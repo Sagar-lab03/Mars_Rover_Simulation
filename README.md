@@ -2,6 +2,8 @@
 
 A sophisticated command-line simulation of a Mars rover navigating a grid-based terrain with obstacles. Built using object-oriented programming principles, design patterns, and rich terminal visualization.
 
+![Mars Rover](mars_rover.png)
+
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
