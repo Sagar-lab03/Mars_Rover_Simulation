@@ -1,6 +1,9 @@
-# Mars Rover Mission Configuration
-# Customize your mission parameters here!
+# ============================================================
+# Mars Rover Simulation - Configuration
+# Edit this file to customise your mission without changing code!
+# ============================================================
 
+# --- Grid ---
 grid:
   width: 10
   height: 10
@@ -8,13 +11,58 @@ grid:
     - [2, 2]
     - [3, 5]
     - [7, 8]
+    - [1, 7]
+    - [5, 3]
 
+# --- Rover Starting State ---
 rover:
   start_x: 0
   start_y: 0
-  start_direction: "N"  # N, S, E, W
+  start_direction: "N"   # N | S | E | W
 
+# --- Battery (Phase 2) ---
+battery:
+  max_charge: 100     # Maximum energy units
+  solar_rate: 5       # Units recharged per 'S' (solar charge) action
+
+# --- Terrain (Phase 2) ---
+# Each entry: { type: <plain|sand|rock|ice>, cells: [[x,y], ...] }
+terrain:
+  - type: sand
+    cells:
+      - [1, 1]
+      - [2, 1]
+      - [3, 1]
+      - [4, 1]
+      - [4, 2]
+      - [4, 3]
+  - type: rock
+    cells:
+      - [6, 4]
+      - [6, 5]
+      - [7, 5]
+      - [7, 6]
+  - type: ice
+    cells:
+      - [0, 5]
+      - [0, 6]
+      - [1, 6]
+      - [2, 6]
+
+# --- Mission (Phase 2) ---
 mission:
-  name: "Mars Exploration Mission Alpha"
+  name: "Mars Exploration Mission - Phase 2"
   enable_telemetry: true
   telemetry_folder: "telemetry"
+
+  # Waypoints the rover must visit
+  waypoints:
+    - name: "Sample Site Alpha"
+      x: 5
+      y: 7
+    - name: "Sample Site Beta"
+      x: 8
+      y: 2
+    - name: "High Ground Sigma"
+      x: 9
+      y: 9
