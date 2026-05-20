@@ -1,0 +1,936 @@
+/* ═══════════════════════════════════════════════════════════
+   Mars Rover Mission Control — style.css
+   Dark space theme with Mars color palette
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Tokens ────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-page: #060c1a;
+  --bg-panel: #0d1526;
+  --bg-panel-alt: #111d35;
+  --bg-cell: #0f1a2e;
+  --bg-cell-hover: #1a2840;
+  --border: #1e3054;
+  --border-glow: #2a4a7f;
+
+  /* Terrain */
+  --plain: #1a2640;
+  --sand: #92400e;
+  --rock: #374151;
+  --ice: #0e4a6e;
+
+  /* Accent colors */
+  --rover: #22c55e;
+  --rover-dim: #16a34a;
+  --obstacle: #dc2626;
+  --waypoint: #e879f9;
+  --reached: #22c55e;
+  --path: #1e3a5f;
+
+  /* Text */
+  --text-primary: #e2e8f0;
+  --text-secondary: #64748b;
+  --text-dim: #374151;
+  --text-accent: #38bdf8;
+
+  /* Battery */
+  --bat-good: #22c55e;
+  --bat-low: #f59e0b;
+  --bat-critical: #ef4444;
+
+  /* UI */
+  --btn-primary: #1d4ed8;
+  --btn-hover: #2563eb;
+  --btn-cmd: #1e3054;
+  --btn-cmd-hover: #2a4a7f;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --transition: 0.15s ease;
+
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: 'Orbitron', sans-serif;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-glow);
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOP BAR
+   ══════════════════════════════════════════════════════════ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-icon {
+  font-size: 22px;
+  color: var(--rover);
+  filter: drop-shadow(0 0 6px var(--rover));
+}
+
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-accent);
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.topbar-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  margin-top: 1px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rover);
+  box-shadow: 0 0 8px var(--rover);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.status-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+}
+
+/* ══════════════════════════════════════════════════════════
+   MAIN LAYOUT
+   ══════════════════════════════════════════════════════════ */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 12px;
+  padding: 12px;
+  min-height: calc(100vh - 56px - 180px);
+}
+
+/* ── Panel base ────────────────────────────────────────────── */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--bg-panel-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-accent);
+  font-weight: 700;
+}
+
+/* ══════════════════════════════════════════════════════════
+   GRID PANEL
+   ══════════════════════════════════════════════════════════ */
+.panel-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.rover-color {
+  background: var(--rover);
+}
+
+.obstacle-color {
+  background: var(--obstacle);
+}
+
+.waypoint-color {
+  background: var(--waypoint);
+  border-radius: 50%;
+}
+
+.reached-color {
+  background: var(--reached);
+  border-radius: 50%;
+}
+
+.sand-color {
+  background: var(--sand);
+}
+
+.rock-color {
+  background: var(--rock);
+}
+
+.ice-color {
+  background: var(--ice);
+}
+
+/* Grid wrapper */
+.grid-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* CSS Grid for the rover map */
+.rover-grid {
+  display: grid;
+  gap: 2px;
+  /* columns set dynamically by JS */
+}
+
+/* Individual cell */
+.cell {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: default;
+  transition: background var(--transition), border-color var(--transition),
+    box-shadow var(--transition);
+  position: relative;
+  user-select: none;
+}
+
+.cell:hover {
+  background: var(--bg-cell-hover);
+}
+
+/* Terrain variants */
+.cell.terrain-sand {
+  background: var(--sand);
+  border-color: #b45309;
+}
+
+.cell.terrain-rock {
+  background: var(--rock);
+  border-color: #4b5563;
+}
+
+.cell.terrain-ice {
+  background: var(--ice);
+  border-color: #0284c7;
+}
+
+/* Path trail */
+.cell.visited:not(.terrain-sand):not(.terrain-rock):not(.terrain-ice) {
+  background: var(--path);
+  border-color: #2a4a7f;
+}
+
+.cell.visited.terrain-sand {
+  border-color: #d97706;
+  filter: brightness(0.7);
+}
+
+.cell.visited.terrain-rock {
+  filter: brightness(0.6);
+}
+
+.cell.visited.terrain-ice {
+  filter: brightness(0.7);
+}
+
+/* Obstacle */
+.cell.obstacle {
+  background: #1a0a0a;
+  border-color: var(--obstacle);
+  box-shadow: inset 0 0 8px rgba(220, 38, 38, 0.3);
+}
+
+/* Waypoint — pulsing beacon landing zone */
+.cell.waypoint {
+  border-color: var(--waypoint);
+  background: #1a0b1f;
+  box-shadow: 0 0 10px rgba(232, 121, 249, 0.35),
+    inset 0 0 8px rgba(232, 121, 249, 0.1);
+}
+
+/* Reached waypoint — Mars base established */
+.cell.reached {
+  border-color: var(--reached);
+  background: #0a1f12;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4),
+    inset 0 0 8px rgba(34, 197, 94, 0.1);
+}
+
+/* Rover cell */
+.cell.rover-cell {
+  background: #052e16;
+  border-color: var(--rover);
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.6),
+    inset 0 0 8px rgba(34, 197, 94, 0.15);
+  z-index: 2;
+}
+
+/* Coordinate label */
+.cell .coord {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  font-size: 7px;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+/* Rover direction arrow */
+.rover-arrow {
+  font-size: 22px;
+  color: var(--rover);
+  text-shadow: 0 0 8px var(--rover);
+  transition: transform 0.2s ease;
+}
+
+/* Obstacle X */
+.obstacle-mark {
+  font-size: 16px;
+  color: var(--obstacle);
+  font-weight: 700;
+}
+
+/* ── Waypoint beacon (pulsing landing zone) ──────────────────── */
+.wp-beacon {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wp-ring {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--waypoint);
+  animation: beacon-pulse 1.8s ease-out infinite;
+}
+
+.wp-ring-2 {
+  width: 18px;
+  height: 18px;
+  animation-delay: 0.6s;
+  opacity: 0.7;
+}
+
+@keyframes beacon-pulse {
+  0% {
+    transform: scale(0.55);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+.wp-cross {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--waypoint);
+  text-shadow: 0 0 8px var(--waypoint);
+  position: relative;
+  z-index: 2;
+  line-height: 1;
+}
+
+/* ── Reached waypoint (Mars base established) ────────────────── */
+.wp-landed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.wp-landed-star {
+  font-size: 16px;
+  color: var(--reached);
+  text-shadow: 0 0 8px var(--reached);
+  animation: base-glow 2s ease-in-out infinite;
+}
+
+.wp-landed-label {
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--reached);
+  opacity: 0.85;
+}
+
+@keyframes base-glow {
+
+  0%,
+  100% {
+    text-shadow: 0 0 6px var(--reached);
+  }
+
+  50% {
+    text-shadow: 0 0 14px var(--reached), 0 0 20px rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════════════════ */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Status panel ──────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+
+.stat {
+  background: var(--bg-panel);
+  padding: 10px 12px;
+}
+
+.stat-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-accent);
+  font-family: var(--font-display);
+}
+
+/* ── Battery panel ─────────────────────────────────────────── */
+.panel-battery {
+  padding: 0;
+}
+
+.battery-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--bat-good);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+}
+
+.battery-bar-track {
+  height: 10px;
+  background: var(--bg-cell);
+  margin: 10px 14px 6px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.battery-bar-fill {
+  height: 100%;
+  background: var(--bat-good);
+  border-radius: 5px;
+  transition: width 0.4s ease, background 0.4s ease;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.battery-numbers {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 12px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.battery-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px 10px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+/* ── Waypoints panel ───────────────────────────────────────── */
+.waypoint-progress {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+}
+
+.waypoint-list {
+  list-style: none;
+  padding: 8px 0;
+}
+
+.waypoint-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  transition: background var(--transition);
+}
+
+.waypoint-list li:last-child {
+  border-bottom: none;
+}
+
+.wp-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.wp-info {
+  flex: 1;
+}
+
+.wp-name {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.wp-coord {
+  color: var(--text-secondary);
+  font-size: 10px;
+}
+
+.wp-status {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
+.wp-todo {
+  color: var(--waypoint);
+  border: 1px solid var(--waypoint);
+}
+
+.wp-done {
+  color: var(--reached);
+  border: 1px solid var(--reached);
+}
+
+.wp-li-done {
+  opacity: 0.75;
+}
+
+.mission-complete {
+  text-align: center;
+  padding: 8px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--reached);
+  background: rgba(168, 85, 247, 0.1);
+  border-top: 1px solid var(--reached);
+  animation: glow-pulse 1.5s infinite;
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(168, 85, 247, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.7);
+  }
+}
+
+/* ── Controls panel ────────────────────────────────────────── */
+.panel-controls {
+  padding-bottom: 12px;
+}
+
+/* D-pad */
+.dpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 0 8px;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.dpad-middle {
+  gap: 4px;
+}
+
+.dpad-center {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--rover);
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-shadow: 0 0 6px var(--rover);
+}
+
+.btn-cmd {
+  width: 60px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: var(--btn-cmd);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition),
+    transform 0.08s ease;
+}
+
+.btn-cmd:hover {
+  background: var(--btn-cmd-hover);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.btn-cmd:active {
+  transform: scale(0.94);
+}
+
+.dpad-arrow {
+  font-size: 14px;
+}
+
+.dpad-label {
+  font-size: 8px;
+  color: var(--text-secondary);
+}
+
+/* Extra controls */
+.extra-controls {
+  padding: 0 14px 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-solar {
+  flex: 1;
+  padding: 8px;
+  background: #1c2a10;
+  border: 1px solid #4d7c0f;
+  border-radius: var(--radius-sm);
+  color: #a3e635;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.btn-solar:hover {
+  background: #22380e;
+  box-shadow: 0 0 10px rgba(163, 230, 53, 0.3);
+}
+
+/* Navigate row */
+.navigate-row {
+  display: flex;
+  gap: 6px;
+  padding: 0 14px 6px;
+  align-items: center;
+}
+
+.nav-inputs {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-inputs input {
+  width: 0;
+  flex: 1;
+  padding: 7px 8px;
+  background: var(--bg-cell);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.nav-inputs input:focus {
+  border-color: var(--text-accent);
+}
+
+.nav-inputs input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.btn-navigate {
+  padding: 7px 12px;
+  background: #1e3a5f;
+  border: 1px solid var(--text-accent);
+  border-radius: var(--radius-sm);
+  color: var(--text-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.btn-navigate:hover {
+  background: #254e80;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+.keyboard-hint {
+  padding: 4px 14px 0;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MISSION LOG (footer)
+   ══════════════════════════════════════════════════════════ */
+.log-panel {
+  margin: 0 12px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.log-count {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.log-scroll {
+  height: 110px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.log-entry {
+  padding: 3px 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition);
+}
+
+.log-entry:first-child {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.log-entry.log-waypoint {
+  color: var(--reached);
+}
+
+.log-entry.log-warning {
+  color: var(--waypoint);
+}
+
+.log-entry.log-error {
+  color: var(--obstacle);
+}
+
+.log-entry.log-nav {
+  color: var(--text-accent);
+}
+
+/* ══════════════════════════════════════════════════════════
+   BUTTONS (shared)
+   ══════════════════════════════════════════════════════════ */
+.btn {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  border: none;
+  outline: none;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-reset {
+  padding: 6px 14px;
+  background: #1f0a0a;
+  border: 1px solid var(--obstacle);
+  border-radius: var(--radius-sm);
+  color: var(--obstacle);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+.btn-reset:hover {
+  background: #2d0f0f;
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.35);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOAST / ERROR
+   ══════════════════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  background: #1a0505;
+  border: 1px solid var(--obstacle);
+  border-radius: var(--radius);
+  color: #fca5a5;
+  font-size: 12px;
+  max-width: 320px;
+  z-index: 999;
+  animation: slide-in 0.2s ease;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── Utilities ─────────────────────────────────────────────── */
+.hidden {
+  display: none !important;
+}

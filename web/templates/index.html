@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mars Rover Mission Control</title>
+  <meta name="description" content="Interactive Mars Rover simulation with A* pathfinding, terrain system, and mission waypoints." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ TOP BAR ══════════════════════════════ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-icon">&#9670;</span>
+      <div>
+        <h1 class="topbar-title">MARS ROVER MISSION CONTROL</h1>
+        <p class="topbar-subtitle" id="mission-name">Loading mission...</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="status-dot" id="status-dot"></span>
+      <span class="status-label" id="status-label">CONNECTING</span>
+      <button class="btn btn-reset" id="btn-reset" onclick="resetMission()">RESET MISSION</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════ MAIN LAYOUT ══════════════════════════ -->
+  <main class="layout">
+
+    <!-- ─── LEFT: GRID ─────────────────────────────────────────────────── -->
+    <section class="panel panel-grid" aria-label="Mars Surface Grid">
+      <div class="panel-header">
+        <span class="panel-title">MARS SURFACE</span>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot rover-color"></span>Rover</span>
+          <span class="legend-item"><span class="legend-dot obstacle-color"></span>Obstacle</span>
+          <span class="legend-item"><span class="legend-dot waypoint-color"></span>Waypoint</span>
+          <span class="legend-item"><span class="legend-dot reached-color"></span>Reached</span>
+          <span class="legend-item"><span class="legend-dot sand-color"></span>Sand</span>
+          <span class="legend-item"><span class="legend-dot rock-color"></span>Rock</span>
+          <span class="legend-item"><span class="legend-dot ice-color"></span>Ice</span>
+        </div>
+      </div>
+      <div class="grid-wrapper">
+        <div id="rover-grid" class="rover-grid" role="grid" aria-label="Rover navigation grid"></div>
+      </div>
+    </section>
+
+    <!-- ─── RIGHT: PANELS ──────────────────────────────────────────────── -->
+    <aside class="sidebar">
+
+      <!-- Rover Status -->
+      <div class="panel panel-status">
+        <div class="panel-header"><span class="panel-title">ROVER STATUS</span></div>
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="stat-label">POSITION</div>
+            <div class="stat-value" id="stat-pos">(0, 0)</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">DIRECTION</div>
+            <div class="stat-value" id="stat-dir">North</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">COMMANDS</div>
+            <div class="stat-value" id="stat-cmds">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">CELLS VISITED</div>
+            <div class="stat-value" id="stat-cells">1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Battery -->
+      <div class="panel panel-battery">
+        <div class="panel-header">
+          <span class="panel-title">POWER SYSTEM</span>
+          <span class="battery-label" id="battery-label">GOOD</span>
+        </div>
+        <div class="battery-bar-track">
+          <div class="battery-bar-fill" id="battery-fill"></div>
+        </div>
+        <div class="battery-numbers">
+          <span id="battery-pct">100%</span>
+          <span id="battery-raw">100 / 100 units</span>
+        </div>
+        <div class="battery-stats">
+          <span>Consumed: <strong id="bat-consumed">0</strong></span>
+          <span>Recharged: <strong id="bat-recharged">0</strong></span>
+        </div>
+      </div>
+
+      <!-- Waypoints -->
+      <div class="panel panel-waypoints">
+        <div class="panel-header">
+          <span class="panel-title">MISSION WAYPOINTS</span>
+          <span class="waypoint-progress" id="wp-progress">0 / 0</span>
+        </div>
+        <ul class="waypoint-list" id="waypoint-list"></ul>
+        <div class="mission-complete hidden" id="mission-complete">
+          ALL OBJECTIVES REACHED
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel panel-controls">
+        <div class="panel-header"><span class="panel-title">COMMAND CENTER</span></div>
+
+        <!-- D-Pad -->
+        <div class="dpad">
+          <div class="dpad-row">
+            <button class="btn btn-cmd dpad-fwd" id="btn-M" onclick="sendCommand('M')" title="Move Forward (W)">
+              <span class="dpad-arrow">&#9650;</span>
+              <span class="dpad-label">FWD</span>
+            </button>
+          </div>
+          <div class="dpad-row dpad-middle">
+            <button class="btn btn-cmd dpad-left" id="btn-L" onclick="sendCommand('L')" title="Turn Left (A)">
+              <span class="dpad-arrow">&#9668;</span>
+              <span class="dpad-label">L</span>
+            </button>
+            <div class="dpad-center">
+              <span id="rover-direction-icon">&#9650;</span>
+            </div>
+            <button class="btn btn-cmd dpad-right" id="btn-R" onclick="sendCommand('R')" title="Turn Right (D)">
+              <span class="dpad-label">R</span>
+              <span class="dpad-arrow">&#9658;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Solar + Navigate -->
+        <div class="extra-controls">
+          <button class="btn btn-solar" id="btn-S" onclick="sendCommand('S')" title="Solar Charge (E)">
+            &#9728; SOLAR CHARGE
+          </button>
+        </div>
+
+        <div class="navigate-row">
+          <div class="nav-inputs">
+            <input type="number" id="nav-x" placeholder="X" min="0" max="99" aria-label="Target X coordinate" />
+            <input type="number" id="nav-y" placeholder="Y" min="0" max="99" aria-label="Target Y coordinate" />
+          </div>
+          <button class="btn btn-navigate" id="btn-nav" onclick="navigate()" title="A* Auto-Navigate">
+            A* GO
+          </button>
+        </div>
+
+        <p class="keyboard-hint">Keyboard: W=Forward &nbsp; A=Left &nbsp; D=Right &nbsp; E=Solar</p>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ═════════════════════════ MISSION LOG ══════════════════════════════ -->
+  <footer class="log-panel">
+    <div class="panel-header">
+      <span class="panel-title">MISSION LOG</span>
+      <span class="log-count" id="log-count">0 events</span>
+    </div>
+    <div class="log-scroll" id="log-scroll">
+      <div id="log-entries"></div>
+    </div>
+  </footer>
+
+  <!-- Error toast -->
+  <div class="toast hidden" id="error-toast" role="alert"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
