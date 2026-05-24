@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission Analytics — Mars Rover</title>
+  <meta name="description" content="Interactive mission analytics dashboard for the Mars Rover simulation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/analytics.css" />
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-icon">&#9670;</span>
+      <div>
+        <h1 class="topbar-title">MISSION ANALYTICS</h1>
+        <p class="topbar-subtitle">Mars Rover Telemetry Dashboard</p>
+      </div>
+    </div>
+    <nav class="topbar-nav">
+      <a href="/" class="nav-link">&#9654; Mission Control</a>
+      <a href="/analytics" class="nav-link nav-active">&#9670; Analytics</a>
+    </nav>
+  </header>
+
+  <main class="analytics-layout">
+
+    <!-- MISSION SELECTOR -->
+    <section class="selector-bar">
+      <div class="selector-left">
+        <label class="selector-label" for="mission-select">SELECT MISSION</label>
+        <select id="mission-select" class="mission-select" onchange="loadMission(this.value)">
+          <option value="">— Choose a mission —</option>
+        </select>
+        <span class="mission-count" id="mission-count">Loading...</span>
+      </div>
+      <div class="selector-right">
+        <button class="btn btn-refresh" onclick="refreshMissions()">&#8635; Refresh</button>
+        <a href="/" class="btn btn-go-control">Go to Mission Control</a>
+      </div>
+    </section>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">&#128752;</div>
+      <h2 class="empty-title">No Mission Selected</h2>
+      <p class="empty-desc">Run a mission in <a href="/">Mission Control</a> to generate telemetry data,<br>then select it from the dropdown above to view analytics.</p>
+    </div>
+
+    <!-- DASHBOARD (hidden until mission loaded) -->
+    <div class="dashboard hidden" id="dashboard">
+
+      <!-- STAT CARDS -->
+      <div class="stat-cards">
+        <div class="astat-card">
+          <div class="astat-icon">&#9654;</div>
+          <div class="astat-value" id="s-commands">—</div>
+          <div class="astat-label">COMMANDS</div>
+        </div>
+        <div class="astat-card">
+          <div class="astat-icon">&#9632;</div>
+          <div class="astat-value" id="s-cells">—</div>
+          <div class="astat-label">CELLS EXPLORED</div>
+        </div>
+        <div class="astat-card">
+          <div class="astat-icon">&#9889;</div>
+          <div class="astat-value" id="s-energy">—</div>
+          <div class="astat-label">ENERGY CONSUMED</div>
+        </div>
+        <div class="astat-card">
+          <div class="astat-icon">&#9728;</div>
+          <div class="astat-value" id="s-recharged">—</div>
+          <div class="astat-label">ENERGY RECHARGED</div>
+        </div>
+        <div class="astat-card">
+          <div class="astat-icon">&#128267;</div>
+          <div class="astat-value" id="s-battery">—</div>
+          <div class="astat-label">FINAL BATTERY</div>
+        </div>
+        <div class="astat-card">
+          <div class="astat-icon">&#9201;</div>
+          <div class="astat-value" id="s-duration">—</div>
+          <div class="astat-label">DURATION (s)</div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 1 -->
+      <div class="charts-grid">
+
+        <!-- Battery Timeline -->
+        <div class="chart-card chart-wide">
+          <div class="chart-header">
+            <span class="chart-title">BATTERY TIMELINE</span>
+            <span class="chart-subtitle">Energy level across all commands</span>
+          </div>
+          <div class="chart-body">
+            <canvas id="chart-battery" height="120"></canvas>
+          </div>
+        </div>
+
+        <!-- Command Mix -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">COMMAND MIX</span>
+            <span class="chart-subtitle">Distribution of rover actions</span>
+          </div>
+          <div class="chart-body chart-body-center">
+            <canvas id="chart-commands" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Terrain Coverage -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">TERRAIN COVERAGE</span>
+            <span class="chart-subtitle">Cells visited by surface type</span>
+          </div>
+          <div class="chart-body">
+            <canvas id="chart-terrain" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Path Heatmap -->
+        <div class="chart-card chart-wide">
+          <div class="chart-header">
+            <span class="chart-title">PATH HEATMAP</span>
+            <span class="chart-subtitle">Visit frequency per cell (brighter = more visits)</span>
+          </div>
+          <div class="chart-body">
+            <div id="heatmap-grid" class="heatmap-grid"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MISSIONS HISTORY TABLE -->
+      <div class="chart-card missions-table-card">
+        <div class="chart-header">
+          <span class="chart-title">ALL MISSIONS</span>
+          <span class="chart-subtitle" id="table-count">— missions recorded</span>
+        </div>
+        <div class="table-wrapper">
+          <table class="missions-table" id="missions-table">
+            <thead>
+              <tr>
+                <th>Mission</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Commands</th>
+                <th>Cells</th>
+                <th>Energy Used</th>
+                <th>Battery Left</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="missions-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/static/analytics.js"></script>
+</body>
+</html>

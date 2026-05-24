@@ -51,7 +51,7 @@ terrain:
 
 # --- Mission (Phase 2) ---
 mission:
-  name: "Mars Exploration Mission - Phase 2"
+  name: "Mars Exploration Mission"
   enable_telemetry: true
   telemetry_folder: "telemetry"
 

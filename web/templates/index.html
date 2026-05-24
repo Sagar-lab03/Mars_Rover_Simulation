@@ -21,6 +21,10 @@
       </div>
     </div>
     <div class="topbar-right">
+      <nav class="topbar-nav">
+        <a href="/" class="nav-link nav-active">&#9654; Mission Control</a>
+        <a href="/analytics" class="nav-link">&#9670; Analytics</a>
+      </nav>
       <span class="status-dot" id="status-dot"></span>
       <span class="status-label" id="status-label">CONNECTING</span>
       <button class="btn btn-reset" id="btn-reset" onclick="resetMission()">RESET MISSION</button>
@@ -151,6 +155,87 @@
         </div>
 
         <p class="keyboard-hint">Keyboard: W=Forward &nbsp; A=Left &nbsp; D=Right &nbsp; E=Solar</p>
+      </div>
+
+      <!-- Batch Commands Panel -->
+      <div class="panel panel-batch">
+        <div class="panel-header" id="batch-toggle" onclick="toggleBatch()" style="cursor:pointer">
+          <span class="panel-title">BATCH COMMANDS</span>
+          <span class="batch-toggle-icon" id="batch-toggle-icon">&#9660;</span>
+        </div>
+        <div class="batch-body hidden" id="batch-body">
+
+          <!-- Mode tabs -->
+          <div class="batch-tabs">
+            <button class="batch-tab active" id="tab-text" onclick="switchTab('text')">TEXT INPUT</button>
+            <button class="batch-tab" id="tab-file" onclick="switchTab('file')">FILE UPLOAD</button>
+          </div>
+
+          <!-- Text input mode -->
+          <div id="mode-text">
+            <textarea id="batch-input" class="batch-textarea"
+              placeholder="# Enter commands here&#10;M M R M L M&#10;G 5,7&#10;S"
+              rows="6" spellcheck="false"></textarea>
+            <div class="batch-format-hint">
+              <strong>M</strong> Move &nbsp;
+              <strong>L</strong> Left &nbsp;
+              <strong>R</strong> Right &nbsp;
+              <strong>S</strong> Solar &nbsp;
+              <strong>G x,y</strong> Navigate
+            </div>
+          </div>
+
+          <!-- File upload mode -->
+          <div id="mode-file" class="hidden">
+            <div class="file-drop-zone" id="file-drop-zone"
+              onclick="document.getElementById('file-input').click()"
+              ondragover="onDragOver(event)" ondrop="onDrop(event)">
+              <div class="drop-icon">&#128196;</div>
+              <div class="drop-text">Click or drag &amp; drop a .txt file</div>
+              <div class="drop-hint">Commands are space-separated or one per line</div>
+            </div>
+            <input type="file" id="file-input" accept=".txt" class="hidden"
+              onchange="onFileSelected(event)" />
+            <div class="file-name hidden" id="file-name-display"></div>
+            <a href="/api/batch/template" class="batch-template-link"
+              download="mission_commands.txt">&#11015; Download sample template</a>
+          </div>
+
+          <!-- Preview -->
+          <div class="batch-preview hidden" id="batch-preview">
+            <div class="preview-header">
+              <span class="preview-label" id="preview-label">0 commands parsed</span>
+              <button class="preview-clear" onclick="clearBatch()">&#10005; Clear</button>
+            </div>
+            <div class="preview-pills" id="preview-pills"></div>
+          </div>
+
+          <!-- Actions -->
+          <div class="batch-actions">
+            <button class="btn btn-parse" onclick="parseBatch()">&#9654; PREVIEW</button>
+            <button class="btn btn-exec" id="btn-exec" onclick="executeBatch(false)" disabled>RUN ALL</button>
+            <button class="btn btn-exec-step" id="btn-exec-step" onclick="executeBatch(true)" disabled>
+              &#9654;&#9474; STEP MODE
+            </button>
+          </div>
+
+          <!-- Speed slider (step mode) -->
+          <div class="speed-row" id="speed-row">
+            <span class="speed-label">Speed</span>
+            <input type="range" id="step-speed" min="100" max="1000" step="100" value="400"
+              class="speed-slider" />
+            <span class="speed-val" id="speed-val">400ms</span>
+          </div>
+
+          <!-- Progress -->
+          <div class="batch-progress hidden" id="batch-progress">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-text" id="progress-text">Running...</span>
+          </div>
+
+        </div>
       </div>
 
     </aside>

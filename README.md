@@ -1,51 +1,75 @@
-# 🚀 Mars Rover Simulation
+# 🚀 Mars Rover Mission Control
 
-A sophisticated command-line simulation of a Mars rover navigating a grid-based terrain with obstacles. Built using object-oriented programming principles, design patterns, and rich terminal visualization.
+A progressive Mars Rover simulation built across three phases — from clean OOP terminal simulation to a full interactive web-based mission control dashboard. Built for learning, portfolio visibility, and showcasing the intersection of **Astronomy + Software Engineering**.
 
 ![Mars Rover](mars_rover.png)
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0%2B-lightgrey.svg)](https://flask.palletsprojects.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 ---
 
-## 🎬 Demo
+## 🌐 Web Mission Control (Phase 3)
 
-Watch the Mars Rover in action!
+> Control the rover directly from your browser — terrain-aware, battery-powered, A\* navigated.
 
-### Basic Version (Code.py) - v0.0
-![Basic Demo](demo/v0.0.png)
-
-### Enhanced Version with Rich UI (rover.py) - v1.0
-![Enhanced Demo](demo/v1.0_demo.gif)
+![Mars Rover Web UI](web_ui_preview.png)
 
 
 ---
 
 ## 📋 Table of Contents
-1. [Features](#features)
-2. [Project Structure](#project-structure)
-3. [Getting Started](#getting-started)
-4. [Usage](#usage)
-5. [Architecture](#architecture)
-6. [Configuration](#configuration)
-7. [Testing](#testing)
-8. [Design Patterns](#design-patterns)
-9. [Contributing](#contributing)
-10. [License](#license)
+
+1. [Project Evolution](#project-evolution)
+2. [Features](#features)
+3. [Project Structure](#project-structure)
+4. [Getting Started](#getting-started)
+5. [Usage](#usage)
+6. [Architecture](#architecture)
+7. [Configuration](#configuration)
+8. [Testing](#testing)
+9. [Design Patterns](#design-patterns)
+
+---
+
+## 🧬 Project Evolution
+
+This project was built in three deliberate phases, each adding a meaningful layer:
+
+| Phase | What was built | Key concepts |
+|---|---|---|
+| **Phase 1** | OOP core, Rich terminal UI, YAML config, telemetry | Strategy Pattern, Command Pattern, ABCs |
+| **Phase 2** | A\* pathfinding, battery system, terrain, waypoints | Graph search, energy modelling, inheritance |
+| **Phase 3** | Flask web server, interactive browser UI | REST API, client-server, reactive rendering |
 
 ---
 
 ## ✨ Features
 
-- **🎯 Grid-based Navigation**: Navigate a customizable grid with obstacle detection
-- **🎨 Rich Terminal UI**: Beautiful command-line interface with colors and formatting (rover.py)
-- **📝 Logging & Telemetry**: Comprehensive logging and mission telemetry tracking
-- **⚙️ Configuration Support**: YAML-based configuration for easy mission customization
-- **🧪 Comprehensive Testing**: Full test suite with pytest
-- **🏗️ Design Patterns**: Strategy Pattern, Command Pattern, and Abstract Base Classes
-- **📊 Status Reporting**: Real-time rover status and position tracking
-- **🚧 Obstacle Avoidance**: Smart navigation that respects grid boundaries and obstacles
+### Phase 1 — Core Simulation
+- **Grid-based navigation** with obstacle detection and boundary validation
+- **Rich terminal UI** with color-coded grid, path trail, and status tables
+- **YAML configuration** — customize grid, obstacles, and rover start without touching code
+- **Telemetry logging** — every mission exported to JSON for analysis
+- **24 unit tests** with pytest
+
+### Phase 2 — Advanced Simulation
+- **A\* Pathfinding** — shortest obstacle-free path with Manhattan heuristic
+- **Battery system** — energy drains on every move (terrain-dependent), solar recharge available
+- **Terrain types** — Plain, Sand, Rock, Ice each with different battery costs
+- **Mission waypoints** — named science targets tracked across the grid
+- **38 unit tests** covering all new systems
+
+### Phase 3 — Web Visualization
+- **Interactive browser UI** — full mission control dashboard at `http://localhost:5000`
+- **Live CSS grid** — terrain colors, rover arrow, obstacles, waypoint beacons, path trail
+- **Pulsing waypoint beacons** — animated landing zone markers; "BASE" star when reached
+- **Animated battery bar** — color shifts green → yellow → red in real time
+- **D-pad + keyboard controls** — W/A/D/E for Move/Left/Right/Solar
+- **Click-to-navigate** — click any grid cell to auto A\* navigate there
+- **Mission log feed** — color-coded event stream
+- **REST API** — clean 5-endpoint Flask server, JSON state contract
 
 ---
 
@@ -53,15 +77,39 @@ Watch the Mars Rover in action!
 
 ```
 Mars_Rover_Exercise/
-├── Code.py                 # Basic implementation with simple CLI
-├── rover.py                # Enhanced implementation with Rich UI
-├── demo.py                 # Demo script
-├── test_rover.py           # Comprehensive test suite
-├── config.yaml             # Mission configuration file
-├── requirements.txt        # Python dependencies
-├── telemetry/              # Mission telemetry logs
-├── README.md               # This file
-└── .gitignore             # Git ignore rules
+│
+├── rover.py                  # Phase 1 core (OOP, terminal, telemetry)
+├── config.yaml               # Shared mission configuration
+├── requirements.txt          # Python dependencies
+│
+├── phase2/                   # Phase 2 — Advanced simulation modules
+│   ├── main.py               # Phase 2 terminal entry point
+│   ├── pathfinder.py         # A* search algorithm
+│   ├── battery.py            # Energy / battery system
+│   ├── terrain.py            # Terrain types and cost map
+│   └── mission.py            # Mission objectives and waypoints
+│
+├── web/                      # Phase 3 — Web visualization
+│   ├── app.py                # Flask server + REST API
+│   ├── templates/
+│   │   └── index.html        # Single-page app shell
+│   └── static/
+│       ├── style.css         # Dark space theme
+│       └── app.js            # Grid renderer + API client
+│
+├── tests/                    # All unit tests
+│   ├── test_phase1.py        # 24 Phase 1 tests
+│   └── test_phase2.py        # 38 Phase 2 tests
+│
+├── demo/                     # Automated demo scripts
+│   ├── demo_phase1.py
+│   └── demo_phase2.py
+│
+├── docs/                     # Per-phase documentation
+│   ├── README_Phase1.md
+│   └── README_Phase2.md
+│
+└── telemetry/                # Auto-generated mission JSON logs
 ```
 
 ---
@@ -69,153 +117,130 @@ Mars_Rover_Exercise/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
+- Python 3.8+
+- pip
 
 ### Installation
 
-1. **Clone the repository**:
 ```bash
 git clone https://github.com/your_username/Mars_Rover_Exercise.git
 cd Mars_Rover_Exercise
-```
-
-2. **Install dependencies**:
-```bash
 pip install -r requirements.txt
 ```
 
-The required packages are:
-- `rich==13.7.0` - For beautiful terminal output
-- `pyyaml==6.0.1` - For configuration file support
-- `pytest==7.4.3` - For running tests
+**Dependencies:**
+- `rich` — terminal UI (Phase 1 & 2)
+- `pyyaml` — YAML config loading
+- `flask` — web server (Phase 3)
+- `pytest` — test framework
 
 ---
 
 ## 🎮 Usage
 
-### Basic Version (Code.py)
-Simple command-line interface with basic logging:
+### Phase 3 — Web Mission Control *(recommended)*
 
 ```bash
-python Code.py
+python web/app.py
 ```
 
-**Example interaction**:
-```
-Initializing the Rover...
-Enter starting position (x, y): 0,0
-Enter starting direction (N, S, E, W): N
+Open **http://localhost:5000** in your browser.
 
-Available Commands:
-M - Move Forward
-L - Turn Left
-R - Turn Right
-Q - Quit and show final status
+| Control | Action |
+|---|---|
+| Click grid cell | A\* navigate to that cell |
+| `W` / FWD button | Move forward |
+| `A` / `D` buttons | Turn left / right |
+| `E` / ☀ button | Solar charge (restore battery) |
+| Type X,Y + A\* GO | Navigate to specific coordinates |
+| RESET MISSION | Restart from config |
 
-Enter command (M, L, R, Q): M
-Enter command (M, L, R, Q): M
-Enter command (M, L, R, Q): R
-Enter command (M, L, R, Q): M
-Enter command (M, L, R, Q): Q
+---
 
-Rover is at (1, 2) facing East. No Obstacles detected.
+### Phase 2 — Terminal Simulation
+
+```bash
+python phase2/main.py
 ```
 
-### Enhanced Version (rover.py)
-Rich terminal UI with configuration support and telemetry:
+| Command | Description |
+|---|---|
+| `M` | Move forward (drains battery by terrain cost) |
+| `L` / `R` | Turn left / right |
+| `S` | Solar charge |
+| `G x,y` | A\* auto-navigate to (x,y) |
+| `Q` | Quit and show summary |
+
+---
+
+### Phase 1 — Terminal Simulation (original)
 
 ```bash
 python rover.py
 ```
 
-Features beautiful colored output, grid visualization, and automatic telemetry logging.
+---
 
-### Demo Script
-Quick demonstration of rover capabilities:
+### Automated Demos
 
 ```bash
-python demo.py
+python demo/demo_phase1.py   # Phase 1 scripted run
+python demo/demo_phase2.py   # Phase 2 scripted run (A*, terrain, waypoints)
 ```
 
 ---
 
 ## 🏗️ Architecture
 
-### Class Hierarchy
+### System Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Direction (ABC)                      │
-│  - move_forward(x, y) -> (x, y)                         │
-│  - turn_left() -> Direction                             │
-│  - turn_right() -> Direction                            │
-└─────────────────────────────────────────────────────────┘
-           ▲        ▲        ▲        ▲
-           │        │        │        │
-      ┌────┴───┬────┴───┬────┴───┬────┴────┐
-      │ North  │  East  │ South  │  West   │
-      └────────┴────────┴────────┴─────────┘
-
-┌─────────────────────────────────────────────────────────┐
-│                     Command (ABC)                       │
-│  - execute(rover) -> None                               │
-└─────────────────────────────────────────────────────────┘
-           ▲        ▲        ▲
-           │        │        │
-      ┌────┴───┬────┴───┬────┴────┐
-      │  Move  │  Turn  │  Turn   │
-      │Forward │  Left  │  Right  │
-      └────────┴────────┴─────────┘
-
-┌─────────────────────────────────────────────────────────┐
-│                        Grid                             │
-│  - width: int                                           │
-│  - height: int                                          │
-│  - obstacles: List[Tuple[int, int]]                     │
-│  + has_obstacle(x, y) -> bool                           │
-└─────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────┐
-│                        Rover                            │
-│  - x: int                                               │
-│  - y: int                                               │
-│  - direction: Direction                                 │
-│  - grid: Grid                                           │
-│  + move_forward() -> None                               │
-│  + turn_left() -> None                                  │
-│  + turn_right() -> None                                 │
-│  + report_status() -> str                               │
-└─────────────────────────────────────────────────────────┘
+Browser (HTML/CSS/JS)
+     │  fetch / REST API
+     ▼
+Flask Server (web/app.py)
+     │  Python calls
+     ▼
+Phase 2 Engine (phase2/)
+     │  inherits from
+     ▼
+Phase 1 Core (rover.py)
 ```
 
-### Key Components
+### Web API Contract
 
-#### 1. **Direction Classes** (Strategy Pattern)
-- `Direction` (ABC): Abstract base class defining direction behavior
-- `North`, `East`, `South`, `West`: Concrete implementations
-- Each direction knows how to move forward and turn
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/` | GET | Serve the single-page app |
+| `/api/state` | GET | Full rover state as JSON |
+| `/api/command` | POST | Execute M / L / R / S |
+| `/api/navigate` | POST | A\* navigate to `{x, y}` |
+| `/api/reset` | POST | Reset mission from config |
 
-#### 2. **Command Classes** (Command Pattern)
-- `Command` (ABC): Abstract base class for commands
-- `MoveForward`, `TurnLeft`, `TurnRight`: Concrete commands
-- Encapsulates rover actions as objects
+### Core Classes
 
-#### 3. **Grid Class**
-- Manages the terrain dimensions
-- Tracks obstacle locations
-- Validates rover movements
+```
+Direction (ABC)
+├── North / East / South / West     ← Strategy Pattern
 
-#### 4. **Rover Class**
-- Maintains rover state (position, direction)
-- Executes commands
-- Validates movements against grid boundaries and obstacles
+Command (ABC)
+├── MoveForward / TurnLeft / TurnRight   ← Command Pattern
+
+Grid          → dimensions + obstacles
+Rover         → position, direction, path history
+ └── RoverV2  → + battery + terrain (Phase 2, Template Method)
+
+Battery       → charge, drain, solar recharge
+TerrainMap    → per-cell terrain type and battery cost
+Mission       → waypoints + completion tracking
+Pathfinder    → A* search (static methods)
+```
 
 ---
 
 ## ⚙️ Configuration
 
-Edit `config.yaml` to customize your mission:
+All mission parameters live in `config.yaml` — no code changes needed:
 
 ```yaml
 grid:
@@ -224,121 +249,84 @@ grid:
   obstacles:
     - [2, 2]
     - [3, 5]
-    - [7, 8]
 
 rover:
   start_x: 0
   start_y: 0
-  start_direction: "N"  # N, S, E, W
+  start_direction: "N"   # N | S | E | W
+
+battery:
+  max_charge: 100
+  solar_rate: 5          # units recharged per solar action
+
+terrain:
+  - type: sand           # plain | sand | rock | ice
+    cells:
+      - [1, 1]
+      - [2, 1]
 
 mission:
-  name: "Mars Exploration Mission Alpha"
-  enable_telemetry: true
-  telemetry_folder: "telemetry"
+  name: "Mars Exploration Mission"
+  waypoints:
+    - name: "Sample Site Alpha"
+      x: 5
+      y: 7
 ```
+
+### Terrain Battery Costs
+
+| Terrain | Cost per move |
+|---|---|
+| Plain | 5 units |
+| Sand | 10 units |
+| Rock | 15 units |
+| Ice | 3 units |
 
 ---
 
 ## 🧪 Testing
 
-Run the comprehensive test suite:
-
 ```bash
-pytest test_rover.py -v
+# All 62 tests (Phase 1 + Phase 2)
+pytest tests/ -v
+
+# Phase 1 only (24 tests)
+pytest tests/test_phase1.py -v
+
+# Phase 2 only (38 tests)
+pytest tests/test_phase2.py -v
 ```
 
-Run with coverage:
-
-```bash
-pytest test_rover.py --cov=rover --cov-report=html
-```
-
-The test suite covers:
-- ✅ Direction class behavior
-- ✅ Command execution
-- ✅ Grid boundary validation
-- ✅ Obstacle detection
-- ✅ Rover movement and turning
-- ✅ Edge cases and error handling
+**Coverage:** Directions, Grid, Rover, Commands, Battery, Terrain, Mission, A\* Pathfinder, RoverV2 integration.
 
 ---
 
 ## 🎨 Design Patterns
 
-### 1. **Strategy Pattern** (Direction Classes)
-Different direction strategies encapsulate movement and turning logic without conditionals.
-
-**Benefits**:
-- Easy to add new directions
-- No if-else chains
-- Each direction is self-contained
-
-### 2. **Command Pattern** (Command Classes)
-Commands are encapsulated as objects, allowing for flexible execution and potential undo/redo functionality.
-
-**Benefits**:
-- Decouples command execution from rover logic
-- Easy to add new commands
-- Supports command queuing and history
-
-### 3. **Abstract Base Classes**
-Using Python's ABC module ensures proper interface implementation.
-
-**Benefits**:
-- Enforces contract compliance
-- Prevents instantiation of incomplete classes
-- Clear interface definitions
+| Pattern | Where used |
+|---|---|
+| **Strategy** | Direction classes — each encapsulates movement + turn logic |
+| **Command** | MoveForward / TurnLeft / TurnRight — actions as objects |
+| **Template Method** | RoverV2 overrides `move_forward()` from Rover |
+| **Factory / Class Method** | `TerrainMap.from_config()`, `Mission.from_config()` |
 
 ---
 
-## 📊 Available Commands
+## 🌌 Astronomy Connection
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `M` | Move forward one step | Moves rover in current direction |
-| `L` | Turn left 90° | North → West → South → East |
-| `R` | Turn right 90° | North → East → South → West |
-| `Q` | Quit and show status | Displays final position |
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Commit your changes**: `git commit -m 'Add amazing feature'`
-4. **Push to the branch**: `git push origin feature/amazing-feature`
-5. **Open a Pull Request**
-
-### Development Guidelines
-- Follow PEP 8 style guidelines
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PR
+> This simulation mirrors real Mars rover mission concepts:
+>
+> - **Battery management** — Perseverance uses an MMRTG power system with finite energy budgets
+> - **Terrain-aware navigation** — NASA's AEGIS AI selects paths based on terrain difficulty
+> - **Waypoints** — Mission controllers uplink daily drive plans with science target coordinates
+> - **A\* pathfinding** — AutoNav uses stereo-vision + graph search to avoid hazards autonomously
 
 ---
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://choosealicense.com/licenses/mit/) file for details.
+MIT License — see [choosealicense.com](https://choosealicense.com/licenses/mit/) for details.
 
 ---
 
-## 🙏 Acknowledgments
-
-- Built with Python's ABC module for robust OOP design
-- Terminal UI powered by [Rich](https://github.com/Textualize/rich)
-- Configuration management with PyYAML
-- Testing framework: pytest
-
----
-
-## 📧 Contact
-
-For questions or suggestions, please open an issue on GitHub.
-
----
-
-**Happy Mars Exploring! 🚀🔴**
+**Built with passion for Astronomy + Engineering 🚀🔴**

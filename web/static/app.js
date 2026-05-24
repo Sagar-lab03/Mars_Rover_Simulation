@@ -423,8 +423,8 @@ async function resetMission() {
 // ── Keyboard shortcuts ────────────────────────────────────────────────────
 
 document.addEventListener("keydown", (e) => {
-  // Don't fire when typing in inputs
-  if (e.target.tagName === "INPUT") return;
+  // Don't fire when typing in inputs or textareas
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
 
   switch (e.key.toUpperCase()) {
     case "W": sendCommand("M"); break;
@@ -438,4 +438,224 @@ document.addEventListener("keydown", (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadState();
+  initBatchPanel();
 });
+
+// ═══════════════════════════════════════════════════════════
+//  BATCH COMMANDS PANEL
+// ═══════════════════════════════════════════════════════════
+
+let parsedCommands = [];   // currently parsed command list
+
+/** Toggle expand/collapse of batch panel body. */
+function toggleBatch() {
+  const body = document.getElementById("batch-body");
+  const icon = document.getElementById("batch-toggle-icon");
+  const open = !body.classList.contains("hidden");
+  body.classList.toggle("hidden", open);
+  icon.classList.toggle("open", !open);
+}
+
+/** Switch between TEXT INPUT and FILE UPLOAD tabs. */
+function switchTab(mode) {
+  document.getElementById("mode-text").classList.toggle("hidden", mode !== "text");
+  document.getElementById("mode-file").classList.toggle("hidden", mode !== "file");
+  document.getElementById("tab-text").classList.toggle("active", mode === "text");
+  document.getElementById("tab-file").classList.toggle("active", mode === "file");
+  clearBatch();
+}
+
+/** Parse raw text (from textarea or file) into a clean command array. */
+function parseBatchText(text) {
+  const cmds = [];
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
+    // Handle inline comments after commands
+    const withoutComment = trimmed.split("#")[0].trim();
+    const tokens = withoutComment.split(/\s+/);
+
+    let i = 0;
+    while (i < tokens.length) {
+      const t = tokens[i].toUpperCase();
+      if (t === "G" && i + 1 < tokens.length) {
+        // "G 5,7" (two tokens) or handled as single below
+        cmds.push(`G ${tokens[i + 1]}`);
+        i += 2;
+      } else if (t.startsWith("G") && t.length > 1) {
+        // "G5,7" (one token, no space)
+        cmds.push(t);
+        i++;
+      } else if (["M", "L", "R", "S"].includes(t)) {
+        cmds.push(t);
+        i++;
+      } else {
+        i++;  // skip unknown tokens
+      }
+    }
+  }
+  return cmds;
+}
+
+/** Read textarea / current file and show preview pills. */
+function parseBatch() {
+  const activeMode = document.getElementById("tab-text").classList.contains("active")
+    ? "text" : "file";
+
+  const text = activeMode === "text"
+    ? document.getElementById("batch-input").value
+    : (document.getElementById("file-name-display").dataset.content || "");
+
+  parsedCommands = parseBatchText(text);
+  renderPreview(parsedCommands);
+}
+
+/** Render the color-coded command pills and enable exec buttons. */
+function renderPreview(cmds) {
+  const preview = document.getElementById("batch-preview");
+  const pills   = document.getElementById("preview-pills");
+  const label   = document.getElementById("preview-label");
+
+  if (cmds.length === 0) {
+    preview.classList.add("hidden");
+    setExecEnabled(false);
+    return;
+  }
+
+  preview.classList.remove("hidden");
+  label.textContent = `${cmds.length} command${cmds.length !== 1 ? "s" : ""} parsed`;
+  pills.innerHTML = "";
+
+  for (const cmd of cmds) {
+    const pill = document.createElement("span");
+    const type = cmd.startsWith("G") ? "G" : cmd;
+    pill.className   = `pill pill-${type}`;
+    pill.textContent = cmd;
+    pills.appendChild(pill);
+  }
+
+  setExecEnabled(true);
+}
+
+function setExecEnabled(enabled) {
+  document.getElementById("btn-exec").disabled      = !enabled;
+  document.getElementById("btn-exec-step").disabled = !enabled;
+}
+
+/** Clear parsed state and hide preview. */
+function clearBatch() {
+  parsedCommands = [];
+  document.getElementById("batch-preview").classList.add("hidden");
+  document.getElementById("batch-input").value = "";
+  document.getElementById("file-name-display").classList.add("hidden");
+  document.getElementById("file-name-display").dataset.content = "";
+  setExecEnabled(false);
+}
+
+/** Sleep helper for step animation. */
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * Execute the batch.
+ * @param {boolean} animate - If true, step through each command with a delay.
+ */
+async function executeBatch(animate) {
+  if (busy || parsedCommands.length === 0) return;
+
+  lockUI(true);
+  setExecEnabled(false);
+
+  const progress  = document.getElementById("batch-progress");
+  const fill      = document.getElementById("progress-fill");
+  const progText  = document.getElementById("progress-text");
+  const delayMs   = parseInt(document.getElementById("step-speed").value, 10) || 400;
+
+  progress.classList.remove("hidden");
+  fill.style.width = "0%";
+
+  const result = await apiFetch("/api/batch/execute", {
+    method: "POST",
+    body: JSON.stringify({ commands: parsedCommands }),
+  });
+
+  if (!result) {
+    progress.classList.add("hidden");
+    lockUI(false);
+    setExecEnabled(true);
+    return;
+  }
+
+  const steps = result.steps || [];
+
+  if (animate && steps.length > 0) {
+    for (let i = 0; i < steps.length; i++) {
+      render(steps[i].state);
+      const pct = Math.round(((i + 1) / steps.length) * 100);
+      fill.style.width    = `${pct}%`;
+      progText.textContent = `Step ${i + 1} / ${steps.length} — ${steps[i].command}`;
+      await sleep(delayMs);
+    }
+  } else {
+    render(result.final_state);
+    fill.style.width    = "100%";
+    progText.textContent = `Done — ${steps.length} steps executed`;
+  }
+
+  const s = result.summary;
+  if (s) {
+    progText.textContent =
+      `Done: ${s.total_steps} steps${s.error_count ? `, ${s.error_count} skipped` : ""} — final pos ${s.final_pos}`;
+  }
+
+  lockUI(false);
+  setExecEnabled(true);
+}
+
+// ── File upload / drag-drop ───────────────────────────────────────────────
+
+function onFileSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  readFile(file);
+}
+
+function onDragOver(event) {
+  event.preventDefault();
+  document.getElementById("file-drop-zone").classList.add("drag-over");
+}
+
+function onDrop(event) {
+  event.preventDefault();
+  document.getElementById("file-drop-zone").classList.remove("drag-over");
+  const file = event.dataTransfer.files[0];
+  if (file) readFile(file);
+}
+
+function readFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const content = e.target.result;
+    const display = document.getElementById("file-name-display");
+    display.textContent         = `📄 ${file.name} loaded`;
+    display.dataset.content     = content;
+    display.classList.remove("hidden");
+    // Auto-parse
+    parsedCommands = parseBatchText(content);
+    renderPreview(parsedCommands);
+  };
+  reader.readAsText(file);
+}
+
+// ── Speed slider live update ──────────────────────────────────────────────
+
+function initBatchPanel() {
+  const slider = document.getElementById("step-speed");
+  const val    = document.getElementById("speed-val");
+  if (slider && val) {
+    slider.addEventListener("input", () => {
+      val.textContent = `${slider.value}ms`;
+    });
+  }
+}
+

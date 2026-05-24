@@ -24,7 +24,7 @@ from typing import Optional
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from flask import Flask, jsonify, request, render_template, send_from_directory
+from flask import Flask, jsonify, request, render_template, send_from_directory, Response
 
 from rover import Grid, North, East, South, West, TelemetryLogger
 from phase2.battery    import Battery
@@ -280,6 +280,278 @@ def post_reset():
     build_mission_objects(config)
     _log("Mission reset.")
     return jsonify(build_state_json())
+
+
+# ── Analytics Routes ─────────────────────────────────────────────────────────
+
+@app.route("/analytics")
+def analytics_page():
+    """Serve the analytics dashboard."""
+    return render_template("analytics.html")
+
+
+@app.route("/api/analytics/missions", methods=["GET"])
+def get_missions():
+    """List all telemetry files with summary metadata."""
+    telemetry_dir = ROOT / config.get("mission", {}).get("telemetry_folder", "telemetry")
+    missions = []
+    if telemetry_dir.exists():
+        for f in sorted(telemetry_dir.glob("mission_*.json"), reverse=True):
+            try:
+                with open(f) as fp:
+                    d = json.load(fp)
+                fs = d.get("final_status", {})
+                bat = fs.get("battery", {})
+                # Duration
+                duration = 0
+                try:
+                    from datetime import datetime as dt
+                    t0 = dt.fromisoformat(d.get("start_time", ""))
+                    t1 = dt.fromisoformat(d.get("end_time", ""))
+                    duration = round((t1 - t0).total_seconds(), 1)
+                except Exception:
+                    pass
+                missions.append({
+                    "filename":          f.name,
+                    "mission_name":      d.get("mission_name", "Unknown"),
+                    "start_time":        d.get("start_time", ""),
+                    "duration_seconds":  duration,
+                    "commands_executed": fs.get("commands_executed", 0),
+                    "cells_visited":     fs.get("cells_visited", 0),
+                    "energy_consumed":   bat.get("total_consumed", 0),
+                    "final_battery_pct": bat.get("percentage", 0),
+                })
+            except Exception:
+                pass
+    return jsonify({"missions": missions})
+
+
+@app.route("/api/analytics/mission/<filename>", methods=["GET"])
+def get_mission_detail(filename):
+    """Return full analytics for one telemetry file."""
+    telemetry_dir = ROOT / config.get("mission", {}).get("telemetry_folder", "telemetry")
+    filepath = telemetry_dir / filename
+    if not filepath.exists():
+        return jsonify({"error": "File not found"}), 404
+
+    with open(filepath) as f:
+        data = json.load(f)
+
+    events       = data.get("events", [])
+    path_history = data.get("path_history", [])
+    final_status = data.get("final_status", {})
+
+    # Battery timeline & command counts
+    battery_timeline = [{"step": 0, "pct": 100.0, "charge": 100, "command": "START", "event": "start"}]
+    command_counts   = {"M": 0, "L": 0, "R": 0, "S": 0}
+    step = 0
+
+    for ev in events:
+        ev_type = ev.get("type", "")
+        ev_data = ev.get("data", {})
+
+        if ev_type == "command":
+            step += 1
+            cmd    = ev_data.get("command", "?")
+            status = ev_data.get("rover_status") or ev_data.get("status") or {}
+            bat    = status.get("battery", {})
+            pct    = bat.get("percentage",   battery_timeline[-1]["pct"])
+            charge = bat.get("charge",       battery_timeline[-1]["charge"])
+            evt    = "solar" if cmd == "S" else ("move" if cmd == "M" else "turn")
+            battery_timeline.append({"step": step, "pct": pct, "charge": charge,
+                                     "command": cmd, "event": evt})
+            if cmd in command_counts:
+                command_counts[cmd] += 1
+
+        elif ev_type == "solar_charge":
+            step += 1
+            bat    = ev_data.get("battery", {})
+            pct    = bat.get("percentage",   battery_timeline[-1]["pct"])
+            charge = bat.get("charge",       battery_timeline[-1]["charge"])
+            battery_timeline.append({"step": step, "pct": pct, "charge": charge,
+                                     "command": "S", "event": "solar"})
+            command_counts["S"] = command_counts.get("S", 0) + 1
+
+    # Terrain breakdown of visited cells
+    terrain_cfg = config.get("terrain", [])
+    terrain_map  = TerrainMap.from_config(
+        config["grid"]["width"], config["grid"]["height"], terrain_cfg)
+    terrain_visited = {"plain": 0, "sand": 0, "rock": 0, "ice": 0}
+    for (x, y) in path_history:
+        t = terrain_map.get_terrain(x, y).value
+        terrain_visited[t] = terrain_visited.get(t, 0) + 1
+
+    # Visit heatmap: "x,y" -> count
+    heatmap = {}
+    for (x, y) in path_history:
+        key = f"{x},{y}"
+        heatmap[key] = heatmap.get(key, 0) + 1
+
+    # Duration
+    duration = 0
+    try:
+        from datetime import datetime as dt
+        t0 = dt.fromisoformat(data.get("start_time", ""))
+        t1 = dt.fromisoformat(data.get("end_time", ""))
+        duration = round((t1 - t0).total_seconds(), 1)
+    except Exception:
+        pass
+
+    bat_final = final_status.get("battery", {})
+    return jsonify({
+        "filename":        filename,
+        "mission_name":    data.get("mission_name", "Unknown"),
+        "start_time":      data.get("start_time", ""),
+        "end_time":        data.get("end_time", ""),
+        "duration_seconds": duration,
+        "battery_timeline": battery_timeline,
+        "command_counts":   command_counts,
+        "terrain_visited":  terrain_visited,
+        "heatmap":          heatmap,
+        "path_history":     path_history,
+        "grid":             {"width": config["grid"]["width"],
+                             "height": config["grid"]["height"]},
+        "mission_stats": {
+            "total_commands":    final_status.get("commands_executed", 0),
+            "cells_visited":     final_status.get("cells_visited", 0),
+            "energy_consumed":   bat_final.get("total_consumed", 0),
+            "energy_recharged":  bat_final.get("total_recharged", 0),
+            "final_battery_pct": bat_final.get("percentage", 0),
+            "final_position":    final_status.get("position", {}),
+            "final_direction":   final_status.get("direction", ""),
+        },
+    })
+
+
+# ── Batch Routes ──────────────────────────────────────────────────────────────
+
+@app.route("/api/batch/execute", methods=["POST"])
+def batch_execute():
+    """
+    Execute a batch of commands and return all intermediate states.
+
+    Body: { "commands": ["M","M","R","G 5,7","S"] }
+    Returns: { "steps": [...], "final_state": {...}, "summary": {...} }
+    """
+    data     = request.get_json(silent=True) or {}
+    raw_cmds = data.get("commands", [])
+
+    steps       = []
+    error_count = 0
+
+    for raw in raw_cmds:
+        raw = str(raw).upper().strip()
+        if not raw:
+            continue
+
+        # ── G x,y ──
+        if raw.startswith("G"):
+            try:
+                # Accept "G5,7", "G 5,7", "G 5 7"
+                coords = raw[1:].replace(",", " ").split()
+                gx, gy = int(coords[0]), int(coords[1])
+            except Exception:
+                error_count += 1
+                continue
+
+            path = Pathfinder.find_path(rover.grid, (rover.x, rover.y), (gx, gy))
+            if path is None:
+                _log(f"[Batch] No path to ({gx},{gy})")
+                error_count += 1
+                continue
+
+            nav_cmds = Pathfinder.path_to_commands(path, str(rover.direction))
+            for nc in nav_cmds:
+                if rover.battery.is_dead:
+                    _log("[Batch] Battery dead — navigation aborted")
+                    break
+                if nc == "M":
+                    rover.move_forward()
+                    reached = mission.check_position(rover.x, rover.y)
+                    if reached:
+                        _log(f"[Batch] Waypoint: {reached.name}!")
+                elif nc == "L":
+                    rover.turn_left()
+                elif nc == "R":
+                    rover.turn_right()
+                steps.append({"command": f"G→{nc}", "state": build_state_json()})
+            _log(f"[Batch] Navigated to ({rover.x},{rover.y})")
+
+        # ── M / L / R / S ──
+        elif raw in ("M", "L", "R", "S"):
+            if raw == "M":
+                success = rover.move_forward()
+                if success:
+                    reached = mission.check_position(rover.x, rover.y)
+                    if reached:
+                        _log(f"[Batch] Waypoint: {reached.name}!")
+                else:
+                    _log("[Batch] Move blocked")
+            elif raw == "L":
+                rover.turn_left()
+                _log(f"[Batch] Turned left → {rover.direction}")
+            elif raw == "R":
+                rover.turn_right()
+                _log(f"[Batch] Turned right → {rover.direction}")
+            elif raw == "S":
+                gained = rover.battery.solar_charge()
+                _log(f"[Batch] Solar +{gained}")
+            steps.append({"command": raw, "state": build_state_json()})
+        else:
+            error_count += 1
+
+    summary = {
+        "total_steps":  len(steps),
+        "error_count":  error_count,
+        "final_pos":    f"({rover.x},{rover.y})",
+        "battery_pct":  rover.battery.percentage,
+    }
+    return jsonify({"steps": steps, "final_state": build_state_json(),
+                    "summary": summary})
+
+
+@app.route("/api/batch/template", methods=["GET"])
+def batch_template():
+    """Return a sample batch command file for download."""
+    template = (
+        "# Mars Rover Batch Command File\n"
+        "# ================================\n"
+        "# Commands:\n"
+        "#   M        - Move Forward (drains battery based on terrain)\n"
+        "#   L        - Turn Left 90 degrees\n"
+        "#   R        - Turn Right 90 degrees\n"
+        "#   S        - Solar Charge (restore battery)\n"
+        "#   G x,y    - A* Auto-navigate to coordinates  e.g. G 5,7\n"
+        "#\n"
+        "# Rules:\n"
+        "#   - Commands can be space-separated on one line or one per line\n"
+        "#   - Lines starting with # are comments and are ignored\n"
+        "#   - Blank lines are ignored\n"
+        "#\n"
+        "# ─────────────────────────────────\n"
+        "# Sample Mission Sequence\n"
+        "# ─────────────────────────────────\n"
+        "\n"
+        "# Phase 1: Move north along the edge\n"
+        "M M M\n"
+        "\n"
+        "# Phase 2: Turn east and explore\n"
+        "R M M M L\n"
+        "\n"
+        "# Phase 3: A* auto-navigate to Sample Site Alpha\n"
+        "G 5,7\n"
+        "\n"
+        "# Phase 4: Recharge solar panels\n"
+        "S\n"
+        "\n"
+        "# Phase 5: Head to High Ground\n"
+        "G 9,9\n"
+    )
+    return Response(
+        template,
+        mimetype="text/plain",
+        headers={"Content-Disposition": "attachment; filename=mission_commands.txt"},
+    )
 
 
 # ── Startup ───────────────────────────────────────────────────────────────────
