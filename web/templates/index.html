@@ -98,6 +98,69 @@
         </div>
       </div>
 
+      <!-- Environmental Sensors (collapsible) -->
+      <div class="panel panel-sensors">
+        <div class="panel-header sensor-header-row" id="sensors-toggle" onclick="toggleSensors()">
+          <span class="panel-title">ENVIRONMENTAL SENSORS</span>
+          <span class="sensor-toggle-icon" id="sensors-toggle-icon">&#9660;</span>
+        </div>
+        <div class="sensors-body" id="sensors-body">
+
+          <!-- Surface Temperature -->
+          <div class="sensor-row">
+            <div class="sensor-label-row">
+              <span class="sensor-icon">&#127777;</span>
+              <span class="sensor-name">SURFACE TEMP</span>
+              <span class="sensor-val" id="sen-temp">—°C</span>
+            </div>
+            <div class="sensor-bar-track">
+              <div class="sensor-bar-fill" id="sen-temp-bar"></div>
+            </div>
+            <span class="sensor-sub" id="sen-temp-sub">—</span>
+          </div>
+
+          <!-- Dust Opacity -->
+          <div class="sensor-row">
+            <div class="sensor-label-row">
+              <span class="sensor-icon">&#127752;</span>
+              <span class="sensor-name">DUST OPACITY (τ)</span>
+              <span class="sensor-val" id="sen-dust">—</span>
+            </div>
+            <div class="sensor-bar-track">
+              <div class="sensor-bar-fill" id="sen-dust-bar"></div>
+            </div>
+            <span class="sensor-sub" id="sen-solar-eff">Solar: 100% efficient</span>
+          </div>
+
+          <!-- UV Radiation -->
+          <div class="sensor-row">
+            <div class="sensor-label-row">
+              <span class="sensor-icon">&#9762;</span>
+              <span class="sensor-name">UV RADIATION</span>
+              <span class="sensor-val" id="sen-uv">— UVI</span>
+            </div>
+            <div class="sensor-bar-track">
+              <div class="sensor-bar-fill" id="sen-uv-bar"></div>
+            </div>
+            <span class="sensor-sub" id="sen-uv-sub">—</span>
+          </div>
+
+          <!-- Surface Slope -->
+          <div class="sensor-row">
+            <div class="sensor-label-row">
+              <span class="sensor-icon">&#128207;</span>
+              <span class="sensor-name">SURFACE SLOPE</span>
+              <span class="sensor-val" id="sen-slope">—°</span>
+            </div>
+            <div class="sensor-bar-track">
+              <div class="sensor-bar-fill" id="sen-slope-bar"></div>
+            </div>
+            <span class="sensor-sub" id="sen-slope-sub">—</span>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Waypoints -->
       <div class="panel panel-waypoints">
         <div class="panel-header">

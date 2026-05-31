@@ -345,6 +345,87 @@ function updateMissionName(state) {
   if (el) el.textContent = state.mission.name || "Mars Mission";
 }
 
+// ── Environmental Sensors ───────────────────────────────────────────────────
+
+function updateSensors(state) {
+  const s = state.sensors;
+  if (!s) return;
+
+  // ── Surface Temperature (-80 to +20 °C range) ──
+  const temp     = s.surface_temp;
+  const tempNorm = Math.max(5, ((temp + 80) / 100) * 100); // map -80..+20 -> 0..100%
+  const tempColor = temp < -50 ? "#0ea5e9"        // ice blue
+                  : temp < -10 ? "#818cf8"        // cool violet
+                  : temp <   5 ? "#f59e0b"        // warm amber
+                  : "#f97316";                     // hot orange
+  const tempLabel = temp < -50 ? "Extreme Cold"
+                  : temp < -10 ? "Cold"
+                  : temp <   5 ? "Mild"
+                  : "Warm";
+  _setSensor("sen-temp",     `${temp}°C`,     tempNorm, tempColor);
+  document.getElementById("sen-temp-sub").textContent = `${tempLabel} — ${s.terrain} terrain`;
+
+  // ── Dust Opacity (τ: 0.1 – 3.0) ──
+  const tau      = s.dust_opacity;
+  const dustNorm = Math.max(5, (tau / 3.0) * 100);
+  const dustColor = tau < 0.5  ? "#22c55e"   // clear
+                  : tau < 1.0  ? "#a3e635"   // light
+                  : tau < 1.5  ? "#f59e0b"   // moderate
+                  : "#ef4444";               // heavy
+  const solEff   = 100 - (s.solar_reduction_pct || 0);
+  _setSensor("sen-dust", `τ = ${tau}`, dustNorm, dustColor);
+  // Warn if dust is high
+  const dustEl = document.getElementById("sen-dust");
+  dustEl.classList.toggle("sensor-dust-warn", tau >= 1.5);
+  document.getElementById("sen-solar-eff").textContent =
+    `Solar: ${solEff.toFixed(0)}% efficient${tau >= 1.5 ? " ⚠ Dust storm" : ""}`;
+
+  // ── UV Radiation Index (0.5 – 5.0 UVI) ──
+  const uv      = s.uv_index;
+  const uvNorm  = Math.max(5, (uv / 5.0) * 100);
+  const uvColor = uv < 2.0 ? "#22c55e"
+                : uv < 3.5 ? "#f59e0b"
+                : "#ef4444";
+  const uvLabel = uv < 2.0 ? "Low exposure"
+                : uv < 3.5 ? "Moderate — shield recommended"
+                : "High — maximum shielding";
+  _setSensor("sen-uv",   `${uv} UVI`, uvNorm, uvColor);
+  document.getElementById("sen-uv-sub").textContent = uvLabel;
+
+  // ── Surface Slope (0 – 25° range) ──
+  const slope      = s.slope_deg;
+  const slopeNorm  = Math.max(5, (slope / 25) * 100);
+  const slopeColor = slope < 5  ? "#22c55e"
+                   : slope < 12 ? "#f59e0b"
+                   : "#ef4444";
+  const slopeLabel = slope < 5  ? "Flat surface"
+                   : slope < 12 ? "Moderate grade"
+                   : "Steep terrain — high battery cost";
+  _setSensor("sen-slope", `${slope}°`, slopeNorm, slopeColor);
+  document.getElementById("sen-slope-sub").textContent = slopeLabel;
+}
+
+/** Helper: update a sensor value + bar in one call. */
+function _setSensor(valId, text, barPct, color) {
+  const valEl = document.getElementById(valId);
+  const barEl = document.getElementById(valId + "-bar");
+  if (valEl) valEl.textContent   = text;
+  if (barEl) {
+    barEl.style.width      = `${barPct}%`;
+    barEl.style.background = color;
+    barEl.style.color      = color;  // drives box-shadow currentColor
+  }
+}
+
+/** Toggle the sensor panel open/closed. */
+function toggleSensors() {
+  const body = document.getElementById("sensors-body");
+  const icon = document.getElementById("sensors-toggle-icon");
+  if (!body) return;
+  const isHidden = body.classList.toggle("hidden");
+  icon.classList.toggle("collapsed", isHidden);
+}
+
 // ── Master render ─────────────────────────────────────────────────────────
 
 let gridBuilt = false;
@@ -363,6 +444,7 @@ function render(state) {
   updateWaypoints(state);
   updateLog(state);
   updateMissionName(state);
+  updateSensors(state);
   setStatus(true);
 
   if (state.error) showError(state.error);

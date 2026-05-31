@@ -1110,3 +1110,105 @@ body {
 }
 
 .progress-text { font-size: 10px; color: var(--text-secondary); }
+
+/* ══ ENVIRONMENTAL SENSORS PANEL ════════════════════════════════════════════ */
+
+.panel-sensors { padding: 0; overflow: hidden; }
+
+.sensor-header-row {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sensor-toggle-icon {
+  font-size: 10px;
+  color: var(--text-secondary);
+  transition: transform var(--transition);
+}
+
+.sensor-toggle-icon.collapsed { transform: rotate(-90deg); }
+
+/* Panel body — starts open */
+.sensors-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  max-height: 400px;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.sensors-body.hidden {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Individual sensor row */
+.sensor-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sensor-label-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sensor-icon { font-size: 12px; }
+
+.sensor-name {
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.sensor-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Bar */
+.sensor-bar-track {
+  height: 5px;
+  background: var(--bg-cell);
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.sensor-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.35s ease, background 0.35s ease;
+  box-shadow: 0 0 4px currentColor;
+}
+
+/* Sub-label below bar */
+.sensor-sub {
+  font-size: 9px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* Dust warning pulse when τ is high */
+@keyframes dust-warning {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.sensor-dust-warn { animation: dust-warning 1.2s ease-in-out infinite; color: #f97316; }

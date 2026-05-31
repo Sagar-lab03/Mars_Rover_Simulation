@@ -40,6 +40,7 @@
         <span class="mission-count" id="mission-count">Loading...</span>
       </div>
       <div class="selector-right">
+        <button class="btn btn-replay hidden" id="btn-replay" onclick="startReplay()">&#9654; REPLAY</button>
         <button class="btn btn-refresh" onclick="refreshMissions()">&#8635; Refresh</button>
         <a href="/" class="btn btn-go-control">Go to Mission Control</a>
       </div>
@@ -155,13 +156,112 @@
                 <th>Cells</th>
                 <th>Energy Used</th>
                 <th>Battery Left</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="missions-tbody"></tbody>
           </table>
         </div>
       </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           MISSION REPLAY PANEL
+           ═══════════════════════════════════════════════ -->
+      <div class="replay-panel hidden" id="replay-panel">
+
+        <!-- Replay header -->
+        <div class="replay-header">
+          <div class="replay-header-left">
+            <span class="replay-badge">&#9654; REPLAY</span>
+            <span class="replay-mission-name" id="replay-mission-name">—</span>
+          </div>
+          <div class="replay-header-right">
+            <span class="replay-step-badge" id="replay-step-badge">Frame 0 / 0</span>
+            <button class="replay-close" onclick="closeReplay()">&#10005;</button>
+          </div>
+        </div>
+
+        <!-- Replay body: grid left, telemetry right -->
+        <div class="replay-body">
+
+          <!-- Grid -->
+          <div class="replay-grid-wrap">
+            <div id="replay-grid" class="replay-grid"></div>
+          </div>
+
+          <!-- Live telemetry sidebar -->
+          <div class="replay-telemetry">
+
+            <!-- Command label -->
+            <div class="rt-row">
+              <span class="rt-label">COMMAND</span>
+              <span class="rt-command" id="rt-cmd">—</span>
+            </div>
+
+            <!-- Position -->
+            <div class="rt-row">
+              <span class="rt-label">POSITION</span>
+              <span class="rt-value" id="rt-pos">(0, 0)</span>
+            </div>
+
+            <!-- Direction -->
+            <div class="rt-row">
+              <span class="rt-label">DIRECTION</span>
+              <span class="rt-value" id="rt-dir">—</span>
+            </div>
+
+            <!-- Battery bar -->
+            <div class="rt-battery-section">
+              <div class="rt-battery-header">
+                <span class="rt-label">BATTERY</span>
+                <span class="rt-value" id="rt-bat-pct">100%</span>
+              </div>
+              <div class="rt-battery-track">
+                <div class="rt-battery-fill" id="rt-bat-fill"></div>
+              </div>
+              <div class="rt-battery-sub" id="rt-bat-sub">100 / 100 units</div>
+            </div>
+
+            <!-- Event type -->
+            <div class="rt-row">
+              <span class="rt-label">EVENT</span>
+              <span class="rt-event" id="rt-event">—</span>
+            </div>
+
+            <!-- Waypoints reached so far -->
+            <div class="rt-waypoints" id="rt-waypoints"></div>
+
+          </div>
+        </div>
+
+        <!-- Timeline scrubber -->
+        <div class="replay-scrubber-wrap">
+          <span class="scrubber-label">0</span>
+          <input type="range" id="replay-scrubber" class="replay-scrubber"
+            min="0" value="0" oninput="scrubReplay(this.value)" />
+          <span class="scrubber-label" id="scrubber-max">0</span>
+        </div>
+
+        <!-- Playback controls -->
+        <div class="replay-controls">
+          <button class="rctl-btn" onclick="replayGoStart()" title="Go to start">&#9198;</button>
+          <button class="rctl-btn" onclick="replayStepBack()" title="Step back">&#9204;</button>
+          <button class="rctl-btn rctl-play" id="replay-play-btn"
+            onclick="toggleReplayPlay()" title="Play / Pause">&#9654;</button>
+          <button class="rctl-btn" onclick="replayStepForward()" title="Step forward">&#9205;</button>
+          <button class="rctl-btn" onclick="replayGoEnd()" title="Go to end">&#9197;</button>
+
+          <div class="rctl-speed">
+            <span class="speed-label">Speed</span>
+            <input type="range" id="replay-speed" class="speed-slider"
+              min="100" max="2000" step="100" value="600"
+              oninput="updateReplaySpeed(this.value)" />
+            <span class="speed-val" id="replay-speed-val">600ms</span>
+          </div>
+        </div>
+
+      </div>
+      <!-- end replay-panel -->
 
     </div>
   </main>

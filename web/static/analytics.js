@@ -365,7 +365,11 @@ function renderMissionsTable(missions) {
       <td>${fmt(m.cells_visited)}</td>
       <td>${fmt(m.energy_consumed)} u</td>
       <td><span class="bat-pct ${cls}">${fmt(pct, 1)}%</span></td>
-      <td><button class="btn-load-row" onclick="selectMission('${m.filename}')">Load</button></td>
+      <td style="display:flex;gap:5px">
+        <button class="btn-load-row" onclick="selectMission('${m.filename}')">Load</button>
+        <button class="btn-load-row" style="border-color:#e879f9;color:#e879f9"
+          onclick="selectAndReplay('${m.filename}')">&#9654;</button>
+      </td>
     `;
     tbody.appendChild(tr);
   }
@@ -376,8 +380,316 @@ function selectMission(filename) {
   loadMission(filename);
 }
 
+function selectAndReplay(filename) {
+  selectMission(filename);
+  // Small delay so loadMission can fetch and store data
+  setTimeout(() => startReplay(), 600);
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
   refreshMissions();
 });
+
+
+// ════════════════════════════════════════════════════════════════
+//  MISSION REPLAY ENGINE
+// ════════════════════════════════════════════════════════════════
+
+let replayData   = null;   // full mission detail from API
+let replayFrames = [];     // one frame per telemetry event
+let replayCursor = 0;      // current frame index
+let replayTimer  = null;   // setInterval handle
+let replaySpeed  = 600;    // ms per frame
+
+const DIR_ARROWS_R = { North: "▲", East: "▶", South: "▼", West: "◄" };
+
+/**
+ * Build a flat array of frames from the telemetry events.
+ * Each frame = { command, x, y, direction, battery, eventType, pathSoFar, waypointsDone }
+ */
+function buildReplayFrames(data) {
+  const frames   = [];
+  const pathSoFar = [];
+  const wpDone    = new Set();
+
+  for (const ev of data.events) {
+    const t    = ev.type;
+    const d    = ev.data || {};
+
+    if (t === "mission_start") {
+      const pos = d.position || {};
+      pathSoFar.push([pos.x, pos.y]);
+      frames.push({
+        command:     "START",
+        eventType:   "mission_start",
+        x:           pos.x ?? 0,
+        y:           pos.y ?? 0,
+        direction:   d.direction || "North",
+        battery:     d.battery || {},
+        pathSoFar:   [...pathSoFar],
+        waypointsDone: new Set(wpDone),
+      });
+
+    } else if (t === "command") {
+      const rs  = d.rover_status || {};
+      const pos = rs.position || {};
+      const ms  = d.mission_status || {};
+
+      // Track waypoints reached up to this frame
+      for (const wp of (ms.waypoints || [])) {
+        if (wp.reached) wpDone.add(wp.name);
+      }
+
+      if (d.command === "M") pathSoFar.push([pos.x, pos.y]);
+
+      frames.push({
+        command:     d.command || "?",
+        eventType:   "command",
+        x:           pos.x ?? 0,
+        y:           pos.y ?? 0,
+        direction:   rs.direction || "North",
+        battery:     rs.battery || {},
+        pathSoFar:   [...pathSoFar],
+        waypointsDone: new Set(wpDone),
+        waypoints:   ms.waypoints || [],
+      });
+
+    } else if (t === "solar_charge") {
+      const last = frames[frames.length - 1] || {};
+      frames.push({
+        command:     "S",
+        eventType:   "solar_charge",
+        x:           last.x ?? 0,
+        y:           last.y ?? 0,
+        direction:   last.direction || "North",
+        battery:     d.battery || {},
+        pathSoFar:   [...pathSoFar],
+        waypointsDone: new Set(wpDone),
+        waypoints:   last.waypoints || [],
+      });
+    }
+  }
+  return frames;
+}
+
+/** Build the replay grid DOM (called once per replay start). */
+function buildReplayGrid(width, height) {
+  const grid = document.getElementById("replay-grid");
+  grid.style.gridTemplateColumns = `repeat(${width}, 38px)`;
+  grid.innerHTML = "";
+  for (let y = height - 1; y >= 0; y--) {
+    for (let x = 0; x < width; x++) {
+      const cell = document.createElement("div");
+      cell.className = "rcell";
+      cell.id = `rc-${x}-${y}`;
+      // Apply terrain
+      const tc = (replayData.terrain_cells || {})[`${x},${y}`] || "plain";
+      if (tc !== "plain") cell.classList.add(`terrain-${tc}`);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+/** Render one frame onto the replay grid + telemetry sidebar. */
+function renderReplayFrame(idx) {
+  if (!replayFrames.length || !replayData) return;
+  idx = Math.max(0, Math.min(idx, replayFrames.length - 1));
+  replayCursor = idx;
+
+  const frame     = replayFrames[idx];
+  const { width, height } = replayData.grid;
+  const obstacleSet = new Set((replayData.obstacles || []).map(([ox,oy]) => `${ox},${oy}`));
+  const pathSet     = new Set((frame.pathSoFar || []).map(([px,py]) => `${px},${py}`));
+
+  // Waypoint map from events (all waypoints in mission)
+  const allWaypoints = frame.waypoints || [];
+  const wpMap = {};
+  for (const wp of allWaypoints) {
+    wpMap[`${wp.position[0]},${wp.position[1]}`] = wp;
+  }
+
+  // Update every cell
+  for (let y = height - 1; y >= 0; y--) {
+    for (let x = 0; x < width; x++) {
+      const key  = `${x},${y}`;
+      const cell = document.getElementById(`rc-${x}-${y}`);
+      if (!cell) continue;
+
+      // Reset dynamic classes (keep terrain)
+      cell.classList.remove("rc-obstacle","rc-visited","rc-rover",
+                            "rc-waypoint-pending","rc-waypoint-reached");
+      cell.innerHTML = "";
+
+      if (obstacleSet.has(key)) {
+        cell.classList.add("rc-obstacle");
+        const s = document.createElement("span");
+        s.className = "obs-glyph"; s.textContent = "✕";
+        cell.appendChild(s);
+        continue;
+      }
+
+      // Rover
+      if (x === frame.x && y === frame.y) {
+        cell.classList.add("rc-rover");
+        const s = document.createElement("span");
+        s.className = "rover-glyph";
+        s.textContent = DIR_ARROWS_R[frame.direction] || "▶";
+        cell.appendChild(s);
+        continue;
+      }
+
+      // Waypoints
+      if (wpMap[key]) {
+        const wp = wpMap[key];
+        const reached = frame.waypointsDone.has(wp.name);
+        cell.classList.add(reached ? "rc-waypoint-reached" : "rc-waypoint-pending");
+        const s = document.createElement("span");
+        s.className = "wp-glyph";
+        s.textContent = reached ? "★" : "◎";
+        cell.appendChild(s);
+        continue;
+      }
+
+      // Path trail
+      if (pathSet.has(key)) {
+        cell.classList.add("rc-visited");
+        const dot = document.createElement("div");
+        dot.className = "trail-dot";
+        cell.appendChild(dot);
+      }
+    }
+  }
+
+  // Update telemetry sidebar
+  const bat = frame.battery || {};
+  const pct = bat.percentage ?? 100;
+  const batColor = pct > 60 ? "#22c55e" : pct > 30 ? "#f59e0b" : "#ef4444";
+
+  const cmdLabels = { M:"MOVE", L:"TURN L", R:"TURN R", S:"SOLAR", START:"START" };
+  document.getElementById("rt-cmd").textContent   = cmdLabels[frame.command] || frame.command;
+  document.getElementById("rt-pos").textContent   = `(${frame.x}, ${frame.y})`;
+  document.getElementById("rt-dir").textContent   = frame.direction;
+  document.getElementById("rt-bat-pct").textContent = `${pct.toFixed(1)}%`;
+  document.getElementById("rt-bat-sub").textContent =
+    `${bat.charge ?? "?"} / ${bat.max_charge ?? "?"} units`;
+  document.getElementById("rt-event").textContent  = frame.eventType.replace("_"," ");
+
+  const fill = document.getElementById("rt-bat-fill");
+  fill.style.width      = `${pct}%`;
+  fill.style.background = batColor;
+
+  // Waypoints list
+  const wpList = document.getElementById("rt-waypoints");
+  wpList.innerHTML = "";
+  for (const wp of (frame.waypoints || [])) {
+    const done = frame.waypointsDone.has(wp.name);
+    const item = document.createElement("div");
+    item.className = `rt-wp-item ${done ? "rt-wp-done" : "rt-wp-todo"}`;
+    item.innerHTML = `<span>${done ? "✔" : "○"}</span> ${wp.name}`;
+    wpList.appendChild(item);
+  }
+
+  // Scrubber + step badge
+  document.getElementById("replay-scrubber").value = idx;
+  document.getElementById("replay-step-badge").textContent =
+    `Frame ${idx + 1} / ${replayFrames.length}`;
+}
+
+// ── Replay controls ───────────────────────────────────────────────────────────
+
+function startReplay() {
+  if (!replayData) return;
+
+  // Stop any running playback
+  stopReplayTimer();
+
+  // Build frames
+  replayFrames = buildReplayFrames(replayData);
+  replayCursor = 0;
+
+  if (replayFrames.length === 0) return;
+
+  // Show panel, set title
+  const panel = document.getElementById("replay-panel");
+  panel.classList.remove("hidden");
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById("replay-mission-name").textContent =
+    replayData.mission_name || "Unknown";
+
+  // Configure scrubber
+  const scrubber = document.getElementById("replay-scrubber");
+  scrubber.max   = replayFrames.length - 1;
+  scrubber.value = 0;
+  document.getElementById("scrubber-max").textContent = replayFrames.length - 1;
+
+  // Build grid DOM
+  buildReplayGrid(replayData.grid.width, replayData.grid.height);
+
+  // Render first frame
+  renderReplayFrame(0);
+}
+
+function closeReplay() {
+  stopReplayTimer();
+  document.getElementById("replay-panel").classList.add("hidden");
+  replayFrames = [];
+  replayCursor = 0;
+}
+
+function toggleReplayPlay() {
+  const btn = document.getElementById("replay-play-btn");
+  if (replayTimer) {
+    stopReplayTimer();
+    btn.innerHTML = "&#9654;";
+    btn.classList.remove("playing");
+  } else {
+    btn.innerHTML = "&#9646;&#9646;";
+    btn.classList.add("playing");
+    replayTimer = setInterval(() => {
+      if (replayCursor >= replayFrames.length - 1) {
+        stopReplayTimer();
+        btn.innerHTML = "&#9654;";
+        btn.classList.remove("playing");
+        return;
+      }
+      renderReplayFrame(replayCursor + 1);
+    }, replaySpeed);
+  }
+}
+
+function stopReplayTimer() {
+  if (replayTimer) { clearInterval(replayTimer); replayTimer = null; }
+}
+
+function replayStepForward()  { stopReplayTimer(); renderReplayFrame(replayCursor + 1); }
+function replayStepBack()     { stopReplayTimer(); renderReplayFrame(replayCursor - 1); }
+function replayGoStart()      { stopReplayTimer(); renderReplayFrame(0); }
+function replayGoEnd()        { stopReplayTimer(); renderReplayFrame(replayFrames.length - 1); }
+function scrubReplay(val)     { stopReplayTimer(); renderReplayFrame(parseInt(val, 10)); }
+
+function updateReplaySpeed(val) {
+  replaySpeed = parseInt(val, 10);
+  document.getElementById("replay-speed-val").textContent = `${val}ms`;
+  // Restart timer if playing
+  if (replayTimer) { stopReplayTimer(); toggleReplayPlay(); }
+}
+
+// ── Hook loadMission to store replayData and show/hide REPLAY button ──────────
+
+const _origLoadMission = loadMission;
+loadMission = async function(filename) {
+  const result = await _origLoadMission.call(this, filename);
+  // After load, stash the data for replay
+  if (filename) {
+    const data = await apiFetch(`/api/analytics/mission/${encodeURIComponent(filename)}`);
+    if (data && !data.error) {
+      replayData = data;
+      document.getElementById("btn-replay").classList.remove("hidden");
+    }
+  } else {
+    document.getElementById("btn-replay").classList.add("hidden");
+  }
+  return result;
+};
