@@ -62,7 +62,7 @@ This project was built in three deliberate phases, each adding a meaningful laye
 - **Mission waypoints** — named science targets tracked and marked on the grid
 - **38 unit tests** covering all Phase 2 systems
 
-### Phase 3 — Web Visualization & Analytics
+### Phase 3 — Web Visualization, Analytics & Sensor Systems
 - **Interactive browser UI** — full mission control dashboard at `http://localhost:5000`
 - **Live CSS grid** — terrain colors, glowing rover arrow, obstacles, waypoint beacons, path trail
 - **Pulsing waypoint beacons** — animated landing zone rings; glowing "BASE ✦" marker when reached
@@ -71,7 +71,10 @@ This project was built in three deliberate phases, each adding a meaningful laye
 - **Click-to-navigate** — click any grid cell to auto A\* navigate there
 - **Batch command runner** — type commands or upload a `.txt` file; step-through animation mode
 - **Analytics dashboard** — Chart.js battery timeline, command distribution, terrain coverage, path heatmap
-- **Persistent telemetry** — every web session auto-saved to `telemetry/` as a JSON file
+- **Mission Replay** — load any saved mission and watch it animate step-by-step with full playback controls
+- **Environmental Sensor Dashboard** — live REMS-style gauges: surface temperature, dust opacity (τ), UV index, slope
+- **Dust-aware solar charging** — high atmospheric τ reduces solar yield by up to 50%
+- **Persistent telemetry** — every web session auto-saved to `telemetry/` as a JSON file with sensor snapshots
 - **Navigation between pages** — Mission Control ↔ Analytics via top nav
 
 ---
@@ -195,8 +198,38 @@ Open **http://localhost:5000/analytics** or click the **Analytics** nav link.
 - Select any saved mission from the dropdown
 - View battery timeline, command mix, terrain coverage, and path heatmap
 - Compare all missions in the history table
+- Click **▶ REPLAY** (or the ▶ button on any table row) to open the Mission Replay panel
 
 > Telemetry is saved automatically after every command, navigation, and batch run. Clicking **Refresh** fetches the latest records including your current session.
+
+#### Mission Replay
+
+Select any mission → click **▶ REPLAY** in the selector bar (or the ▶ button in any table row).
+
+| Control | Action |
+|---|---|
+| `⏮` | Jump to mission start |
+| `◀` | Step back one frame |
+| `▶ / ⏸` | Play / Pause auto-playback |
+| `▶` | Step forward one frame |
+| `⏭` | Jump to mission end |
+| Scrubber bar | Drag to any frame instantly |
+| Speed slider | 100 ms (fast) → 2000 ms (slow) |
+
+The replay grid shows terrain, obstacles, rover arrow, path trail building progressively, and waypoints lighting up the moment they are reached. The live telemetry sidebar shows battery, position, direction, and waypoint status for each frame.
+
+#### Environmental Sensor Dashboard
+
+The **ENVIRONMENTAL SENSORS** panel appears in the Mission Control sidebar between the battery panel and waypoints. Click the header to collapse or expand it.
+
+| Sensor | What it measures | Real parallel |
+|---|---|---|
+| 🌡 **Surface Temp** | Terrain-based temperature (−80°C ice → +15°C sand) ± 3°C noise | Curiosity REMS thermometer |
+| 🌪 **Dust Opacity (τ)** | Atmospheric dust — higher toward grid edges (dust storm zones) | Daily τ readings from Mars weather reports |
+| ☢ **UV Radiation** | UV index increases with Y position (higher ground = thinner atmosphere) | Curiosity REMS UV sensor |
+| 📐 **Surface Slope** | Terrain-based slope estimate (Rock ~18°, Plain ~2°) ± 1.5° noise | IMU tilt sensor on Perseverance |
+
+**Dust effect on solar charging:** When τ ≥ 0.5, the `S` (Solar Charge) command yields less energy — linearly reduced up to **−50%** at τ = 2.5. The mission log shows exactly how much dust reduced the yield (e.g. `Solar charge (τ=1.8, -32% dust) — +3 units`).
 
 ---
 
@@ -283,7 +316,7 @@ Phase 1 Core  (rover.py)
 
 ### Telemetry Persistence
 
-Every web session generates one `telemetry/mission_YYYYMMDD_HHMMSS.json` file that follows the exact same schema as the terminal-generated files:
+Every web session generates one `telemetry/mission_YYYYMMDD_HHMMSS.json` file that follows the exact same schema as the terminal-generated files. Sensor readings are embedded in every event:
 
 ```json
 {
@@ -291,11 +324,22 @@ Every web session generates one `telemetry/mission_YYYYMMDD_HHMMSS.json` file th
   "start_time":   "2026-05-28T19:00:00",
   "end_time":     "2026-05-28T19:15:43",
   "final_status": { "position": {}, "direction": "", "battery": {} },
-  "path_history": [[0,0], [0,1], ...],
+  "path_history": [[0,0], [0,1], "..."],
   "events": [
-    { "timestamp": "...", "type": "mission_start", "data": {} },
-    { "timestamp": "...", "type": "command",       "data": { "command": "M", "rover_status": {} } },
-    { "timestamp": "...", "type": "solar_charge",  "data": { "gained": 5,   "battery": {} } }
+    { "timestamp": "...", "type": "mission_start", "data": { "battery": {}, "position": {} } },
+    { "timestamp": "...", "type": "command", "data": {
+        "command": "M",
+        "rover_status": {},
+        "mission_status": {},
+        "sensors": {
+          "surface_temp": -22.4,
+          "dust_opacity": 0.87,
+          "uv_index": 2.1,
+          "slope_deg": 3.2,
+          "solar_reduction_pct": 9.3
+        }
+    }},
+    { "timestamp": "...", "type": "solar_charge", "data": { "gained": 3, "battery": {}, "sensors": {} } }
   ]
 }
 ```
@@ -315,10 +359,12 @@ Grid          → grid dimensions + obstacle tracking
 Rover         → position, direction, path history
  └── RoverV2  → + battery + terrain-aware movement (Template Method)
 
-Battery       → charge level, drain, solar recharge
+Battery       → charge level, drain, dust-aware solar recharge
 TerrainMap    → per-cell terrain type and battery cost mapping
 Mission       → waypoint list + completion tracking
 Pathfinder    → A* search with Manhattan heuristic (static methods)
+SensorSimulator → REMS-style environmental readings (temperature,
+                  dust opacity, UV index, slope) per grid position
 ```
 
 ---
@@ -415,6 +461,9 @@ pytest tests/test_phase2.py -v
 > - **Waypoints** — Mission controllers uplink daily drive plans with named science target coordinates
 > - **A\* pathfinding** — AutoNav uses stereo-vision + graph search to autonomously avoid hazards
 > - **Telemetry** — Every rover sends continuous status packets; ground teams replay sessions for analysis
+> - **REMS sensors** — Curiosity's weather station measures temperature, UV, and atmospheric dust (τ) daily
+> - **Dust storms** — High τ events reduce solar panel efficiency; NASA plans conservative power budgets around them
+> - **Mission replay** — JPL engineers replay telemetry recordings to diagnose rover behaviour and plan corrections
 
 ---
 
