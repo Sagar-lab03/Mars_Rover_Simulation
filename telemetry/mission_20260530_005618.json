@@ -1,0 +1,2015 @@
+{
+  "mission_name": "Mars Exploration Mission",
+  "start_time": "2026-05-30T00:56:18.469513",
+  "end_time": "2026-05-30T00:57:43.134031",
+  "final_status": {
+    "position": {
+      "x": 8,
+      "y": 2
+    },
+    "direction": "South",
+    "commands_executed": 30,
+    "cells_visited": 26,
+    "battery": {
+      "charge": 34,
+      "max_charge": 100,
+      "percentage": 34.0,
+      "status": "Low",
+      "total_consumed": 126,
+      "total_recharged": 60
+    }
+  },
+  "path_history": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      0,
+      9
+    ],
+    [
+      1,
+      9
+    ],
+    [
+      2,
+      9
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      9
+    ],
+    [
+      5,
+      9
+    ],
+    [
+      6,
+      9
+    ],
+    [
+      7,
+      9
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      9,
+      9
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      8,
+      8
+    ],
+    [
+      8,
+      7
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      8,
+      5
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      8,
+      3
+    ],
+    [
+      8,
+      2
+    ]
+  ],
+  "events": [
+    {
+      "timestamp": "2026-05-30T00:56:18.469513",
+      "type": "mission_start",
+      "data": {
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "direction": "North",
+        "commands_executed": 0,
+        "cells_visited": 1,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 1
+          },
+          "direction": "North",
+          "commands_executed": 1,
+          "cells_visited": 2,
+          "battery": {
+            "charge": 95,
+            "max_charge": 100,
+            "percentage": 95.0,
+            "status": "Good",
+            "total_consumed": 5,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 2
+          },
+          "direction": "North",
+          "commands_executed": 2,
+          "cells_visited": 3,
+          "battery": {
+            "charge": 90,
+            "max_charge": 100,
+            "percentage": 90.0,
+            "status": "Good",
+            "total_consumed": 10,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 3
+          },
+          "direction": "North",
+          "commands_executed": 3,
+          "cells_visited": 4,
+          "battery": {
+            "charge": 85,
+            "max_charge": 100,
+            "percentage": 85.0,
+            "status": "Good",
+            "total_consumed": 15,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 4
+          },
+          "direction": "North",
+          "commands_executed": 4,
+          "cells_visited": 5,
+          "battery": {
+            "charge": 80,
+            "max_charge": 100,
+            "percentage": 80.0,
+            "status": "Good",
+            "total_consumed": 20,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 5
+          },
+          "direction": "North",
+          "commands_executed": 5,
+          "cells_visited": 6,
+          "battery": {
+            "charge": 77,
+            "max_charge": 100,
+            "percentage": 77.0,
+            "status": "Good",
+            "total_consumed": 23,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 6
+          },
+          "direction": "North",
+          "commands_executed": 6,
+          "cells_visited": 7,
+          "battery": {
+            "charge": 74,
+            "max_charge": 100,
+            "percentage": 74.0,
+            "status": "Good",
+            "total_consumed": 26,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 7
+          },
+          "direction": "North",
+          "commands_executed": 7,
+          "cells_visited": 8,
+          "battery": {
+            "charge": 69,
+            "max_charge": 100,
+            "percentage": 69.0,
+            "status": "Good",
+            "total_consumed": 31,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 8
+          },
+          "direction": "North",
+          "commands_executed": 8,
+          "cells_visited": 9,
+          "battery": {
+            "charge": 64,
+            "max_charge": 100,
+            "percentage": 64.0,
+            "status": "Good",
+            "total_consumed": 36,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 9
+          },
+          "direction": "North",
+          "commands_executed": 9,
+          "cells_visited": 10,
+          "battery": {
+            "charge": 59,
+            "max_charge": 100,
+            "percentage": 59.0,
+            "status": "Low",
+            "total_consumed": 41,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "R",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 10,
+          "cells_visited": 10,
+          "battery": {
+            "charge": 59,
+            "max_charge": 100,
+            "percentage": 59.0,
+            "status": "Low",
+            "total_consumed": 41,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 11,
+          "cells_visited": 11,
+          "battery": {
+            "charge": 54,
+            "max_charge": 100,
+            "percentage": 54.0,
+            "status": "Low",
+            "total_consumed": 46,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 12,
+          "cells_visited": 12,
+          "battery": {
+            "charge": 49,
+            "max_charge": 100,
+            "percentage": 49.0,
+            "status": "Low",
+            "total_consumed": 51,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 13,
+          "cells_visited": 13,
+          "battery": {
+            "charge": 44,
+            "max_charge": 100,
+            "percentage": 44.0,
+            "status": "Low",
+            "total_consumed": 56,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 14,
+          "cells_visited": 14,
+          "battery": {
+            "charge": 39,
+            "max_charge": 100,
+            "percentage": 39.0,
+            "status": "Low",
+            "total_consumed": 61,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 5,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 15,
+          "cells_visited": 15,
+          "battery": {
+            "charge": 34,
+            "max_charge": 100,
+            "percentage": 34.0,
+            "status": "Low",
+            "total_consumed": 66,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 6,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 16,
+          "cells_visited": 16,
+          "battery": {
+            "charge": 29,
+            "max_charge": 100,
+            "percentage": 29.0,
+            "status": "Critical",
+            "total_consumed": 71,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 7,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 17,
+          "cells_visited": 17,
+          "battery": {
+            "charge": 24,
+            "max_charge": 100,
+            "percentage": 24.0,
+            "status": "Critical",
+            "total_consumed": 76,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 18,
+          "cells_visited": 18,
+          "battery": {
+            "charge": 19,
+            "max_charge": 100,
+            "percentage": 19.0,
+            "status": "Critical",
+            "total_consumed": 81,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:28.166557",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 9,
+            "y": 9
+          },
+          "direction": "East",
+          "commands_executed": 19,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 14,
+            "max_charge": 100,
+            "percentage": 14.0,
+            "status": "Critical",
+            "total_consumed": 86,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:40.855845",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 19,
+          "max_charge": 100,
+          "percentage": 19.0,
+          "status": "Critical",
+          "total_consumed": 86,
+          "total_recharged": 5
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:41.647749",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 24,
+          "max_charge": 100,
+          "percentage": 24.0,
+          "status": "Critical",
+          "total_consumed": 86,
+          "total_recharged": 10
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:42.347728",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 29,
+          "max_charge": 100,
+          "percentage": 29.0,
+          "status": "Critical",
+          "total_consumed": 86,
+          "total_recharged": 15
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:43.584727",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 34,
+          "max_charge": 100,
+          "percentage": 34.0,
+          "status": "Low",
+          "total_consumed": 86,
+          "total_recharged": 20
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:44.355824",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 39,
+          "max_charge": 100,
+          "percentage": 39.0,
+          "status": "Low",
+          "total_consumed": 86,
+          "total_recharged": 25
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:45.835965",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 44,
+          "max_charge": 100,
+          "percentage": 44.0,
+          "status": "Low",
+          "total_consumed": 86,
+          "total_recharged": 30
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:46.456012",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 49,
+          "max_charge": 100,
+          "percentage": 49.0,
+          "status": "Low",
+          "total_consumed": 86,
+          "total_recharged": 35
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:47.588765",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 54,
+          "max_charge": 100,
+          "percentage": 54.0,
+          "status": "Low",
+          "total_consumed": 86,
+          "total_recharged": 40
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:48.080764",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 59,
+          "max_charge": 100,
+          "percentage": 59.0,
+          "status": "Low",
+          "total_consumed": 86,
+          "total_recharged": 45
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:50.410097",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 64,
+          "max_charge": 100,
+          "percentage": 64.0,
+          "status": "Good",
+          "total_consumed": 86,
+          "total_recharged": 50
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:51.662565",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 69,
+          "max_charge": 100,
+          "percentage": 69.0,
+          "status": "Good",
+          "total_consumed": 86,
+          "total_recharged": 55
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:56:52.995344",
+      "type": "solar_charge",
+      "data": {
+        "gained": 5,
+        "battery": {
+          "charge": 74,
+          "max_charge": 100,
+          "percentage": 74.0,
+          "status": "Good",
+          "total_consumed": 86,
+          "total_recharged": 60
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 9,
+            "y": 9
+          },
+          "direction": "North",
+          "commands_executed": 20,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 74,
+            "max_charge": 100,
+            "percentage": 74.0,
+            "status": "Good",
+            "total_consumed": 86,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 9,
+            "y": 9
+          },
+          "direction": "West",
+          "commands_executed": 21,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 74,
+            "max_charge": 100,
+            "percentage": 74.0,
+            "status": "Good",
+            "total_consumed": 86,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 9
+          },
+          "direction": "West",
+          "commands_executed": 22,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 69,
+            "max_charge": 100,
+            "percentage": 69.0,
+            "status": "Good",
+            "total_consumed": 91,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 9
+          },
+          "direction": "South",
+          "commands_executed": 23,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 69,
+            "max_charge": 100,
+            "percentage": 69.0,
+            "status": "Good",
+            "total_consumed": 91,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 8
+          },
+          "direction": "South",
+          "commands_executed": 24,
+          "cells_visited": 20,
+          "battery": {
+            "charge": 64,
+            "max_charge": 100,
+            "percentage": 64.0,
+            "status": "Good",
+            "total_consumed": 96,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 7
+          },
+          "direction": "South",
+          "commands_executed": 25,
+          "cells_visited": 21,
+          "battery": {
+            "charge": 59,
+            "max_charge": 100,
+            "percentage": 59.0,
+            "status": "Low",
+            "total_consumed": 101,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 6
+          },
+          "direction": "South",
+          "commands_executed": 26,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 54,
+            "max_charge": 100,
+            "percentage": 54.0,
+            "status": "Low",
+            "total_consumed": 106,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 5
+          },
+          "direction": "South",
+          "commands_executed": 27,
+          "cells_visited": 23,
+          "battery": {
+            "charge": 49,
+            "max_charge": 100,
+            "percentage": 49.0,
+            "status": "Low",
+            "total_consumed": 111,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 4
+          },
+          "direction": "South",
+          "commands_executed": 28,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 44,
+            "max_charge": 100,
+            "percentage": 44.0,
+            "status": "Low",
+            "total_consumed": 116,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 3
+          },
+          "direction": "South",
+          "commands_executed": 29,
+          "cells_visited": 25,
+          "battery": {
+            "charge": 39,
+            "max_charge": 100,
+            "percentage": 39.0,
+            "status": "Low",
+            "total_consumed": 121,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 1,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-05-30T00:57:20.127865",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 8,
+            "y": 2
+          },
+          "direction": "South",
+          "commands_executed": 30,
+          "cells_visited": 26,
+          "battery": {
+            "charge": 34,
+            "max_charge": 100,
+            "percentage": 34.0,
+            "status": "Low",
+            "total_consumed": 126,
+            "total_recharged": 60
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 3,
+          "reached_waypoints": 2,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                7
+              ],
+              "reached": false
+            },
+            {
+              "name": "Sample Site Beta",
+              "position": [
+                8,
+                2
+              ],
+              "reached": true
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                9,
+                9
+              ],
+              "reached": true
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

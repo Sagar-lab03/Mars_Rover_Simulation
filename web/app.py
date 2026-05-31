@@ -14,6 +14,8 @@ Then open http://localhost:5000 in your browser.
 
 import sys
 import json
+import math
+import random
 import yaml
 import logging
 from pathlib import Path
@@ -46,6 +48,79 @@ rover:   Optional[RoverV2] = None
 mission: Optional[Mission] = None
 mission_log: list          = []
 config: dict               = {}
+
+# ── Telemetry session (written to disk after every action) ────────────────────
+
+_session: dict = {}   # mirrors the terminal telemetry JSON format exactly
+
+
+# ── Environmental Sensor Simulator ─────────────────────────────────────────
+
+class SensorSimulator:
+    """
+    Simulates environmental sensor readings for the rover's current position.
+    Mirrors real Curiosity / Perseverance sensor systems (REMS).
+    """
+
+    # Surface temperature base values by terrain (°C)
+    _TEMP_BASE = {"plain": -20, "sand": 15, "rock": -5, "ice": -80}
+
+    # Slope base values by terrain (degrees)
+    _SLOPE_BASE = {"plain": 2.0, "sand": 5.0, "rock": 18.0, "ice": 8.0}
+
+    @classmethod
+    def surface_temp(cls, terrain: str) -> float:
+        """Terrain-dependent surface temperature with ±3 °C noise."""
+        base = cls._TEMP_BASE.get(terrain, -20)
+        return round(base + random.uniform(-3, 3), 1)
+
+    @classmethod
+    def dust_opacity(cls, x: int, y: int, grid_w: int, grid_h: int) -> float:
+        """
+        Atmospheric dust opacity (τ).  Higher toward grid edges
+        — simulates dust storm zones away from the landing site.
+        τ range: 0.1 (crystal clear) → 3.0 (full dust storm).
+        """
+        cx, cy   = grid_w / 2.0, grid_h / 2.0
+        dx       = abs(x - cx) / max(cx, 1)
+        dy       = abs(y - cy) / max(cy, 1)
+        edge     = max(dx, dy)          # 0 at centre, 1 at corner
+        tau      = 0.3 + edge * 1.8 + random.uniform(-0.1, 0.1)
+        return round(max(0.1, min(tau, 3.0)), 2)
+
+    @classmethod
+    def uv_index(cls, y: int, grid_h: int) -> float:
+        """
+        UV radiation index.  Higher ground (larger Y) = thinner
+        atmosphere = stronger UV.  Range: 0.5 – 5.0 UVI.
+        """
+        uv = 1.0 + (y / max(grid_h - 1, 1)) * 3.5 + random.uniform(-0.2, 0.2)
+        return round(max(0.5, min(uv, 5.0)), 1)
+
+    @classmethod
+    def slope_deg(cls, terrain: str) -> float:
+        """Estimated surface slope in degrees, ±1.5° noise."""
+        base = cls._SLOPE_BASE.get(terrain, 2.0)
+        return round(max(0.0, base + random.uniform(-1.5, 1.5)), 1)
+
+    @classmethod
+    def get_all(cls, x: int, y: int, terrain: str,
+                grid_w: int, grid_h: int) -> dict:
+        """Return a complete sensor snapshot for the current rover position."""
+        tau = cls.dust_opacity(x, y, grid_w, grid_h)
+        # Solar reduction: 0 % at τ ≤ 0.5, linear up to 50 % at τ = 2.5
+        solar_reduction_pct = round(max(0.0, min(50.0, (tau - 0.5) * 25.0)), 1)
+        return {
+            "surface_temp":        cls.surface_temp(terrain),
+            "dust_opacity":        tau,
+            "uv_index":            cls.uv_index(y, grid_h),
+            "slope_deg":           cls.slope_deg(terrain),
+            "solar_reduction_pct": solar_reduction_pct,
+            "terrain":             terrain,
+        }
+
+
+_current_sensors: dict = {}   # latest reading — updated after every action
 
 
 def load_config() -> dict:
@@ -99,6 +174,8 @@ def build_mission_objects(cfg: dict):
 
     mission_log.clear()
     _log(f"Mission started — Rover at ({rover.x},{rover.y}) facing {rover.direction}")
+    _init_session(mc["name"])
+    _update_sensors()   # seed sensor readings for the start position
 
 
 def _log(message: str) -> None:
@@ -107,6 +184,89 @@ def _log(message: str) -> None:
     mission_log.append(f"[{ts}] {message}")
     if len(mission_log) > 50:
         mission_log.pop(0)
+
+
+def _update_sensors() -> None:
+    """Refresh _current_sensors based on the rover's current position."""
+    global _current_sensors
+    if not rover:
+        return
+    terrain_type = rover.terrain.get_terrain(rover.x, rover.y).value
+    _current_sensors = SensorSimulator.get_all(
+        rover.x, rover.y,
+        terrain_type,
+        rover.grid.width,
+        rover.grid.height,
+    )
+
+
+# ── Telemetry helpers ─────────────────────────────────────────────────────────
+
+def _init_session(mission_name: str) -> None:
+    """Start a fresh in-memory telemetry session and assign a filename."""
+    global _session
+    ts   = datetime.now()
+    fname = f"mission_{ts.strftime('%Y%m%d_%H%M%S')}.json"
+    _session = {
+        "mission_name": mission_name,
+        "start_time":   ts.isoformat(),
+        "end_time":     ts.isoformat(),
+        "final_status": {},
+        "path_history": [],
+        "events":       [],
+        "_filename":    fname,   # internal — stripped on write
+    }
+    # Log the mission_start event (matches terminal format exactly)
+    _record_event("mission_start", {
+        "position":         {"x": rover.x, "y": rover.y},
+        "direction":        str(rover.direction),
+        "commands_executed": 0,
+        "cells_visited":    1,
+        "battery":          rover.battery.get_status(),
+    })
+
+
+def _record_event(event_type: str, data: dict) -> None:
+    """Append one event to the current session (same schema as terminal files)."""
+    if not _session:
+        return
+    _session["events"].append({
+        "timestamp": datetime.now().isoformat(),
+        "type":      event_type,
+        "data":      data,
+    })
+
+
+def _save_telemetry() -> None:
+    """
+    Snapshot the current session and write it to the telemetry folder.
+    Called after every command/navigate/batch so the file is always current.
+    """
+    if not _session or not rover:
+        return
+
+    telemetry_dir = ROOT / config.get("mission", {}).get("telemetry_folder", "telemetry")
+    telemetry_dir.mkdir(parents=True, exist_ok=True)
+
+    now = datetime.now().isoformat()
+    _session["end_time"]     = now
+    _session["path_history"] = list(rover.path_history)
+    _session["final_status"] = {
+        "position":          {"x": rover.x, "y": rover.y},
+        "direction":         str(rover.direction),
+        "commands_executed": rover.command_count,
+        "cells_visited":     len(set(map(tuple, rover.path_history))),
+        "battery":           rover.battery.get_status(),
+    }
+
+    # Write without the internal _filename key
+    payload = {k: v for k, v in _session.items() if not k.startswith("_")}
+    filepath = telemetry_dir / _session["_filename"]
+    try:
+        with open(filepath, "w") as f:
+            json.dump(payload, f, indent=2)
+    except Exception as exc:
+        logging.warning(f"Telemetry save failed: {exc}")
 
 
 def build_state_json() -> dict:
@@ -133,10 +293,11 @@ def build_state_json() -> dict:
             "height":    rover.grid.height,
             "obstacles": list(rover.grid.obstacles),
         },
-        "terrain": terrain_cells,
-        "mission": mission.get_status(),
-        "log":     list(reversed(mission_log)),   # newest first
-        "error":   None,
+        "terrain":  terrain_cells,
+        "sensors":  dict(_current_sensors),   # live environmental readings
+        "mission":  mission.get_status(),
+        "log":      list(reversed(mission_log)),
+        "error":    None,
     }
 
 
@@ -192,8 +353,41 @@ def post_command():
         _log(f"Turned right — now facing {rover.direction}")
 
     elif cmd == "S":
-        gained = rover.battery.solar_charge()
-        _log(f"Solar charge — +{gained} battery units ({rover.battery.charge}/{rover.battery.max_charge})")
+        # Dust-aware solar charge: high τ reduces yield
+        _update_sensors()
+        tau        = _current_sensors.get("dust_opacity", 0.3)
+        reduction  = _current_sensors.get("solar_reduction_pct", 0.0) / 100.0
+        base_rate  = rover.battery.solar_rate
+        eff_rate   = max(1, round(base_rate * (1.0 - reduction)))
+        # Apply effective charge directly (bypass solar_charge() to use eff_rate)
+        shortfall  = rover.battery.max_charge - rover.battery.charge
+        gained     = min(eff_rate, shortfall)
+        if gained > 0:
+            rover.battery.charge          += gained
+            rover.battery.total_recharged += gained
+        dust_note = f" (τ={tau}, -{_current_sensors.get('solar_reduction_pct',0):.0f}% dust)" \
+                    if reduction > 0 else ""
+        _log(f"Solar charge{dust_note} — +{gained} battery units "
+             f"({rover.battery.charge}/{rover.battery.max_charge})")
+
+    # Refresh sensor readings after any action that may change position
+    _update_sensors()
+
+    # Record event and persist to disk
+    if cmd == "S":
+        _record_event("solar_charge", {
+            "gained":  gained if cmd == "S" else 0,
+            "battery": rover.battery.get_status(),
+            "sensors": dict(_current_sensors),
+        })
+    else:
+        _record_event("command", {
+            "command":        cmd,
+            "rover_status":   rover.get_status(),
+            "mission_status": mission.get_status(),
+            "sensors":        dict(_current_sensors),
+        })
+    _save_telemetry()
 
     state = build_state_json()
     return jsonify(state)
@@ -267,8 +461,15 @@ def post_navigate():
             rover.turn_left()
         elif step == "R":
             rover.turn_right()
+        # Record each nav sub-step
+        _record_event("command", {
+            "command":        step,
+            "rover_status":   rover.get_status(),
+            "mission_status": mission.get_status(),
+        })
 
     _log(f"Navigation complete. Final position: ({rover.x},{rover.y})")
+    _save_telemetry()
     return jsonify(build_state_json())
 
 
@@ -276,6 +477,8 @@ def post_navigate():
 def post_reset():
     """Reset the mission to its initial state (re-reads config)."""
     global config
+    # Finalise and save the current session before resetting
+    _save_telemetry()
     config = load_config()
     build_mission_objects(config)
     _log("Mission reset.")
@@ -411,6 +614,13 @@ def get_mission_detail(filename):
         "path_history":     path_history,
         "grid":             {"width": config["grid"]["width"],
                              "height": config["grid"]["height"]},
+        "terrain_cells": {
+            f"{x},{y}": terrain_map.get_terrain(x, y).value
+            for x in range(config["grid"]["width"])
+            for y in range(config["grid"]["height"])
+        },
+        "obstacles": config["grid"].get("obstacles", []),
+        "events":    events,     # full event list for frame-by-frame replay
         "mission_stats": {
             "total_commands":    final_status.get("commands_executed", 0),
             "cells_visited":     final_status.get("cells_visited", 0),
@@ -496,9 +706,25 @@ def batch_execute():
             elif raw == "S":
                 gained = rover.battery.solar_charge()
                 _log(f"[Batch] Solar +{gained}")
+
+            # Record event for every batch command
+            if raw == "S":
+                _record_event("solar_charge", {
+                    "gained":  rover.battery.solar_rate,
+                    "battery": rover.battery.get_status(),
+                })
+            else:
+                _record_event("command", {
+                    "command":        raw,
+                    "rover_status":   rover.get_status(),
+                    "mission_status": mission.get_status(),
+                })
             steps.append({"command": raw, "state": build_state_json()})
         else:
             error_count += 1
+
+    # Persist entire batch to disk in one write
+    _save_telemetry()
 
     summary = {
         "total_steps":  len(steps),
