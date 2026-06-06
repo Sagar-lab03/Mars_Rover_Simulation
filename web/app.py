@@ -633,6 +633,208 @@ def get_mission_detail(filename):
     })
 
 
+# ── Mission Planner ───────────────────────────────────────────────────────────
+
+@app.route("/api/plan", methods=["POST"])
+def plan_mission():
+    """
+    Mission Feasibility Analysis — dry-run only, never mutates rover state.
+
+    Accept:
+      { "x": 5, "y": 7 }                         → A* navigate plan
+      { "commands": ["M","M","R","G 5,7","S"] }   → batch plan
+
+    Returns full analysis: path, energy, terrain, dust, risk, recommendation.
+    """
+    data = request.get_json(silent=True) or {}
+
+    if "commands" in data:
+        mode     = "batch"
+        raw_cmds = data["commands"]
+    elif "x" in data and "y" in data:
+        mode = "navigate"
+        try:
+            gx, gy = int(data["x"]), int(data["y"])
+        except (ValueError, TypeError):
+            return jsonify({"error": "x and y must be integers"}), 400
+    else:
+        return jsonify({"error": "Provide {x,y} or {commands:[...]}"}), 400
+
+    # ── helpers ──
+    def _cost(x, y):
+        return rover.terrain.get_battery_cost(x, y)
+
+    def _ttype(x, y):
+        return rover.terrain.get_terrain(x, y).value
+
+    # ── waypoint lookup by position ──
+    wp_map = {}
+    for wp in mission.get_status().get("waypoints", []):
+        wp_map[tuple(wp["position"])] = wp["name"]
+
+    path            = []
+    energy_cost     = 0
+    solar_gain      = 0
+    terrain_counts  = {"plain": 0, "sand": 0, "rock": 0, "ice": 0}
+    wps_on_route    = []
+    warnings        = []
+
+    # ── build path ──
+    if mode == "navigate":
+        if not rover.grid.is_valid_position(gx, gy):
+            return jsonify({"feasible": False, "risk_level": "HIGH",
+                            "recommendation": "NOT_RECOMMENDED",
+                            "warnings": [f"Target ({gx},{gy}) is outside the grid."]})
+        if rover.grid.has_obstacle(gx, gy):
+            return jsonify({"feasible": False, "risk_level": "HIGH",
+                            "recommendation": "NOT_RECOMMENDED",
+                            "warnings": [f"Target ({gx},{gy}) is an obstacle."]})
+        raw_path = Pathfinder.find_path(rover.grid, (rover.x, rover.y), (gx, gy))
+        if raw_path is None:
+            return jsonify({"feasible": False, "risk_level": "HIGH",
+                            "recommendation": "NOT_RECOMMENDED",
+                            "warnings": ["No viable path — all routes blocked by obstacles."]})
+        path = [list(p) for p in raw_path]
+        for (x, y) in raw_path[1:]:
+            energy_cost += _cost(x, y)
+            t = _ttype(x, y)
+            terrain_counts[t] = terrain_counts.get(t, 0) + 1
+            if (x, y) in wp_map:
+                wps_on_route.append({"name": wp_map[(x, y)], "position": [x, y]})
+    else:
+        CW      = ["North", "East", "South", "West"]
+        DIR_VEC = {"North": (0,1), "East": (1,0), "South": (0,-1), "West": (-1,0)}
+        sim_x, sim_y   = rover.x, rover.y
+        sim_dir        = str(rover.direction)
+        sim_charge     = rover.battery.charge
+        path           = [[sim_x, sim_y]]
+
+        for token in raw_cmds:
+            t = str(token).upper().strip()
+            if t == "M":
+                dx, dy = DIR_VEC.get(sim_dir, (0, 1))
+                nx, ny = sim_x + dx, sim_y + dy
+                if rover.grid.is_valid_position(nx, ny) and not rover.grid.has_obstacle(nx, ny):
+                    c = _cost(nx, ny)
+                    energy_cost += c
+                    sim_charge   = max(0, sim_charge - c)
+                    tt = _ttype(nx, ny)
+                    terrain_counts[tt] = terrain_counts.get(tt, 0) + 1
+                    sim_x, sim_y = nx, ny
+                    path.append([sim_x, sim_y])
+                    if (sim_x, sim_y) in wp_map:
+                        wps_on_route.append({"name": wp_map[(sim_x, sim_y)], "position": [sim_x, sim_y]})
+            elif t == "L":
+                sim_dir = CW[(CW.index(sim_dir) - 1) % 4]
+            elif t == "R":
+                sim_dir = CW[(CW.index(sim_dir) + 1) % 4]
+            elif t == "S":
+                tau       = SensorSimulator.dust_opacity(sim_x, sim_y, rover.grid.width, rover.grid.height)
+                reduction = max(0.0, min(50.0, (tau - 0.5) * 25.0)) / 100.0
+                eff_rate  = max(1, round(rover.battery.solar_rate * (1.0 - reduction)))
+                gained    = min(eff_rate, rover.battery.max_charge - sim_charge)
+                sim_charge = min(rover.battery.max_charge, sim_charge + gained)
+                solar_gain += gained
+            elif t.startswith("G"):
+                try:
+                    coords = t[1:].replace(",", " ").split()
+                    gxb, gyb = int(coords[0]), int(coords[1])
+                    sub = Pathfinder.find_path(rover.grid, (sim_x, sim_y), (gxb, gyb))
+                    if sub:
+                        for (px, py) in sub[1:]:
+                            c = _cost(px, py)
+                            energy_cost += c
+                            sim_charge   = max(0, sim_charge - c)
+                            tt = _ttype(px, py)
+                            terrain_counts[tt] = terrain_counts.get(tt, 0) + 1
+                            path.append([px, py])
+                            if (px, py) in wp_map:
+                                wps_on_route.append({"name": wp_map[(px, py)], "position": [px, py]})
+                        sim_x, sim_y = gxb, gyb
+                except Exception:
+                    warnings.append(f"Could not plan sub-route for '{token}'.")
+
+    # ── de-duplicate waypoints ──
+    seen, unique_wps = set(), []
+    for w in wps_on_route:
+        k = tuple(w["position"])
+        if k not in seen:
+            seen.add(k); unique_wps.append(w)
+    wps_on_route = unique_wps
+
+    # ── atmospheric exposure ──
+    if path:
+        tau_vals = [SensorSimulator.dust_opacity(p[0], p[1], rover.grid.width, rover.grid.height) for p in path]
+        avg_dust = round(sum(tau_vals) / len(tau_vals), 2)
+        max_dust = round(max(tau_vals), 2)
+    else:
+        avg_dust = max_dust = 0.0
+
+    # ── energy projection ──
+    current_charge    = rover.battery.charge
+    projected_battery = max(0, current_charge - energy_cost + solar_gain)
+    projected_pct     = round((projected_battery / rover.battery.max_charge) * 100, 1)
+
+    # ── risk scoring ──
+    risk_score = 0
+
+    if energy_cost > current_charge:
+        risk_score += 40
+        warnings.append(
+            f"Insufficient battery — route costs {energy_cost} units "
+            f"but only {current_charge} available. Rover may stall.")
+
+    if projected_pct < 10:
+        risk_score += 20
+        warnings.append("Projected battery after route is critically low (≤ 10%). Charge first.")
+    elif projected_pct < 25:
+        risk_score += 10
+        warnings.append("Projected battery will be below 25%. Proceed with caution.")
+
+    if avg_dust >= 1.5:
+        risk_score += 15
+        warnings.append(f"High atmospheric dust on route (τ = {avg_dust}). Solar efficiency reduced.")
+    elif avg_dust >= 0.8:
+        risk_score += 5
+
+    total_cells = sum(terrain_counts.values())
+    rocky = terrain_counts.get("rock", 0)
+    if total_cells > 0 and rocky / total_cells > 0.5:
+        risk_score += 10
+        warnings.append(f"Over 50% rock terrain ({rocky}/{total_cells} cells). High battery drain.")
+
+    if total_cells > 20:
+        risk_score += 5
+        warnings.append(f"Long route ({total_cells} steps). Consider mid-route solar charging.")
+
+    # ── risk tier ──
+    if risk_score >= 40 or energy_cost > current_charge:
+        risk_level, recommendation, feasible = "HIGH", "NOT_RECOMMENDED", False
+    elif risk_score >= 15:
+        risk_level, recommendation, feasible = "MEDIUM", "EXECUTE_WITH_CAUTION", True
+    else:
+        risk_level, recommendation, feasible = "LOW", "SAFE_TO_EXECUTE", True
+
+    return jsonify({
+        "mode":               mode,
+        "feasible":           feasible,
+        "path":               path,
+        "steps":              max(0, len(path) - 1),
+        "energy_cost":        energy_cost,
+        "solar_gain":         solar_gain,
+        "current_battery":    current_charge,
+        "projected_battery":  projected_battery,
+        "projected_pct":      projected_pct,
+        "avg_dust":           avg_dust,
+        "max_dust":           max_dust,
+        "terrain_breakdown":  terrain_counts,
+        "waypoints_on_route": wps_on_route,
+        "risk_level":         risk_level,
+        "recommendation":     recommendation,
+        "warnings":           warnings,
+    })
+
+
 # ── Batch Routes ──────────────────────────────────────────────────────────────
 
 @app.route("/api/batch/execute", methods=["POST"])

@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mars Rover Mission Control</title>
-  <meta name="description" content="Interactive Mars Rover simulation with A* pathfinding, terrain system, and mission waypoints." />
+  <meta name="description"
+    content="Interactive Mars Rover simulation with A* pathfinding, terrain system, and mission waypoints." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
 
   <!-- ═══════════════════════════════ TOP BAR ══════════════════════════════ -->
@@ -237,8 +242,8 @@
           <!-- Text input mode -->
           <div id="mode-text">
             <textarea id="batch-input" class="batch-textarea"
-              placeholder="# Enter commands here&#10;M M R M L M&#10;G 5,7&#10;S"
-              rows="6" spellcheck="false"></textarea>
+              placeholder="# Enter commands here&#10;M M R M L M&#10;G 5,7&#10;S" rows="6"
+              spellcheck="false"></textarea>
             <div class="batch-format-hint">
               <strong>M</strong> Move &nbsp;
               <strong>L</strong> Left &nbsp;
@@ -250,18 +255,16 @@
 
           <!-- File upload mode -->
           <div id="mode-file" class="hidden">
-            <div class="file-drop-zone" id="file-drop-zone"
-              onclick="document.getElementById('file-input').click()"
+            <div class="file-drop-zone" id="file-drop-zone" onclick="document.getElementById('file-input').click()"
               ondragover="onDragOver(event)" ondrop="onDrop(event)">
               <div class="drop-icon">&#128196;</div>
               <div class="drop-text">Click or drag &amp; drop a .txt file</div>
               <div class="drop-hint">Commands are space-separated or one per line</div>
             </div>
-            <input type="file" id="file-input" accept=".txt" class="hidden"
-              onchange="onFileSelected(event)" />
+            <input type="file" id="file-input" accept=".txt" class="hidden" onchange="onFileSelected(event)" />
             <div class="file-name hidden" id="file-name-display"></div>
-            <a href="/api/batch/template" class="batch-template-link"
-              download="mission_commands.txt">&#11015; Download sample template</a>
+            <a href="/api/batch/template" class="batch-template-link" download="mission_commands.txt">&#11015; Download
+              sample template</a>
           </div>
 
           <!-- Preview -->
@@ -276,6 +279,7 @@
           <!-- Actions -->
           <div class="batch-actions">
             <button class="btn btn-parse" onclick="parseBatch()">&#9654; PREVIEW</button>
+            <button class="btn btn-plan" id="btn-plan" onclick="planBatch()" disabled>&#9670; PLAN</button>
             <button class="btn btn-exec" id="btn-exec" onclick="executeBatch(false)" disabled>RUN ALL</button>
             <button class="btn btn-exec-step" id="btn-exec-step" onclick="executeBatch(true)" disabled>
               &#9654;&#9474; STEP MODE
@@ -285,8 +289,7 @@
           <!-- Speed slider (step mode) -->
           <div class="speed-row" id="speed-row">
             <span class="speed-label">Speed</span>
-            <input type="range" id="step-speed" min="100" max="1000" step="100" value="400"
-              class="speed-slider" />
+            <input type="range" id="step-speed" min="100" max="1000" step="100" value="400" class="speed-slider" />
             <span class="speed-val" id="speed-val">400ms</span>
           </div>
 
@@ -304,6 +307,85 @@
     </aside>
   </main>
 
+  <!-- ═══════════════ MISSION FEASIBILITY MODAL ═══════════════ -->
+  <div class="mfp-overlay hidden" id="mfp-overlay" onclick="closePlanModal()">
+    <div class="mfp-modal" onclick="event.stopPropagation()">
+
+      <div class="mfp-header">
+        <div class="mfp-header-left">
+          <span class="mfp-icon">&#9670;</span>
+          <div>
+            <div class="mfp-title">MISSION FEASIBILITY ANALYSIS</div>
+            <div class="mfp-subtitle" id="mfp-subtitle">Pre-execution route assessment</div>
+          </div>
+        </div>
+        <div class="mfp-header-right">
+          <span class="mfp-risk-badge" id="mfp-risk-badge">&#x2014;</span>
+          <button class="mfp-close" onclick="closePlanModal()">&#10005;</button>
+        </div>
+      </div>
+
+      <div class="mfp-body">
+
+        <div class="mfp-row-3">
+          <div class="mfp-card">
+            <div class="mfp-card-label">PATH LENGTH</div>
+            <div class="mfp-card-value" id="mfp-steps">&#x2014;</div>
+            <div class="mfp-card-sub">movement steps</div>
+          </div>
+          <div class="mfp-card">
+            <div class="mfp-card-label">ENERGY IMPACT</div>
+            <div class="mfp-card-value" id="mfp-cost">&#x2014;</div>
+            <div class="mfp-card-sub" id="mfp-cost-sub">&#x2014;</div>
+          </div>
+          <div class="mfp-card">
+            <div class="mfp-card-label">PROJECTED BATTERY</div>
+            <div class="mfp-card-value" id="mfp-proj-pct">&#x2014;</div>
+            <div class="mfp-proj-bar-track"><div class="mfp-proj-bar" id="mfp-proj-bar"></div></div>
+            <div class="mfp-card-sub" id="mfp-proj-sub">&#x2014;</div>
+          </div>
+        </div>
+
+        <div class="mfp-row-3">
+          <div class="mfp-card">
+            <div class="mfp-card-label">TERRAIN EXPOSURE</div>
+            <div class="mfp-terrain-list" id="mfp-terrain">&#x2014;</div>
+          </div>
+          <div class="mfp-card">
+            <div class="mfp-card-label">ATMOSPHERIC CONDITIONS</div>
+            <div class="mfp-atm-row"><span class="mfp-atm-label">Avg Dust (&#x3c4;)</span><span class="mfp-atm-val" id="mfp-avg-dust">&#x2014;</span></div>
+            <div class="mfp-atm-bar-track"><div class="mfp-atm-bar" id="mfp-dust-bar"></div></div>
+            <div class="mfp-atm-row"><span class="mfp-atm-label">Peak Dust (&#x3c4;)</span><span class="mfp-atm-val" id="mfp-max-dust">&#x2014;</span></div>
+            <div class="mfp-card-sub" id="mfp-solar-note">Solar: 100% efficient</div>
+          </div>
+          <div class="mfp-card">
+            <div class="mfp-card-label">SCIENCE TARGETS</div>
+            <div class="mfp-wp-list" id="mfp-waypoints">No waypoints on route</div>
+          </div>
+        </div>
+
+        <div class="mfp-risk-section">
+          <div class="mfp-card-label" style="margin-bottom:8px">RISK ASSESSMENT</div>
+          <div class="mfp-warnings" id="mfp-warnings"></div>
+        </div>
+
+        <div class="mfp-verdict-section">
+          <div class="mfp-verdict-label">MISSION RECOMMENDATION</div>
+          <div class="mfp-verdict" id="mfp-verdict">&#x2014;</div>
+          <div class="mfp-verdict-note" id="mfp-verdict-note">&#x2014;</div>
+        </div>
+
+      </div>
+
+      <div class="mfp-footer">
+        <button class="mfp-btn mfp-btn-abort" onclick="closePlanModal()">&#10005; ABORT PLAN</button>
+        <button class="mfp-btn mfp-btn-caution hidden" id="mfp-btn-caution" onclick="confirmPlanExecute()">&#9888; EXECUTE WITH CAUTION</button>
+        <button class="mfp-btn mfp-btn-execute hidden" id="mfp-btn-execute" onclick="confirmPlanExecute()">&#9654; EXECUTE MISSION</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ═════════════════════════ MISSION LOG ══════════════════════════════ -->
   <footer class="log-panel">
     <div class="panel-header">
@@ -320,4 +402,5 @@
 
   <script src="/static/app.js"></script>
 </body>
+
 </html>
