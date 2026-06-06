@@ -14,30 +14,30 @@
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const API = {
-  STATE:    "/api/state",
-  COMMAND:  "/api/command",
+  STATE: "/api/state",
+  COMMAND: "/api/command",
   NAVIGATE: "/api/navigate",
-  RESET:    "/api/reset",
+  RESET: "/api/reset",
 };
 
 const DIR_ARROWS = {
   North: "&#9650;",   // ▲
-  East:  "&#9658;",   // ▶
+  East: "&#9658;",   // ▶
   South: "&#9660;",   // ▼
-  West:  "&#9668;",   // ◀
+  West: "&#9668;",   // ◀
 };
 
 const TERRAIN_CLASS = {
-  sand:  "terrain-sand",
-  rock:  "terrain-rock",
-  ice:   "terrain-ice",
+  sand: "terrain-sand",
+  rock: "terrain-rock",
+  ice: "terrain-ice",
   plain: "",
 };
 
 const TERRAIN_LABEL = {
-  sand:  "Sand",
-  rock:  "Rock",
-  ice:   "Ice",
+  sand: "Sand",
+  rock: "Rock",
+  ice: "Ice",
   plain: "Plain",
 };
 
@@ -66,22 +66,22 @@ async function apiFetch(url, options = {}) {
 }
 
 function setStatus(connected) {
-  const dot   = document.getElementById("status-dot");
+  const dot = document.getElementById("status-dot");
   const label = document.getElementById("status-label");
   if (connected) {
-    dot.style.background  = "var(--rover)";
-    dot.style.boxShadow   = "0 0 8px var(--rover)";
-    label.textContent     = "ONLINE";
+    dot.style.background = "var(--rover)";
+    dot.style.boxShadow = "0 0 8px var(--rover)";
+    label.textContent = "ONLINE";
   } else {
-    dot.style.background  = "var(--obstacle)";
-    dot.style.boxShadow   = "0 0 8px var(--obstacle)";
-    label.textContent     = "OFFLINE";
+    dot.style.background = "var(--obstacle)";
+    dot.style.boxShadow = "0 0 8px var(--obstacle)";
+    label.textContent = "OFFLINE";
   }
 }
 
 function lockUI(lock) {
   busy = lock;
-  ["btn-M","btn-L","btn-R","btn-S","btn-nav","btn-reset"].forEach(id => {
+  ["btn-M", "btn-L", "btn-R", "btn-S", "btn-nav", "btn-reset"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.disabled = lock;
   });
@@ -142,8 +142,8 @@ function buildGrid(state) {
 function updateGrid(state) {
   const { width, height, obstacles } = state.grid;
   const obstacleSet = new Set(obstacles.map(([ox, oy]) => `${ox},${oy}`));
-  const pathSet     = new Set(state.rover.path_history.map(([px, py]) => `${px},${py}`));
-  const terrain     = state.terrain;   // "x,y" -> type string
+  const pathSet = new Set(state.rover.path_history.map(([px, py]) => `${px},${py}`));
+  const terrain = state.terrain;   // "x,y" -> type string
 
   // Waypoint lookup — server sends { position: [x, y], name, reached }
   const waypointMap = {};
@@ -154,7 +154,7 @@ function updateGrid(state) {
 
   for (let y = height - 1; y >= 0; y--) {
     for (let x = 0; x < width; x++) {
-      const key  = `${x},${y}`;
+      const key = `${x},${y}`;
       const cell = document.getElementById(`cell-${x}-${y}`);
       if (!cell) continue;
 
@@ -255,36 +255,36 @@ function updateStatus(state) {
 }
 
 function updateBattery(state) {
-  const b   = state.battery;
+  const b = state.battery;
   const pct = b.percentage;
   const fill = document.getElementById("battery-fill");
   const label = document.getElementById("battery-label");
 
   // Color by level
   let color;
-  if (pct > 60)      { color = "var(--bat-good)";     label.style.color = "var(--bat-good)";     }
-  else if (pct > 30) { color = "var(--bat-low)";      label.style.color = "var(--bat-low)";      }
-  else               { color = "var(--bat-critical)";  label.style.color = "var(--bat-critical)"; }
+  if (pct > 60) { color = "var(--bat-good)"; label.style.color = "var(--bat-good)"; }
+  else if (pct > 30) { color = "var(--bat-low)"; label.style.color = "var(--bat-low)"; }
+  else { color = "var(--bat-critical)"; label.style.color = "var(--bat-critical)"; }
 
-  fill.style.width      = `${pct}%`;
+  fill.style.width = `${pct}%`;
   fill.style.background = color;
-  fill.style.boxShadow  = `0 0 6px ${color}`;
+  fill.style.boxShadow = `0 0 6px ${color}`;
 
   document.getElementById("battery-pct").textContent = `${pct.toFixed(0)}%`;
   document.getElementById("battery-raw").textContent
     = `${b.charge} / ${b.max_charge} units`;
   document.getElementById("battery-label").textContent = b.status.toUpperCase();
-  document.getElementById("bat-consumed").textContent  = b.total_consumed;
+  document.getElementById("bat-consumed").textContent = b.total_consumed;
   document.getElementById("bat-recharged").textContent = b.total_recharged;
 }
 
 function updateWaypoints(state) {
-  const m    = state.mission;
+  const m = state.mission;
   const list = document.getElementById("waypoint-list");
   const prog = document.getElementById("wp-progress");
 
   prog.textContent = `${m.reached_waypoints} / ${m.total_waypoints}`;
-  list.innerHTML   = "";
+  list.innerHTML = "";
 
   for (const wp of m.waypoints) {
     const li = document.createElement("li");
@@ -312,9 +312,9 @@ function updateWaypoints(state) {
 }
 
 function updateLog(state) {
-  const entries   = document.getElementById("log-entries");
-  const countEl   = document.getElementById("log-count");
-  const logItems  = state.log || [];
+  const entries = document.getElementById("log-entries");
+  const countEl = document.getElementById("log-count");
+  const logItems = state.log || [];
 
   countEl.textContent = `${logItems.length} event${logItems.length !== 1 ? "s" : ""}`;
   entries.innerHTML = "";
@@ -352,27 +352,27 @@ function updateSensors(state) {
   if (!s) return;
 
   // ── Surface Temperature (-80 to +20 °C range) ──
-  const temp     = s.surface_temp;
+  const temp = s.surface_temp;
   const tempNorm = Math.max(5, ((temp + 80) / 100) * 100); // map -80..+20 -> 0..100%
   const tempColor = temp < -50 ? "#0ea5e9"        // ice blue
-                  : temp < -10 ? "#818cf8"        // cool violet
-                  : temp <   5 ? "#f59e0b"        // warm amber
-                  : "#f97316";                     // hot orange
+    : temp < -10 ? "#818cf8"        // cool violet
+      : temp < 5 ? "#f59e0b"        // warm amber
+        : "#f97316";                     // hot orange
   const tempLabel = temp < -50 ? "Extreme Cold"
-                  : temp < -10 ? "Cold"
-                  : temp <   5 ? "Mild"
-                  : "Warm";
-  _setSensor("sen-temp",     `${temp}°C`,     tempNorm, tempColor);
+    : temp < -10 ? "Cold"
+      : temp < 5 ? "Mild"
+        : "Warm";
+  _setSensor("sen-temp", `${temp}°C`, tempNorm, tempColor);
   document.getElementById("sen-temp-sub").textContent = `${tempLabel} — ${s.terrain} terrain`;
 
   // ── Dust Opacity (τ: 0.1 – 3.0) ──
-  const tau      = s.dust_opacity;
+  const tau = s.dust_opacity;
   const dustNorm = Math.max(5, (tau / 3.0) * 100);
-  const dustColor = tau < 0.5  ? "#22c55e"   // clear
-                  : tau < 1.0  ? "#a3e635"   // light
-                  : tau < 1.5  ? "#f59e0b"   // moderate
-                  : "#ef4444";               // heavy
-  const solEff   = 100 - (s.solar_reduction_pct || 0);
+  const dustColor = tau < 0.5 ? "#22c55e"   // clear
+    : tau < 1.0 ? "#a3e635"   // light
+      : tau < 1.5 ? "#f59e0b"   // moderate
+        : "#ef4444";               // heavy
+  const solEff = 100 - (s.solar_reduction_pct || 0);
   _setSensor("sen-dust", `τ = ${tau}`, dustNorm, dustColor);
   // Warn if dust is high
   const dustEl = document.getElementById("sen-dust");
@@ -381,26 +381,26 @@ function updateSensors(state) {
     `Solar: ${solEff.toFixed(0)}% efficient${tau >= 1.5 ? " ⚠ Dust storm" : ""}`;
 
   // ── UV Radiation Index (0.5 – 5.0 UVI) ──
-  const uv      = s.uv_index;
-  const uvNorm  = Math.max(5, (uv / 5.0) * 100);
+  const uv = s.uv_index;
+  const uvNorm = Math.max(5, (uv / 5.0) * 100);
   const uvColor = uv < 2.0 ? "#22c55e"
-                : uv < 3.5 ? "#f59e0b"
-                : "#ef4444";
+    : uv < 3.5 ? "#f59e0b"
+      : "#ef4444";
   const uvLabel = uv < 2.0 ? "Low exposure"
-                : uv < 3.5 ? "Moderate — shield recommended"
-                : "High — maximum shielding";
-  _setSensor("sen-uv",   `${uv} UVI`, uvNorm, uvColor);
+    : uv < 3.5 ? "Moderate — shield recommended"
+      : "High — maximum shielding";
+  _setSensor("sen-uv", `${uv} UVI`, uvNorm, uvColor);
   document.getElementById("sen-uv-sub").textContent = uvLabel;
 
   // ── Surface Slope (0 – 25° range) ──
-  const slope      = s.slope_deg;
-  const slopeNorm  = Math.max(5, (slope / 25) * 100);
-  const slopeColor = slope < 5  ? "#22c55e"
-                   : slope < 12 ? "#f59e0b"
-                   : "#ef4444";
-  const slopeLabel = slope < 5  ? "Flat surface"
-                   : slope < 12 ? "Moderate grade"
-                   : "Steep terrain — high battery cost";
+  const slope = s.slope_deg;
+  const slopeNorm = Math.max(5, (slope / 25) * 100);
+  const slopeColor = slope < 5 ? "#22c55e"
+    : slope < 12 ? "#f59e0b"
+      : "#ef4444";
+  const slopeLabel = slope < 5 ? "Flat surface"
+    : slope < 12 ? "Moderate grade"
+      : "Steep terrain — high battery cost";
   _setSensor("sen-slope", `${slope}°`, slopeNorm, slopeColor);
   document.getElementById("sen-slope-sub").textContent = slopeLabel;
 }
@@ -409,11 +409,11 @@ function updateSensors(state) {
 function _setSensor(valId, text, barPct, color) {
   const valEl = document.getElementById(valId);
   const barEl = document.getElementById(valId + "-bar");
-  if (valEl) valEl.textContent   = text;
+  if (valEl) valEl.textContent = text;
   if (barEl) {
-    barEl.style.width      = `${barPct}%`;
+    barEl.style.width = `${barPct}%`;
     barEl.style.background = color;
-    barEl.style.color      = color;  // drives box-shadow currentColor
+    barEl.style.color = color;  // drives box-shadow currentColor
   }
 }
 
@@ -596,8 +596,8 @@ function parseBatch() {
 /** Render the color-coded command pills and enable exec buttons. */
 function renderPreview(cmds) {
   const preview = document.getElementById("batch-preview");
-  const pills   = document.getElementById("preview-pills");
-  const label   = document.getElementById("preview-label");
+  const pills = document.getElementById("preview-pills");
+  const label = document.getElementById("preview-label");
 
   if (cmds.length === 0) {
     preview.classList.add("hidden");
@@ -612,7 +612,7 @@ function renderPreview(cmds) {
   for (const cmd of cmds) {
     const pill = document.createElement("span");
     const type = cmd.startsWith("G") ? "G" : cmd;
-    pill.className   = `pill pill-${type}`;
+    pill.className = `pill pill-${type}`;
     pill.textContent = cmd;
     pills.appendChild(pill);
   }
@@ -621,7 +621,7 @@ function renderPreview(cmds) {
 }
 
 function setExecEnabled(enabled) {
-  document.getElementById("btn-exec").disabled      = !enabled;
+  document.getElementById("btn-exec").disabled = !enabled;
   document.getElementById("btn-exec-step").disabled = !enabled;
 }
 
@@ -648,10 +648,10 @@ async function executeBatch(animate) {
   lockUI(true);
   setExecEnabled(false);
 
-  const progress  = document.getElementById("batch-progress");
-  const fill      = document.getElementById("progress-fill");
-  const progText  = document.getElementById("progress-text");
-  const delayMs   = parseInt(document.getElementById("step-speed").value, 10) || 400;
+  const progress = document.getElementById("batch-progress");
+  const fill = document.getElementById("progress-fill");
+  const progText = document.getElementById("progress-text");
+  const delayMs = parseInt(document.getElementById("step-speed").value, 10) || 400;
 
   progress.classList.remove("hidden");
   fill.style.width = "0%";
@@ -674,13 +674,13 @@ async function executeBatch(animate) {
     for (let i = 0; i < steps.length; i++) {
       render(steps[i].state);
       const pct = Math.round(((i + 1) / steps.length) * 100);
-      fill.style.width    = `${pct}%`;
+      fill.style.width = `${pct}%`;
       progText.textContent = `Step ${i + 1} / ${steps.length} — ${steps[i].command}`;
       await sleep(delayMs);
     }
   } else {
     render(result.final_state);
-    fill.style.width    = "100%";
+    fill.style.width = "100%";
     progText.textContent = `Done — ${steps.length} steps executed`;
   }
 
@@ -719,8 +719,8 @@ function readFile(file) {
   reader.onload = (e) => {
     const content = e.target.result;
     const display = document.getElementById("file-name-display");
-    display.textContent         = `📄 ${file.name} loaded`;
-    display.dataset.content     = content;
+    display.textContent = `📄 ${file.name} loaded`;
+    display.dataset.content = content;
     display.classList.remove("hidden");
     // Auto-parse
     parsedCommands = parseBatchText(content);
@@ -733,7 +733,7 @@ function readFile(file) {
 
 function initBatchPanel() {
   const slider = document.getElementById("step-speed");
-  const val    = document.getElementById("speed-val");
+  const val = document.getElementById("speed-val");
   if (slider && val) {
     slider.addEventListener("input", () => {
       val.textContent = `${slider.value}ms`;
@@ -741,3 +741,167 @@ function initBatchPanel() {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  MISSION FEASIBILITY ANALYSIS ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+let _planCtx = null;   // { mode, payload }
+
+// Gate btn-plan alongside the exec buttons
+const _setExecOrig = setExecEnabled;
+function setExecEnabled(en) {
+  _setExecOrig(en);
+  const p = document.getElementById("btn-plan");
+  if (p) p.disabled = !en;
+}
+
+/** navigate() — now shows feasibility modal before executing. */
+async function navigate() {
+  if (busy) return;
+  const x = parseInt(document.getElementById("nav-x").value, 10);
+  const y = parseInt(document.getElementById("nav-y").value, 10);
+  if (isNaN(x) || isNaN(y)) { showError("Please enter valid X and Y coordinates."); return; }
+  lockUI(true);
+  const plan = await apiFetch("/api/plan", { method: "POST", body: JSON.stringify({ x, y }) });
+  lockUI(false);
+  if (plan) showPlanModal(plan, "navigate", { x, y });
+}
+
+/** Plan a batch sequence — open modal without executing. */
+async function planBatch() {
+  if (parsedCommands.length === 0) return;
+  lockUI(true);
+  const plan = await apiFetch("/api/plan", { method: "POST", body: JSON.stringify({ commands: parsedCommands }) });
+  lockUI(false);
+  if (plan) showPlanModal(plan, "batch", null);
+}
+
+/** Populate and display the Mission Feasibility Modal. */
+function showPlanModal(plan, mode, payload) {
+  _planCtx = { mode, payload };
+
+  // Header
+  document.getElementById("mfp-subtitle").textContent =
+    mode === "navigate" ? `A* route to (${payload.x}, ${payload.y})` : `Batch — ${parsedCommands.length} commands`;
+  const badge = document.getElementById("mfp-risk-badge");
+  badge.textContent = plan.risk_level || "—";
+  badge.className = `mfp-risk-badge mfp-risk-${plan.risk_level || "LOW"}`;
+
+  // Path length
+  document.getElementById("mfp-steps").textContent = plan.steps ?? "—";
+
+  // Energy
+  const cost = plan.energy_cost ?? 0, gained = plan.solar_gain ?? 0, cur = plan.current_battery ?? 100;
+  document.getElementById("mfp-cost").textContent = `\u2212${cost}${gained > 0 ? ` / +${gained}` : ""} u`;
+  document.getElementById("mfp-cost-sub").textContent =
+    `${cur} units available${gained > 0 ? ` \u00b7 ${gained} solar est.` : ""}`;
+
+  // Projected battery
+  const pp = plan.projected_pct ?? 0, pb = plan.projected_battery ?? 0;
+  const bc = pp > 60 ? "#22c55e" : pp > 25 ? "#f59e0b" : "#ef4444";
+  document.getElementById("mfp-proj-pct").textContent = `${pp.toFixed(1)}%`;
+  const projBar = document.getElementById("mfp-proj-bar");
+  projBar.style.width = `${Math.max(2, pp)}%`; projBar.style.background = bc;
+  document.getElementById("mfp-proj-sub").textContent = `${pb} / ${cur} units projected`;
+
+  // Terrain breakdown
+  const tb = plan.terrain_breakdown || {}, total = Object.values(tb).reduce((a, b) => a + b, 0);
+  const tcols = { plain: "#38bdf8", sand: "#f59e0b", rock: "#6b7280", ice: "#0ea5e9" };
+  const tel = document.getElementById("mfp-terrain"); tel.innerHTML = "";
+  for (const [type, count] of Object.entries(tb)) {
+    if (count === 0 && total > 0) continue;
+    const pct = total > 0 ? Math.round(count / total * 100) : 0;
+    const row = document.createElement("div"); row.className = "mfp-terrain-row";
+    row.innerHTML = `<div class="mfp-terrain-label-row"><span class="mfp-terrain-name">${type[0].toUpperCase() + type.slice(1)}</span><span class="mfp-terrain-count">${count} cell${count !== 1 ? "s" : ""} (${pct}%)</span></div><div class="mfp-terrain-bar-track"><div class="mfp-terrain-bar" style="width:${pct}%;background:${tcols[type] || "#38bdf8"}"></div></div>`;
+    tel.appendChild(row);
+  }
+  if (total === 0) tel.textContent = "No movement steps";
+
+  // Atmospheric
+  const ad = plan.avg_dust ?? 0, md = plan.max_dust ?? 0;
+  const dp = Math.min(100, (ad / 3) * 100);
+  const dc = ad < 0.5 ? "#22c55e" : ad < 1.0 ? "#a3e635" : ad < 1.5 ? "#f59e0b" : "#ef4444";
+  const solRed = Math.max(0, Math.min(50, (ad - 0.5) * 25));
+  document.getElementById("mfp-avg-dust").textContent = ad.toFixed(2);
+  document.getElementById("mfp-max-dust").textContent = md.toFixed(2);
+  const dustBar = document.getElementById("mfp-dust-bar");
+  dustBar.style.width = `${dp}%`; dustBar.style.background = dc;
+  document.getElementById("mfp-solar-note").textContent =
+    ad >= 1.5 ? `\u26a0 Dust storm \u2014 solar \u2248 ${(100 - solRed).toFixed(0)}%`
+      : `Solar: \u2248${(100 - solRed).toFixed(0)}% efficient`;
+
+  // Science targets
+  const wl = document.getElementById("mfp-waypoints"); wl.innerHTML = "";
+  const wps = plan.waypoints_on_route || [];
+  if (wps.length === 0) {
+    wl.innerHTML = `<span style="font-size:10px;color:var(--text-secondary)">No waypoints on route</span>`;
+  } else {
+    for (const wp of wps) {
+      const item = document.createElement("div"); item.className = "mfp-wp-item";
+      item.innerHTML = `<div class="mfp-wp-dot"></div>${wp.name} <span style="color:var(--text-secondary)">(${wp.position[0]},${wp.position[1]})</span>`;
+      wl.appendChild(item);
+    }
+  }
+
+  // Risk warnings
+  const wel = document.getElementById("mfp-warnings"); wel.innerHTML = "";
+  const ws = plan.warnings || [], rl = plan.risk_level || "LOW";
+  const wicon = rl === "HIGH" ? "\u25cf" : rl === "MEDIUM" ? "\u25b2" : "\u25c6";
+  if (ws.length === 0) {
+    wel.innerHTML = `<div class="mfp-no-warnings">\u2714 No critical risks \u2014 route is clear.</div>`;
+  } else {
+    for (const w of ws)
+      wel.innerHTML += `<div class="mfp-warning-item"><span class="mfp-warn-icon mfp-warn-${rl}">${wicon}</span><span>${w}</span></div>`;
+  }
+
+  // Verdict
+  const rec = plan.recommendation || "NOT_RECOMMENDED";
+  const VM = {
+    SAFE_TO_EXECUTE: { text: "SAFE TO EXECUTE", cls: "mfp-verdict-SAFE", note: "All systems nominal. Route approved for immediate execution." },
+    EXECUTE_WITH_CAUTION: { text: "EXECUTE WITH CAUTION", cls: "mfp-verdict-CAUTION", note: "Route is feasible but risk factors detected. Monitor battery closely." },
+    NOT_RECOMMENDED: { text: "NOT RECOMMENDED", cls: "mfp-verdict-NO", note: "Mission parameters exceed safe thresholds. Resolve warnings first." },
+  };
+  const v = VM[rec] || VM["NOT_RECOMMENDED"];
+  const ve = document.getElementById("mfp-verdict");
+  ve.textContent = v.text; ve.className = `mfp-verdict ${v.cls}`;
+  document.getElementById("mfp-verdict-note").textContent = v.note;
+
+  // Footer buttons
+  document.getElementById("mfp-btn-execute").classList.toggle("hidden", rec !== "SAFE_TO_EXECUTE");
+  document.getElementById("mfp-btn-caution").classList.toggle("hidden", rec !== "EXECUTE_WITH_CAUTION");
+
+  // Path grid overlay
+  clearPlannedOverlay();
+  for (const [px, py] of (plan.path || [])) {
+    const c = document.getElementById(`cell-${px}-${py}`);
+    if (c) c.classList.add("cell-planned");
+  }
+
+  document.getElementById("mfp-overlay").classList.remove("hidden");
+}
+
+function clearPlannedOverlay() {
+  document.querySelectorAll(".cell-planned").forEach(c => c.classList.remove("cell-planned"));
+}
+
+function closePlanModal() {
+  document.getElementById("mfp-overlay").classList.add("hidden");
+  clearPlannedOverlay();
+  _planCtx = null;
+}
+
+async function confirmPlanExecute() {
+  if (!_planCtx) return;
+  const { mode, payload } = _planCtx;
+  closePlanModal();
+  lockUI(true);
+  if (mode === "navigate") {
+    const state = await apiFetch(API.NAVIGATE, { method: "POST", body: JSON.stringify(payload) });
+    render(state);
+  } else {
+    await executeBatch(false);
+  }
+  lockUI(false);
+}
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") closePlanModal(); });
