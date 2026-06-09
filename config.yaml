@@ -5,14 +5,35 @@
 
 # --- Grid ---
 grid:
-  width: 10
-  height: 10
+  width: 20
+  height: 20
   obstacles:
-    - [2, 2]
-    - [3, 5]
-    - [7, 8]
-    - [1, 7]
-    - [5, 3]
+    # --- Northwest corridor choke ---
+    - [2,  17]
+    - [3,  17]
+    - [2,  15]
+    # --- Central mountain ridge ---
+    - [9,  10]
+    - [10, 10]
+    - [10, 11]
+    - [11, 11]
+    - [11, 12]
+    # --- Northeast barrier ---
+    - [15, 16]
+    - [16, 16]
+    - [15, 14]
+    - [16, 14]
+    # --- Southwest gully ---
+    - [4,  4]
+    - [5,  4]
+    - [4,  5]
+    # --- Southeast obstacle cluster ---
+    - [14, 3]
+    - [15, 3]
+    - [14, 2]
+    # --- Mid-west block ---
+    - [7,  7]
+    - [6,  8]
 
 # --- Rover Starting State ---
 rover:
@@ -26,28 +47,130 @@ battery:
   solar_rate: 5       # Units recharged per 'S' (solar charge) action
 
 # --- Terrain (Phase 2) ---
-# Each entry: { type: <plain|sand|rock|ice>, cells: [[x,y], ...] }
+# Geographic regions — each type forms a coherent biome on the map
 terrain:
+
+  # ── Sand Basin (Southwest) ─────────────────────────────────────────────────
+  # A broad lowland dune field occupying the lower-left quarter
   - type: sand
     cells:
-      - [1, 1]
-      - [2, 1]
-      - [3, 1]
-      - [4, 1]
-      - [4, 2]
-      - [4, 3]
+      - [1,  1]
+      - [2,  1]
+      - [3,  1]
+      - [4,  1]
+      - [5,  1]
+      - [1,  2]
+      - [2,  2]
+      - [3,  2]
+      - [5,  2]
+      - [6,  2]
+      - [1,  3]
+      - [2,  3]
+      - [3,  3]
+      - [6,  3]
+      - [7,  3]
+      - [1,  4]
+      - [2,  4]
+      - [3,  4]
+      - [7,  4]
+      - [8,  4]
+      - [1,  5]
+      - [2,  5]
+      - [8,  5]
+      - [9,  5]
+      - [8,  6]
+      - [9,  6]
+      - [10, 6]
+
+  # ── Rock Formation (Northeast) ─────────────────────────────────────────────
+  # Ancient highland terrain — high battery cost, scientifically rich
   - type: rock
     cells:
-      - [6, 4]
-      - [6, 5]
-      - [7, 5]
-      - [7, 6]
+      - [13, 13]
+      - [14, 13]
+      - [15, 13]
+      - [16, 13]
+      - [13, 14]
+      - [14, 14]
+      - [17, 14]
+      - [13, 15]
+      - [17, 15]
+      - [13, 16]
+      - [14, 16]
+      - [17, 16]
+      - [13, 17]
+      - [14, 17]
+      - [15, 17]
+      - [16, 17]
+      - [17, 17]
+      - [18, 17]
+      - [18, 16]
+      - [18, 15]
+
+  # ── Ice Field (Northwest) ──────────────────────────────────────────────────
+  # Permafrost polar cap region — slow traverse, extreme cold
   - type: ice
     cells:
-      - [0, 5]
-      - [0, 6]
-      - [1, 6]
-      - [2, 6]
+      - [0,  13]
+      - [1,  13]
+      - [2,  13]
+      - [3,  13]
+      - [0,  14]
+      - [1,  14]
+      - [2,  14]
+      - [3,  14]
+      - [4,  14]
+      - [0,  15]
+      - [1,  15]
+      - [2,  15]   # (not obstacle — passable but costly)
+      - [4,  15]
+      - [5,  15]
+      - [0,  16]
+      - [1,  16]
+      - [0,  17]
+      - [1,  17]
+      - [0,  18]
+      - [1,  18]
+      - [2,  18]
+      - [0,  19]
+      - [1,  19]
+      - [2,  19]
+      - [3,  19]
+
+  # ── Rock Ridge (Southeast) ─────────────────────────────────────────────────
+  # Eroded volcanic ridge running along the southern edge
+  - type: rock
+    cells:
+      - [10, 1]
+      - [11, 1]
+      - [12, 1]
+      - [13, 1]
+      - [11, 2]
+      - [12, 2]
+      - [13, 2]
+      - [12, 3]
+      - [13, 3]
+      - [12, 4]
+      - [13, 4]
+      - [12, 5]
+
+  # ── Sand Ridge (Mid-East) ──────────────────────────────────────────────────
+  # Wind-deposited dune corridor running north-south through the centre-east
+  - type: sand
+    cells:
+      - [16, 5]
+      - [17, 5]
+      - [16, 6]
+      - [17, 6]
+      - [18, 6]
+      - [16, 7]
+      - [17, 7]
+      - [18, 7]
+      - [17, 8]
+      - [18, 8]
+      - [19, 8]
+      - [18, 9]
+      - [19, 9]
 
 # --- Mission (Phase 2) ---
 mission:
@@ -55,14 +178,23 @@ mission:
   enable_telemetry: true
   telemetry_folder: "telemetry"
 
-  # Waypoints the rover must visit
+  # Waypoints spread across all four quadrants of the 20x20 map
   waypoints:
     - name: "Sample Site Alpha"
       x: 5
-      y: 7
-    - name: "Sample Site Beta"
-      x: 8
-      y: 2
-    - name: "High Ground Sigma"
-      x: 9
+      y: 8
+    - name: "Olympus Outpost"
+      x: 10
+      y: 15
+    - name: "Dust Basin Delta"
+      x: 17
       y: 9
+    - name: "Polar Ridge Epsilon"
+      x: 3
+      y: 18
+    - name: "Iron Peak Zeta"
+      x: 15
+      y: 5
+    - name: "High Ground Sigma"
+      x: 18
+      y: 19
