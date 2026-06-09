@@ -106,7 +106,7 @@ function buildGrid(state) {
   const container = document.getElementById("rover-grid");
   const { width, height } = state.grid;
 
-  container.style.gridTemplateColumns = `repeat(${width}, 46px)`;
+  container.style.gridTemplateColumns = `repeat(${width}, 40px)`;
   container.innerHTML = "";
 
   for (let y = height - 1; y >= 0; y--) {
