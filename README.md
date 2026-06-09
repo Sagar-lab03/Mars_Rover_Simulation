@@ -14,7 +14,7 @@ A progressive Mars Rover simulation built across three phases — from clean OOP
 
 > Control the rover directly from your browser — terrain-aware, battery-powered, A\* navigated.
 
-![Mars Rover Web UI](web_ui_preview_dashboard.png)
+![Mars Rover Web UI](web_ui_preview_dashboard_2.png)
 <!-- ![Mars Rover Web UI](web_ui_preview_mission_analytics.png) -->
 
 ---
