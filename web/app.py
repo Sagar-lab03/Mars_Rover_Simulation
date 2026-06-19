@@ -632,6 +632,160 @@ def get_mission_detail(filename):
         },
     })
 
+# ── Science Prioritization Engine ────────────────────────────────────────────
+
+def _score_cell(x: int, y: int) -> tuple[int, list[str]]:
+    """
+    Compute the science yield score (0-100) for a candidate cell.
+    Returns (science_value, reasons[]).
+
+    Scoring factors (deterministic, rule-based):
+      1. Terrain base value       — geological interest of the terrain type
+      2. Terrain boundary bonus   — adjacency to multiple biome types (contact zones)
+      3. UV anomaly bonus         — high UV at northern latitudes = thinner atmosphere
+      4. Extreme temperature      — ice-field cold signatures indicate subsurface interest
+      5. Mission waypoint bonus   — designated science targets score higher
+      6. Dust storm penalty       — heavy dust degrades instrument performance
+    """
+    reasons: list[str] = []
+    score = 0
+
+    ttype = rover.terrain.get_terrain(x, y).value
+
+    # 1. Terrain base
+    terrain_base = {"rock": 40, "ice": 35, "sand": 20, "plain": 10}
+    base = terrain_base.get(ttype, 10)
+    score += base
+    if ttype == "rock":
+        reasons.append("Rock terrain — high geological interest")
+    elif ttype == "ice":
+        reasons.append("Ice terrain — potential subsurface water")
+    elif ttype == "sand":
+        reasons.append("Sand terrain — aeolian deposit analysis")
+
+    # 2. Terrain boundary bonus — count distinct terrain types in 8 neighbours
+    neighbour_types: set[str] = set()
+    for dx in [-1, 0, 1]:
+        for dy in [-1, 0, 1]:
+            if dx == 0 and dy == 0:
+                continue
+            nx, ny = x + dx, y + dy
+            if rover.grid.is_valid_position(nx, ny) and not rover.grid.has_obstacle(nx, ny):
+                neighbour_types.add(rover.terrain.get_terrain(nx, ny).value)
+
+    # Subtract own type to count *different* biomes nearby
+    foreign = neighbour_types - {ttype}
+    if len(foreign) >= 2:
+        score += 30
+        reasons.append("Multi-terrain boundary zone — 3+ biomes converge")
+    elif len(foreign) == 1:
+        score += 20
+        reasons.append("Terrain boundary zone — biome transition region")
+
+    # 3. UV anomaly — high elevation (large y) = higher UV
+    uv = SensorSimulator.uv_index(y, rover.grid.height)
+    if uv >= 3.5:
+        score += 15
+        reasons.append(f"High UV anomaly (UVI {uv:.1f}) — atmospheric thinning")
+    elif uv >= 2.5:
+        score += 8
+        reasons.append(f"Elevated UV index (UVI {uv:.1f})")
+
+    # 4. Extreme temperature signature
+    temp = SensorSimulator.surface_temp(ttype)
+    if temp < -65:
+        score += 10
+        reasons.append(f"Extreme cold signature ({temp}°C) — cryogenic interest")
+
+    # 5. Mission waypoint bonus
+    wp_positions = {tuple(wp["position"]) for wp in mission.get_status().get("waypoints", [])}
+    if (x, y) in wp_positions:
+        score += 20
+        reasons.append("Designated mission science target")
+
+    # 6. Dust storm penalty
+    dust = SensorSimulator.dust_opacity(x, y, rover.grid.width, rover.grid.height)
+    if dust > 1.5:
+        score -= 5   # instrument degradation in heavy dust
+
+    return max(0, min(100, score)), reasons
+
+
+@app.route("/api/recommend", methods=["GET"])
+def recommend_science():
+    """
+    Science Prioritization Engine — rank unvisited cells by scientific value
+    relative to travel cost.
+
+    Query params:
+      n  (int, default 3) — number of top recommendations to return.
+
+    Returns for each target:
+      position, terrain, science_value, travel_cost, efficiency, score, reasons[].
+    Also returns mission_score (cumulative science value of all visited cells).
+    """
+    n = min(int(request.args.get("n", 3)), 10)
+
+    visited = set(map(tuple, rover.path_history))
+    rover_pos = (rover.x, rover.y)
+
+    # ── Score all candidate cells ──
+    candidates = []
+    for x in range(rover.grid.width):
+        for y in range(rover.grid.height):
+            if rover.grid.has_obstacle(x, y):
+                continue
+            if (x, y) == rover_pos:
+                continue
+            if (x, y) in visited:
+                continue
+            science_value, reasons = _score_cell(x, y)
+            candidates.append({
+                "position":      [x, y],
+                "terrain":       rover.terrain.get_terrain(x, y).value,
+                "science_value": science_value,
+                "reasons":       reasons,
+            })
+
+    # ── Pre-filter: top candidates by science_value before running A* ──
+    candidates.sort(key=lambda c: c["science_value"], reverse=True)
+    top_pool = candidates[:min(len(candidates), n * 6)]
+
+    # ── Compute A* travel cost for shortlisted candidates ──
+    reachable = []
+    for c in top_pool:
+        x, y = c["position"]
+        path = Pathfinder.find_path(rover.grid, rover_pos, (x, y))
+        if path is None:
+            continue
+        travel_cost = max(1, sum(
+            rover.terrain.get_battery_cost(px, py) for px, py in path[1:]
+        ))
+        efficiency = round(c["science_value"] / travel_cost, 3)
+        # Final score: 60% science value + 40% efficiency (normalised ×10)
+        final_score = round(c["science_value"] * 0.6 + efficiency * 10 * 0.4, 1)
+        reachable.append({
+            **c,
+            "travel_cost": travel_cost,
+            "efficiency":  efficiency,
+            "score":       final_score,
+        })
+
+    reachable.sort(key=lambda c: c["score"], reverse=True)
+
+    # ── Mission science score: sum of science values for visited cells ──
+    mission_score = sum(
+        _score_cell(vx, vy)[0]
+        for vx, vy in visited
+        if rover.grid.is_valid_position(vx, vy) and not rover.grid.has_obstacle(vx, vy)
+    )
+
+    return jsonify({
+        "recommendations":   reachable[:n],
+        "total_candidates":  len(candidates),
+        "mission_score":     mission_score,
+    })
+
 
 # ── Mission Planner ───────────────────────────────────────────────────────────
 
