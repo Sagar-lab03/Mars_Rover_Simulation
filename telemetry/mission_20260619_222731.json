@@ -1,0 +1,166 @@
+{
+  "mission_name": "Mars Exploration Mission",
+  "start_time": "2026-06-19T22:27:31.311780",
+  "end_time": "2026-06-19T22:32:06.143713",
+  "final_status": {
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "direction": "North",
+    "commands_executed": 0,
+    "cells_visited": 1,
+    "battery": {
+      "charge": 100,
+      "max_charge": 100,
+      "percentage": 100.0,
+      "status": "Good",
+      "total_consumed": 0,
+      "total_recharged": 0
+    }
+  },
+  "path_history": [
+    [
+      0,
+      0
+    ]
+  ],
+  "events": [
+    {
+      "timestamp": "2026-06-19T22:27:31.311780",
+      "type": "mission_start",
+      "data": {
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "direction": "North",
+        "commands_executed": 0,
+        "cells_visited": 1,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-19T22:31:48.283382",
+      "type": "solar_charge",
+      "data": {
+        "gained": 0,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        },
+        "sensors": {
+          "surface_temp": -20.4,
+          "dust_opacity": 2.09,
+          "uv_index": 0.8,
+          "slope_deg": 0.6,
+          "solar_reduction_pct": 39.8,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-19T22:32:02.104007",
+      "type": "solar_charge",
+      "data": {
+        "gained": 0,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        },
+        "sensors": {
+          "surface_temp": -20.3,
+          "dust_opacity": 2.02,
+          "uv_index": 0.8,
+          "slope_deg": 1.3,
+          "solar_reduction_pct": 38.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-19T22:32:03.697614",
+      "type": "solar_charge",
+      "data": {
+        "gained": 0,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        },
+        "sensors": {
+          "surface_temp": -18.2,
+          "dust_opacity": 2.01,
+          "uv_index": 1.1,
+          "slope_deg": 0.9,
+          "solar_reduction_pct": 37.7,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-19T22:32:04.781879",
+      "type": "solar_charge",
+      "data": {
+        "gained": 0,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        },
+        "sensors": {
+          "surface_temp": -21.1,
+          "dust_opacity": 2.2,
+          "uv_index": 1.2,
+          "slope_deg": 2.2,
+          "solar_reduction_pct": 42.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-19T22:32:06.143713",
+      "type": "solar_charge",
+      "data": {
+        "gained": 0,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        },
+        "sensors": {
+          "surface_temp": -20.0,
+          "dust_opacity": 2.18,
+          "uv_index": 0.9,
+          "slope_deg": 3.4,
+          "solar_reduction_pct": 42.0,
+          "terrain": "plain"
+        }
+      }
+    }
+  ]
+}

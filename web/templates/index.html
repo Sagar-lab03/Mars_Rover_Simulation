@@ -304,6 +304,26 @@
         </div>
       </div>
 
+      <!-- ── Science Survey Panel ─────────────────────────────────────── -->
+      <div class="panel panel-survey">
+        <div class="panel-header survey-header" onclick="toggleSurvey()">
+          <span class="panel-title">&#9670; SCIENCE SURVEY</span>
+          <div class="survey-header-right">
+            <span class="survey-score-badge" id="survey-score-badge">0 pts</span>
+            <span class="survey-toggle-icon" id="survey-toggle-icon">&#9660;</span>
+          </div>
+        </div>
+        <div class="survey-body" id="survey-body">
+          <div class="survey-controls">
+            <button class="btn btn-survey" id="btn-survey" onclick="runSurvey()">
+              &#9670; SCAN TARGETS
+            </button>
+            <span class="survey-hint" id="survey-hint">Identify top science targets</span>
+          </div>
+          <div id="survey-results" class="survey-results hidden"></div>
+        </div>
+      </div>
+
     </aside>
   </main>
 

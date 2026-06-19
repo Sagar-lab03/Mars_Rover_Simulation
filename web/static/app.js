@@ -902,6 +902,141 @@ async function confirmPlanExecute() {
     await executeBatch(false);
   }
   lockUI(false);
+  // Auto-refresh survey rankings if the survey panel is currently active
+  const surveyResultsEl = document.getElementById("survey-results");
+  if (surveyResultsEl && !surveyResultsEl.classList.contains("hidden")) {
+    clearSurveyOverlay();
+    await runSurvey();
+  }
 }
 
+
 document.addEventListener("keydown", e => { if (e.key === "Escape") closePlanModal(); });
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCIENCE SURVEY ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+const RANK_SYMBOLS = ["①", "②", "③", "④", "⑤"];
+
+/** Toggle the Science Survey panel open/closed. */
+function toggleSurvey() {
+  const body = document.getElementById("survey-body");
+  const icon = document.getElementById("survey-toggle-icon");
+  if (!body) return;
+  const hidden = body.style.display === "none";
+  body.style.display = hidden ? "" : "none";
+  icon.classList.toggle("collapsed", !hidden);
+}
+
+/** Remove all survey overlays from grid cells. */
+function clearSurveyOverlay() {
+  document.querySelectorAll(".cell-survey").forEach(c => {
+    c.classList.remove("cell-survey");
+    c.removeAttribute("data-survey-rank");
+  });
+}
+
+/**
+ * Navigate to (x, y) by calling /api/plan and opening the feasibility modal.
+ * All survey recommendations route through the standard analyze→approve→execute flow.
+ */
+async function navigateTo(x, y) {
+  if (busy) return;
+  lockUI(true);
+  const plan = await apiFetch("/api/plan", { method: "POST", body: JSON.stringify({ x, y }) });
+  lockUI(false);
+  if (plan) showPlanModal(plan, "navigate", { x, y });
+}
+
+/** Call /api/recommend and render the ranked target cards + grid overlays. */
+async function runSurvey() {
+  const btn = document.getElementById("btn-survey");
+  const hint = document.getElementById("survey-hint");
+  const resultsEl = document.getElementById("survey-results");
+
+  btn.classList.add("loading");
+  btn.disabled = true;
+  hint.textContent = "Scanning…";
+  clearSurveyOverlay();
+  resultsEl.classList.add("hidden");
+  resultsEl.innerHTML = "";
+
+  const data = await apiFetch("/api/recommend?n=3");
+
+  btn.classList.remove("loading");
+  btn.disabled = false;
+
+  if (!data) {
+    hint.textContent = "Scan failed — is server running?";
+    return;
+  }
+
+  const recs = data.recommendations || [];
+  const missionScore = data.mission_score ?? 0;
+  const total = data.total_candidates ?? 0;
+
+  // Update score badge in panel header
+  const scoreBadge = document.getElementById("survey-score-badge");
+  if (scoreBadge) scoreBadge.textContent = `${missionScore} pts`;
+
+  hint.textContent = `${recs.length} of ${total} candidates`;
+
+  if (recs.length === 0) {
+    resultsEl.innerHTML = `<div style="font-size:10px;color:var(--text-secondary);text-align:center;padding:8px">All high-value cells explored.</div>`;
+    resultsEl.classList.remove("hidden");
+    return;
+  }
+
+  // Terrain CSS class map
+  const terrainCls = { rock: "survey-terrain-rock", ice: "survey-terrain-ice", sand: "survey-terrain-sand", plain: "survey-terrain-plain" };
+
+  recs.forEach((rec, i) => {
+    const [x, y] = rec.position;
+    const rank = RANK_SYMBOLS[i] || `#${i + 1}`;
+
+    // ── Grid overlay badge ──
+    const cell = document.getElementById(`cell-${x}-${y}`);
+    if (cell) {
+      cell.classList.add("cell-survey");
+      cell.setAttribute("data-survey-rank", rank);
+    }
+
+    // ── Sidebar card ──
+    const reasons = (rec.reasons || []).map(r =>
+      `<span class="survey-reason-pill">${r}</span>`
+    ).join("");
+
+    const card = document.createElement("div");
+    card.className = "survey-card";
+    card.title = `Click to plan route to (${x}, ${y})`;
+    card.innerHTML = `
+      <div class="survey-card-header">
+        <span class="survey-rank-badge">${rank}</span>
+        <span class="survey-pos">(${x}, ${y})</span>
+        <span class="survey-terrain-tag ${terrainCls[rec.terrain] || ""}">${rec.terrain}</span>
+      </div>
+      <div class="survey-reasons">${reasons || '<span class="survey-reason-pill">Plain terrain</span>'}</div>
+      <div class="survey-metrics">
+        <div class="survey-metric">
+          <span class="survey-metric-label">SCIENCE</span>
+          <span class="survey-metric-value">${rec.science_value}</span>
+        </div>
+        <div class="survey-metric">
+          <span class="survey-metric-label">COST</span>
+          <span class="survey-metric-value">${rec.travel_cost}u</span>
+        </div>
+        <div class="survey-metric">
+          <span class="survey-metric-label">EFFICIENCY</span>
+          <span class="survey-metric-value">${rec.efficiency.toFixed(2)}</span>
+        </div>
+      </div>
+      <div class="survey-action-hint">▶ Click to open feasibility analysis</div>
+    `;
+    card.addEventListener("click", () => navigateTo(x, y));
+    resultsEl.appendChild(card);
+  });
+
+  resultsEl.classList.remove("hidden");
+}
+
