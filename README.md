@@ -77,6 +77,28 @@ This project was built in three deliberate phases, each adding a meaningful laye
 - **Persistent telemetry** — every web session auto-saved to `telemetry/` as a JSON file with sensor snapshots
 - **Navigation between pages** — Mission Control ↔ Analytics via top nav
 
+### Phase 3 Extensions — Mission Intelligence
+- **Mission Feasibility Analysis** — every navigation and batch sequence passes through a pre-flight check before executing:
+  - `◆ PLAN` button in the batch panel opens a full mission report modal
+  - Clicking any grid cell or coordinate triggers the analysis before moving
+  - Report includes: path length, energy cost, projected battery (colour bar), terrain breakdown (per-biome bars), atmospheric dust exposure, science targets on route
+  - Risk scoring engine classifies routes as **LOW / MEDIUM / HIGH** with a final verdict: `SAFE TO EXECUTE`, `EXECUTE WITH CAUTION`, or `NOT RECOMMENDED`
+  - Planned path previewed on the grid as a dashed cyan overlay while the modal is open
+  - `EXECUTE MISSION` / `EXECUTE WITH CAUTION` / `ABORT PLAN` action buttons in modal footer
+- **20 × 20 exploration grid** — map expanded from 10×10 to 20×20 (400 cells) with:
+  - Five geographic terrain biomes: Sand Basin (SW), Rock Formation (NE), Ice Field (NW), Rock Ridge (SE), Sand Ridge (mid-east)
+  - 20 strategically placed obstacle clusters forming natural chokepoints and corridors
+  - Six mission waypoints distributed across all map quadrants
+- **Science Survey Engine** — autonomous science target prioritization panel in the sidebar:
+  - `◆ SCAN TARGETS` button calls `/api/recommend` to rank every unvisited cell by scientific value
+  - Each cell scored on: terrain geological interest, terrain boundary-zone adjacency (multi-biome contact zones), UV anomaly, extreme temperature signature, designated waypoint bonus, dust storm penalty
+  - Returns `science_value`, `travel_cost`, `efficiency` (science/cost ratio), and a `reasons[]` array explaining each score contribution
+  - Top 3 targets rendered as ranked cards ①②③ in the sidebar with terrain tag, reason pills, and metrics
+  - Corresponding grid cells highlighted with a magenta outline and rank badge overlay
+  - Clicking any target card opens the **Mission Feasibility Modal** for that route — all missions still pass through the analyze → approve → execute flow
+  - **Mission Science Score** accumulates in the panel header as the rover visits high-value cells
+  - Rankings auto-refresh after each mission execution
+
 ---
 
 ## 📁 Project Structure
@@ -314,6 +336,13 @@ Phase 1 Core  (rover.py)
 | `/api/analytics/missions` | GET | List all telemetry files with metadata |
 | `/api/analytics/mission/<file>` | GET | Full breakdown for one mission |
 
+#### Mission Intelligence
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/plan` | POST | Mission Feasibility Analysis — dry-run route assessment (never mutates state) |
+| `/api/recommend` | GET | Science Prioritization Engine — ranked list of top unvisited science targets |
+
 ### Telemetry Persistence
 
 Every web session generates one `telemetry/mission_YYYYMMDD_HHMMSS.json` file that follows the exact same schema as the terminal-generated files. Sensor readings are embedded in every event:
@@ -375,12 +404,13 @@ All mission parameters live in `config.yaml` — no code changes needed:
 
 ```yaml
 grid:
-  width: 10
-  height: 10
-  obstacles:
-    - [2, 2]
-    - [3, 5]
-    - [7, 8]
+  width: 20
+  height: 20
+  obstacles:          # 20 strategic chokepoints
+    - [9,  10]
+    - [10, 10]
+    - [11, 11]
+    # ... (see config.yaml for full list)
 
 rover:
   start_x: 0
@@ -391,26 +421,44 @@ battery:
   max_charge: 100
   solar_rate: 5          # units restored per solar charge action
 
-terrain:
-  - type: sand           # plain | sand | rock | ice
+terrain:               # Five geographic biome regions
+  - type: sand         # Sand Basin — southwest lowland dunes
     cells:
       - [1, 1]
       - [2, 1]
-  - type: rock
+      # ... (26 cells total)
+  - type: rock         # Rock Formation — northeast highland plateau
     cells:
-      - [6, 4]
+      - [13, 13]
+      # ... (20 cells total)
+  - type: ice          # Ice Field — northwest polar permafrost
+    cells:
+      - [0, 13]
+      # ... (25 cells total)
 
 mission:
   name: "Mars Exploration Mission"
   enable_telemetry: true
   telemetry_folder: "telemetry"
-  waypoints:
+  waypoints:           # Six targets across all map quadrants
     - name: "Sample Site Alpha"
       x: 5
-      y: 7
-    - name: "High Ground Sigma"
-      x: 9
+      y: 8
+    - name: "Olympus Outpost"
+      x: 10
+      y: 15
+    - name: "Dust Basin Delta"
+      x: 17
       y: 9
+    - name: "Polar Ridge Epsilon"
+      x: 3
+      y: 18
+    - name: "Iron Peak Zeta"
+      x: 15
+      y: 5
+    - name: "High Ground Sigma"
+      x: 18
+      y: 19
 ```
 
 ### Terrain Battery Costs
@@ -464,6 +512,9 @@ pytest tests/test_phase2.py -v
 > - **REMS sensors** — Curiosity's weather station measures temperature, UV, and atmospheric dust (τ) daily
 > - **Dust storms** — High τ events reduce solar panel efficiency; NASA plans conservative power budgets around them
 > - **Mission replay** — JPL engineers replay telemetry recordings to diagnose rover behaviour and plan corrections
+- **Science contact zones** — NASA's science teams prioritize cells at the boundary between two geological units (e.g. basalt–sediment contacts); the Science Survey Engine mirrors this by awarding boundary-zone bonuses
+- **Autonomous science targeting** — Perseverance's AEGIS system autonomously ranks and photographs science targets; the `science_value / travel_cost` efficiency ratio in `/api/recommend` mirrors this reward-to-effort prioritization
+- **Mission Feasibility Analysis** — before every drive, JPL engineers run trajectory simulations checking energy budget, terrain risk, and dust exposure; the `/api/plan` dry-run endpoint mirrors this pre-flight assessment workflow
 
 ---
 
