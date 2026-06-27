@@ -1040,3 +1040,130 @@ async function runSurvey() {
   resultsEl.classList.remove("hidden");
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  AUTONOMOUS EXPLORATION ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+let _aeActive   = false;
+let _aeTimer    = null;
+let _aeSteps    = 0;
+
+/** Toggle the Auto Explore panel open/collapsed. */
+function toggleAutoExplorePanel() {
+  const body = document.getElementById("ae-body");
+  const icon = document.getElementById("ae-panel-toggle");
+  if (!body) return;
+  const hidden = body.style.display === "none";
+  body.style.display = hidden ? "" : "none";
+  icon.classList.toggle("collapsed", !hidden);
+}
+
+/** Start or stop the autonomous exploration loop. */
+function toggleAutoExplore() {
+  if (_aeActive) {
+    _stopAutoExplore("Stopped by operator.");
+  } else {
+    _startAutoExplore();
+  }
+}
+
+function _startAutoExplore() {
+  _aeActive = true;
+  _aeSteps  = 0;
+  const btn = document.getElementById("btn-ae-start");
+  const statusEl = document.getElementById("ae-status");
+  btn.classList.add("running");
+  btn.textContent = "⏹ STOP EXPLORING";
+  statusEl.className = "ae-status-label running";
+  statusEl.textContent = "Exploring…";
+  document.getElementById("ae-log").innerHTML = "";
+  appendAeLog("◆ Autonomous exploration started.", "info");
+  _aeLoop();
+}
+
+function _stopAutoExplore(reason) {
+  _aeActive = false;
+  clearTimeout(_aeTimer);
+  const btn = document.getElementById("btn-ae-start");
+  const statusEl = document.getElementById("ae-status");
+  btn.classList.remove("running");
+  btn.textContent = "◆ AUTO EXPLORE";
+  statusEl.className = "ae-status-label stopped";
+  statusEl.textContent = "Stopped";
+  if (reason) appendAeLog(reason, "warn");
+}
+
+async function _aeLoop() {
+  if (!_aeActive) return;
+
+  const result = await apiFetch("/api/auto_explore/step", { method: "POST" });
+
+  if (!result) {
+    _stopAutoExplore("Connection error — exploration halted.");
+    return;
+  }
+
+  // ── Step divider ──
+  _aeSteps++;
+  document.getElementById("ae-step-count").textContent = `${_aeSteps} step${_aeSteps !== 1 ? "s" : ""}`;
+  appendAeLog(`── Step ${_aeSteps} ──`, "step-divider");
+
+  // ── Log each reasoning line ──
+  (result.reasoning || []).forEach(line => appendAeLog(line));
+
+  // ── Update grid + sidebar ──
+  if (result.state) render(result.state);
+
+  // ── Update score badge ──
+  const score = result.mission_score ?? 0;
+  const scoreBadge = document.getElementById("ae-score-badge");
+  if (scoreBadge) {
+    scoreBadge.textContent = `${score} pts`;
+    scoreBadge.classList.toggle("active", score > 0);
+  }
+
+  // ── Also refresh survey overlay if it's open ──
+  const surveyResultsEl = document.getElementById("survey-results");
+  if (surveyResultsEl && !surveyResultsEl.classList.contains("hidden")) {
+    clearSurveyOverlay();
+    // Don't await — let it refresh in background
+    runSurvey();
+  }
+
+  // ── Continue or stop ──
+  if (!_aeActive) return;
+
+  if (!result.should_continue) {
+    _stopAutoExplore(result.stop_reason || "Exploration complete.");
+    return;
+  }
+
+  const delay = parseInt(document.getElementById("ae-speed")?.value || "1600", 10);
+  _aeTimer = setTimeout(_aeLoop, delay);
+}
+
+/**
+ * Append one line to the decision log with automatic colour classification.
+ * Colour is derived from the leading emoji/character:
+ *   ✓  → green (ok)    ⚠  → amber (warn)    ✗/⛔ → red (error)
+ *   🎯/🔍/🔋/◆ → cyan (info)   ── → dim (step-divider)
+ */
+function appendAeLog(text, forceClass) {
+  const log = document.getElementById("ae-log");
+  if (!log) return;
+
+  let cls = forceClass || "";
+  if (!cls) {
+    if (text.startsWith("✓"))                   cls = "ok";
+    else if (text.startsWith("⚠"))             cls = "warn";
+    else if (text.startsWith("✗") || text.startsWith("⛔")) cls = "error";
+    else if (text.startsWith("🎯") || text.startsWith("🔍") ||
+             text.startsWith("🔋") || text.startsWith("◆")) cls = "info";
+  }
+
+  const line = document.createElement("div");
+  line.className = `ae-log-line${cls ? " " + cls : ""}`;
+  line.textContent = text;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}

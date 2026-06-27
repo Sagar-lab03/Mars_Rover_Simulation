@@ -1,0 +1,5491 @@
+{
+  "mission_name": "Mars Exploration Mission",
+  "start_time": "2026-06-27T17:34:51.103380",
+  "end_time": "2026-06-27T17:36:59.558355",
+  "final_status": {
+    "position": {
+      "x": 3,
+      "y": 19
+    },
+    "direction": "East",
+    "commands_executed": 59,
+    "cells_visited": 34,
+    "battery": {
+      "charge": 33,
+      "max_charge": 100,
+      "percentage": 33.0,
+      "status": "Low",
+      "total_consumed": 158,
+      "total_recharged": 91
+    }
+  },
+  "path_history": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      0,
+      9
+    ],
+    [
+      0,
+      10
+    ],
+    [
+      0,
+      11
+    ],
+    [
+      0,
+      12
+    ],
+    [
+      0,
+      13
+    ],
+    [
+      0,
+      14
+    ],
+    [
+      1,
+      14
+    ],
+    [
+      2,
+      14
+    ],
+    [
+      3,
+      14
+    ],
+    [
+      4,
+      14
+    ],
+    [
+      4,
+      15
+    ],
+    [
+      4,
+      16
+    ],
+    [
+      4,
+      17
+    ],
+    [
+      4,
+      16
+    ],
+    [
+      4,
+      15
+    ],
+    [
+      5,
+      15
+    ],
+    [
+      4,
+      15
+    ],
+    [
+      3,
+      15
+    ],
+    [
+      3,
+      14
+    ],
+    [
+      2,
+      14
+    ],
+    [
+      1,
+      14
+    ],
+    [
+      1,
+      13
+    ],
+    [
+      2,
+      13
+    ],
+    [
+      3,
+      13
+    ],
+    [
+      2,
+      13
+    ],
+    [
+      1,
+      13
+    ],
+    [
+      1,
+      14
+    ],
+    [
+      1,
+      15
+    ],
+    [
+      1,
+      16
+    ],
+    [
+      1,
+      17
+    ],
+    [
+      1,
+      18
+    ],
+    [
+      2,
+      18
+    ],
+    [
+      2,
+      19
+    ],
+    [
+      3,
+      19
+    ]
+  ],
+  "events": [
+    {
+      "timestamp": "2026-06-27T17:34:51.103380",
+      "type": "mission_start",
+      "data": {
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "direction": "North",
+        "commands_executed": 0,
+        "cells_visited": 1,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 0,
+          "total_recharged": 0
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 1
+          },
+          "direction": "North",
+          "commands_executed": 1,
+          "cells_visited": 2,
+          "battery": {
+            "charge": 95,
+            "max_charge": 100,
+            "percentage": 95.0,
+            "status": "Good",
+            "total_consumed": 5,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 2
+          },
+          "direction": "North",
+          "commands_executed": 2,
+          "cells_visited": 3,
+          "battery": {
+            "charge": 90,
+            "max_charge": 100,
+            "percentage": 90.0,
+            "status": "Good",
+            "total_consumed": 10,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 3
+          },
+          "direction": "North",
+          "commands_executed": 3,
+          "cells_visited": 4,
+          "battery": {
+            "charge": 85,
+            "max_charge": 100,
+            "percentage": 85.0,
+            "status": "Good",
+            "total_consumed": 15,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 4
+          },
+          "direction": "North",
+          "commands_executed": 4,
+          "cells_visited": 5,
+          "battery": {
+            "charge": 80,
+            "max_charge": 100,
+            "percentage": 80.0,
+            "status": "Good",
+            "total_consumed": 20,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 5
+          },
+          "direction": "North",
+          "commands_executed": 5,
+          "cells_visited": 6,
+          "battery": {
+            "charge": 75,
+            "max_charge": 100,
+            "percentage": 75.0,
+            "status": "Good",
+            "total_consumed": 25,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 6
+          },
+          "direction": "North",
+          "commands_executed": 6,
+          "cells_visited": 7,
+          "battery": {
+            "charge": 70,
+            "max_charge": 100,
+            "percentage": 70.0,
+            "status": "Good",
+            "total_consumed": 30,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 7
+          },
+          "direction": "North",
+          "commands_executed": 7,
+          "cells_visited": 8,
+          "battery": {
+            "charge": 65,
+            "max_charge": 100,
+            "percentage": 65.0,
+            "status": "Good",
+            "total_consumed": 35,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 8
+          },
+          "direction": "North",
+          "commands_executed": 8,
+          "cells_visited": 9,
+          "battery": {
+            "charge": 60,
+            "max_charge": 100,
+            "percentage": 60.0,
+            "status": "Low",
+            "total_consumed": 40,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 9
+          },
+          "direction": "North",
+          "commands_executed": 9,
+          "cells_visited": 10,
+          "battery": {
+            "charge": 55,
+            "max_charge": 100,
+            "percentage": 55.0,
+            "status": "Low",
+            "total_consumed": 45,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 10
+          },
+          "direction": "North",
+          "commands_executed": 10,
+          "cells_visited": 11,
+          "battery": {
+            "charge": 50,
+            "max_charge": 100,
+            "percentage": 50.0,
+            "status": "Low",
+            "total_consumed": 50,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 11
+          },
+          "direction": "North",
+          "commands_executed": 11,
+          "cells_visited": 12,
+          "battery": {
+            "charge": 45,
+            "max_charge": 100,
+            "percentage": 45.0,
+            "status": "Low",
+            "total_consumed": 55,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 12
+          },
+          "direction": "North",
+          "commands_executed": 12,
+          "cells_visited": 13,
+          "battery": {
+            "charge": 40,
+            "max_charge": 100,
+            "percentage": 40.0,
+            "status": "Low",
+            "total_consumed": 60,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 13
+          },
+          "direction": "North",
+          "commands_executed": 13,
+          "cells_visited": 14,
+          "battery": {
+            "charge": 37,
+            "max_charge": 100,
+            "percentage": 37.0,
+            "status": "Low",
+            "total_consumed": 63,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 14
+          },
+          "direction": "North",
+          "commands_executed": 14,
+          "cells_visited": 15,
+          "battery": {
+            "charge": 34,
+            "max_charge": 100,
+            "percentage": 34.0,
+            "status": "Low",
+            "total_consumed": 66,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "R",
+        "rover_status": {
+          "position": {
+            "x": 0,
+            "y": 14
+          },
+          "direction": "East",
+          "commands_executed": 15,
+          "cells_visited": 15,
+          "battery": {
+            "charge": 34,
+            "max_charge": 100,
+            "percentage": 34.0,
+            "status": "Low",
+            "total_consumed": 66,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 14
+          },
+          "direction": "East",
+          "commands_executed": 16,
+          "cells_visited": 16,
+          "battery": {
+            "charge": 31,
+            "max_charge": 100,
+            "percentage": 31.0,
+            "status": "Low",
+            "total_consumed": 69,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 14
+          },
+          "direction": "East",
+          "commands_executed": 17,
+          "cells_visited": 17,
+          "battery": {
+            "charge": 28,
+            "max_charge": 100,
+            "percentage": 28.0,
+            "status": "Critical",
+            "total_consumed": 72,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 14
+          },
+          "direction": "East",
+          "commands_executed": 18,
+          "cells_visited": 18,
+          "battery": {
+            "charge": 25,
+            "max_charge": 100,
+            "percentage": 25.0,
+            "status": "Critical",
+            "total_consumed": 75,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:35:10.193728",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 14
+          },
+          "direction": "East",
+          "commands_executed": 19,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 22,
+            "max_charge": 100,
+            "percentage": 22.0,
+            "status": "Critical",
+            "total_consumed": 78,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:13.339140",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 14
+          },
+          "direction": "North",
+          "commands_executed": 20,
+          "cells_visited": 19,
+          "battery": {
+            "charge": 22,
+            "max_charge": 100,
+            "percentage": 22.0,
+            "status": "Critical",
+            "total_consumed": 78,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:13.339140",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 15
+          },
+          "direction": "North",
+          "commands_executed": 21,
+          "cells_visited": 20,
+          "battery": {
+            "charge": 19,
+            "max_charge": 100,
+            "percentage": 19.0,
+            "status": "Critical",
+            "total_consumed": 81,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:13.339140",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 16
+          },
+          "direction": "North",
+          "commands_executed": 22,
+          "cells_visited": 21,
+          "battery": {
+            "charge": 14,
+            "max_charge": 100,
+            "percentage": 14.0,
+            "status": "Critical",
+            "total_consumed": 86,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:13.339140",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 17
+          },
+          "direction": "North",
+          "commands_executed": 23,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 9,
+            "max_charge": 100,
+            "percentage": 9.0,
+            "status": "Critical",
+            "total_consumed": 91,
+            "total_recharged": 0
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:18.972792",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 13,
+          "max_charge": 100,
+          "percentage": 13.0,
+          "status": "Critical",
+          "total_consumed": 91,
+          "total_recharged": 4
+        },
+        "sensors": {
+          "surface_temp": -17.1,
+          "dust_opacity": 1.55,
+          "uv_index": 4.3,
+          "slope_deg": 0.9,
+          "solar_reduction_pct": 26.2,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:19.979292",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 17,
+          "max_charge": 100,
+          "percentage": 17.0,
+          "status": "Critical",
+          "total_consumed": 91,
+          "total_recharged": 8
+        },
+        "sensors": {
+          "surface_temp": -20.1,
+          "dust_opacity": 1.56,
+          "uv_index": 4.3,
+          "slope_deg": 2.1,
+          "solar_reduction_pct": 26.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:20.588815",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 21,
+          "max_charge": 100,
+          "percentage": 21.0,
+          "status": "Critical",
+          "total_consumed": 91,
+          "total_recharged": 12
+        },
+        "sensors": {
+          "surface_temp": -19.6,
+          "dust_opacity": 1.54,
+          "uv_index": 4.2,
+          "slope_deg": 2.9,
+          "solar_reduction_pct": 26.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:21.459921",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 25,
+          "max_charge": 100,
+          "percentage": 25.0,
+          "status": "Critical",
+          "total_consumed": 91,
+          "total_recharged": 16
+        },
+        "sensors": {
+          "surface_temp": -19.8,
+          "dust_opacity": 1.6,
+          "uv_index": 4.3,
+          "slope_deg": 2.9,
+          "solar_reduction_pct": 27.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:21.862779",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 29,
+          "max_charge": 100,
+          "percentage": 29.0,
+          "status": "Critical",
+          "total_consumed": 91,
+          "total_recharged": 20
+        },
+        "sensors": {
+          "surface_temp": -18.8,
+          "dust_opacity": 1.6,
+          "uv_index": 4.0,
+          "slope_deg": 0.9,
+          "solar_reduction_pct": 27.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:22.452303",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 33,
+          "max_charge": 100,
+          "percentage": 33.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 24
+        },
+        "sensors": {
+          "surface_temp": -20.4,
+          "dust_opacity": 1.51,
+          "uv_index": 3.9,
+          "slope_deg": 1.7,
+          "solar_reduction_pct": 25.2,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:22.712701",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 37,
+          "max_charge": 100,
+          "percentage": 37.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 28
+        },
+        "sensors": {
+          "surface_temp": -22.7,
+          "dust_opacity": 1.46,
+          "uv_index": 4.3,
+          "slope_deg": 0.9,
+          "solar_reduction_pct": 24.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:23.093159",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 41,
+          "max_charge": 100,
+          "percentage": 41.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 32
+        },
+        "sensors": {
+          "surface_temp": -17.9,
+          "dust_opacity": 1.57,
+          "uv_index": 4.2,
+          "slope_deg": 0.7,
+          "solar_reduction_pct": 26.8,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:23.871787",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 45,
+          "max_charge": 100,
+          "percentage": 45.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 36
+        },
+        "sensors": {
+          "surface_temp": -21.8,
+          "dust_opacity": 1.54,
+          "uv_index": 4.3,
+          "slope_deg": 0.6,
+          "solar_reduction_pct": 26.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:24.122192",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 49,
+          "max_charge": 100,
+          "percentage": 49.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 40
+        },
+        "sensors": {
+          "surface_temp": -20.9,
+          "dust_opacity": 1.55,
+          "uv_index": 4.3,
+          "slope_deg": 2.6,
+          "solar_reduction_pct": 26.2,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:24.404997",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 53,
+          "max_charge": 100,
+          "percentage": 53.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 44
+        },
+        "sensors": {
+          "surface_temp": -21.9,
+          "dust_opacity": 1.46,
+          "uv_index": 4.0,
+          "slope_deg": 3.2,
+          "solar_reduction_pct": 24.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:24.972723",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 57,
+          "max_charge": 100,
+          "percentage": 57.0,
+          "status": "Low",
+          "total_consumed": 91,
+          "total_recharged": 48
+        },
+        "sensors": {
+          "surface_temp": -18.7,
+          "dust_opacity": 1.55,
+          "uv_index": 4.1,
+          "slope_deg": 3.3,
+          "solar_reduction_pct": 26.2,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:25.473199",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 61,
+          "max_charge": 100,
+          "percentage": 61.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 52
+        },
+        "sensors": {
+          "surface_temp": -21.1,
+          "dust_opacity": 1.57,
+          "uv_index": 4.2,
+          "slope_deg": 2.6,
+          "solar_reduction_pct": 26.8,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:26.331190",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 65,
+          "max_charge": 100,
+          "percentage": 65.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 56
+        },
+        "sensors": {
+          "surface_temp": -19.6,
+          "dust_opacity": 1.53,
+          "uv_index": 3.9,
+          "slope_deg": 2.6,
+          "solar_reduction_pct": 25.8,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:26.581035",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 69,
+          "max_charge": 100,
+          "percentage": 69.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 60
+        },
+        "sensors": {
+          "surface_temp": -20.3,
+          "dust_opacity": 1.48,
+          "uv_index": 4.2,
+          "slope_deg": 2.9,
+          "solar_reduction_pct": 24.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:26.920688",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 73,
+          "max_charge": 100,
+          "percentage": 73.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 64
+        },
+        "sensors": {
+          "surface_temp": -17.5,
+          "dust_opacity": 1.61,
+          "uv_index": 4.2,
+          "slope_deg": 1.8,
+          "solar_reduction_pct": 27.8,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:27.571307",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 77,
+          "max_charge": 100,
+          "percentage": 77.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 68
+        },
+        "sensors": {
+          "surface_temp": -21.5,
+          "dust_opacity": 1.54,
+          "uv_index": 4.2,
+          "slope_deg": 1.4,
+          "solar_reduction_pct": 26.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:27.834463",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 81,
+          "max_charge": 100,
+          "percentage": 81.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 72
+        },
+        "sensors": {
+          "surface_temp": -18.3,
+          "dust_opacity": 1.5,
+          "uv_index": 3.9,
+          "slope_deg": 2.2,
+          "solar_reduction_pct": 25.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:28.204746",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 85,
+          "max_charge": 100,
+          "percentage": 85.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 76
+        },
+        "sensors": {
+          "surface_temp": -17.2,
+          "dust_opacity": 1.62,
+          "uv_index": 4.3,
+          "slope_deg": 1.0,
+          "solar_reduction_pct": 28.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:29.039176",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 89,
+          "max_charge": 100,
+          "percentage": 89.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 80
+        },
+        "sensors": {
+          "surface_temp": -18.0,
+          "dust_opacity": 1.58,
+          "uv_index": 4.0,
+          "slope_deg": 1.3,
+          "solar_reduction_pct": 27.0,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:29.375562",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 93,
+          "max_charge": 100,
+          "percentage": 93.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 84
+        },
+        "sensors": {
+          "surface_temp": -21.1,
+          "dust_opacity": 1.61,
+          "uv_index": 4.1,
+          "slope_deg": 2.2,
+          "solar_reduction_pct": 27.8,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:30.221334",
+      "type": "solar_charge",
+      "data": {
+        "gained": 4,
+        "battery": {
+          "charge": 97,
+          "max_charge": 100,
+          "percentage": 97.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 88
+        },
+        "sensors": {
+          "surface_temp": -18.0,
+          "dust_opacity": 1.64,
+          "uv_index": 4.3,
+          "slope_deg": 1.6,
+          "solar_reduction_pct": 28.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:30.556386",
+      "type": "solar_charge",
+      "data": {
+        "gained": 3,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 91
+        },
+        "sensors": {
+          "surface_temp": -21.9,
+          "dust_opacity": 1.59,
+          "uv_index": 4.3,
+          "slope_deg": 2.8,
+          "solar_reduction_pct": 27.3,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:31.351745",
+      "type": "solar_charge",
+      "data": {
+        "gained": 0,
+        "battery": {
+          "charge": 100,
+          "max_charge": 100,
+          "percentage": 100.0,
+          "status": "Good",
+          "total_consumed": 91,
+          "total_recharged": 91
+        },
+        "sensors": {
+          "surface_temp": -19.3,
+          "dust_opacity": 1.56,
+          "uv_index": 3.9,
+          "slope_deg": 1.3,
+          "solar_reduction_pct": 26.5,
+          "terrain": "plain"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:43.962695",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 17
+          },
+          "direction": "West",
+          "commands_executed": 24,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 100,
+            "max_charge": 100,
+            "percentage": 100.0,
+            "status": "Good",
+            "total_consumed": 91,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:43.962695",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 17
+          },
+          "direction": "South",
+          "commands_executed": 25,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 100,
+            "max_charge": 100,
+            "percentage": 100.0,
+            "status": "Good",
+            "total_consumed": 91,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:43.962695",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 16
+          },
+          "direction": "South",
+          "commands_executed": 26,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 95,
+            "max_charge": 100,
+            "percentage": 95.0,
+            "status": "Good",
+            "total_consumed": 96,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:43.962695",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 15
+          },
+          "direction": "South",
+          "commands_executed": 27,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 92,
+            "max_charge": 100,
+            "percentage": 92.0,
+            "status": "Good",
+            "total_consumed": 99,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:43.962695",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 15
+          },
+          "direction": "East",
+          "commands_executed": 28,
+          "cells_visited": 22,
+          "battery": {
+            "charge": 92,
+            "max_charge": 100,
+            "percentage": 92.0,
+            "status": "Good",
+            "total_consumed": 99,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:43.962695",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 5,
+            "y": 15
+          },
+          "direction": "East",
+          "commands_executed": 29,
+          "cells_visited": 23,
+          "battery": {
+            "charge": 89,
+            "max_charge": 100,
+            "percentage": 89.0,
+            "status": "Good",
+            "total_consumed": 102,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 5,
+            "y": 15
+          },
+          "direction": "North",
+          "commands_executed": 30,
+          "cells_visited": 23,
+          "battery": {
+            "charge": 89,
+            "max_charge": 100,
+            "percentage": 89.0,
+            "status": "Good",
+            "total_consumed": 102,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 5,
+            "y": 15
+          },
+          "direction": "West",
+          "commands_executed": 31,
+          "cells_visited": 23,
+          "battery": {
+            "charge": 89,
+            "max_charge": 100,
+            "percentage": 89.0,
+            "status": "Good",
+            "total_consumed": 102,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 4,
+            "y": 15
+          },
+          "direction": "West",
+          "commands_executed": 32,
+          "cells_visited": 23,
+          "battery": {
+            "charge": 86,
+            "max_charge": 100,
+            "percentage": 86.0,
+            "status": "Good",
+            "total_consumed": 105,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 15
+          },
+          "direction": "West",
+          "commands_executed": 33,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 81,
+            "max_charge": 100,
+            "percentage": 81.0,
+            "status": "Good",
+            "total_consumed": 110,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 15
+          },
+          "direction": "South",
+          "commands_executed": 34,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 81,
+            "max_charge": 100,
+            "percentage": 81.0,
+            "status": "Good",
+            "total_consumed": 110,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 14
+          },
+          "direction": "South",
+          "commands_executed": 35,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 78,
+            "max_charge": 100,
+            "percentage": 78.0,
+            "status": "Good",
+            "total_consumed": 113,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "R",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 14
+          },
+          "direction": "West",
+          "commands_executed": 36,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 78,
+            "max_charge": 100,
+            "percentage": 78.0,
+            "status": "Good",
+            "total_consumed": 113,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 14
+          },
+          "direction": "West",
+          "commands_executed": 37,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 75,
+            "max_charge": 100,
+            "percentage": 75.0,
+            "status": "Good",
+            "total_consumed": 116,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 14
+          },
+          "direction": "West",
+          "commands_executed": 38,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 72,
+            "max_charge": 100,
+            "percentage": 72.0,
+            "status": "Good",
+            "total_consumed": 119,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 14
+          },
+          "direction": "South",
+          "commands_executed": 39,
+          "cells_visited": 24,
+          "battery": {
+            "charge": 72,
+            "max_charge": 100,
+            "percentage": 72.0,
+            "status": "Good",
+            "total_consumed": 119,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:45.672719",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 13
+          },
+          "direction": "South",
+          "commands_executed": 40,
+          "cells_visited": 25,
+          "battery": {
+            "charge": 69,
+            "max_charge": 100,
+            "percentage": 69.0,
+            "status": "Good",
+            "total_consumed": 122,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:47.512436",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 13
+          },
+          "direction": "East",
+          "commands_executed": 41,
+          "cells_visited": 25,
+          "battery": {
+            "charge": 69,
+            "max_charge": 100,
+            "percentage": 69.0,
+            "status": "Good",
+            "total_consumed": 122,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:47.512436",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 13
+          },
+          "direction": "East",
+          "commands_executed": 42,
+          "cells_visited": 26,
+          "battery": {
+            "charge": 66,
+            "max_charge": 100,
+            "percentage": 66.0,
+            "status": "Good",
+            "total_consumed": 125,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:49.221090",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 13
+          },
+          "direction": "East",
+          "commands_executed": 43,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 63,
+            "max_charge": 100,
+            "percentage": 63.0,
+            "status": "Good",
+            "total_consumed": 128,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 13
+          },
+          "direction": "North",
+          "commands_executed": 44,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 63,
+            "max_charge": 100,
+            "percentage": 63.0,
+            "status": "Good",
+            "total_consumed": 128,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 13
+          },
+          "direction": "West",
+          "commands_executed": 45,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 63,
+            "max_charge": 100,
+            "percentage": 63.0,
+            "status": "Good",
+            "total_consumed": 128,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 13
+          },
+          "direction": "West",
+          "commands_executed": 46,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 60,
+            "max_charge": 100,
+            "percentage": 60.0,
+            "status": "Low",
+            "total_consumed": 131,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 13
+          },
+          "direction": "West",
+          "commands_executed": 47,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 57,
+            "max_charge": 100,
+            "percentage": 57.0,
+            "status": "Low",
+            "total_consumed": 134,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "R",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 13
+          },
+          "direction": "North",
+          "commands_executed": 48,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 57,
+            "max_charge": 100,
+            "percentage": 57.0,
+            "status": "Low",
+            "total_consumed": 134,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 14
+          },
+          "direction": "North",
+          "commands_executed": 49,
+          "cells_visited": 27,
+          "battery": {
+            "charge": 54,
+            "max_charge": 100,
+            "percentage": 54.0,
+            "status": "Low",
+            "total_consumed": 137,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:50.936304",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 15
+          },
+          "direction": "North",
+          "commands_executed": 50,
+          "cells_visited": 28,
+          "battery": {
+            "charge": 51,
+            "max_charge": 100,
+            "percentage": 51.0,
+            "status": "Low",
+            "total_consumed": 140,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:52.656679",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 16
+          },
+          "direction": "North",
+          "commands_executed": 51,
+          "cells_visited": 29,
+          "battery": {
+            "charge": 48,
+            "max_charge": 100,
+            "percentage": 48.0,
+            "status": "Low",
+            "total_consumed": 143,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:54.379268",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 17
+          },
+          "direction": "North",
+          "commands_executed": 52,
+          "cells_visited": 30,
+          "battery": {
+            "charge": 45,
+            "max_charge": 100,
+            "percentage": 45.0,
+            "status": "Low",
+            "total_consumed": 146,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:56.099582",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 18
+          },
+          "direction": "North",
+          "commands_executed": 53,
+          "cells_visited": 31,
+          "battery": {
+            "charge": 42,
+            "max_charge": 100,
+            "percentage": 42.0,
+            "status": "Low",
+            "total_consumed": 149,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:56.099582",
+      "type": "command",
+      "data": {
+        "command": "R",
+        "rover_status": {
+          "position": {
+            "x": 1,
+            "y": 18
+          },
+          "direction": "East",
+          "commands_executed": 54,
+          "cells_visited": 31,
+          "battery": {
+            "charge": 42,
+            "max_charge": 100,
+            "percentage": 42.0,
+            "status": "Low",
+            "total_consumed": 149,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:56.099582",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 18
+          },
+          "direction": "East",
+          "commands_executed": 55,
+          "cells_visited": 32,
+          "battery": {
+            "charge": 39,
+            "max_charge": 100,
+            "percentage": 39.0,
+            "status": "Low",
+            "total_consumed": 152,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:57.853767",
+      "type": "command",
+      "data": {
+        "command": "L",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 18
+          },
+          "direction": "North",
+          "commands_executed": 56,
+          "cells_visited": 32,
+          "battery": {
+            "charge": 39,
+            "max_charge": 100,
+            "percentage": 39.0,
+            "status": "Low",
+            "total_consumed": 152,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:57.853767",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 19
+          },
+          "direction": "North",
+          "commands_executed": 57,
+          "cells_visited": 33,
+          "battery": {
+            "charge": 36,
+            "max_charge": 100,
+            "percentage": 36.0,
+            "status": "Low",
+            "total_consumed": 155,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:59.558355",
+      "type": "command",
+      "data": {
+        "command": "R",
+        "rover_status": {
+          "position": {
+            "x": 2,
+            "y": 19
+          },
+          "direction": "East",
+          "commands_executed": 58,
+          "cells_visited": 33,
+          "battery": {
+            "charge": 36,
+            "max_charge": 100,
+            "percentage": 36.0,
+            "status": "Low",
+            "total_consumed": 155,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "timestamp": "2026-06-27T17:36:59.558355",
+      "type": "command",
+      "data": {
+        "command": "M",
+        "rover_status": {
+          "position": {
+            "x": 3,
+            "y": 19
+          },
+          "direction": "East",
+          "commands_executed": 59,
+          "cells_visited": 34,
+          "battery": {
+            "charge": 33,
+            "max_charge": 100,
+            "percentage": 33.0,
+            "status": "Low",
+            "total_consumed": 158,
+            "total_recharged": 91
+          }
+        },
+        "mission_status": {
+          "name": "Mars Exploration Mission",
+          "total_waypoints": 6,
+          "reached_waypoints": 0,
+          "complete": false,
+          "waypoints": [
+            {
+              "name": "Sample Site Alpha",
+              "position": [
+                5,
+                8
+              ],
+              "reached": false
+            },
+            {
+              "name": "Olympus Outpost",
+              "position": [
+                10,
+                15
+              ],
+              "reached": false
+            },
+            {
+              "name": "Dust Basin Delta",
+              "position": [
+                17,
+                9
+              ],
+              "reached": false
+            },
+            {
+              "name": "Polar Ridge Epsilon",
+              "position": [
+                3,
+                18
+              ],
+              "reached": false
+            },
+            {
+              "name": "Iron Peak Zeta",
+              "position": [
+                15,
+                5
+              ],
+              "reached": false
+            },
+            {
+              "name": "High Ground Sigma",
+              "position": [
+                18,
+                19
+              ],
+              "reached": false
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

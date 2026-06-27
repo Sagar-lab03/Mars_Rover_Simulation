@@ -632,6 +632,246 @@ def get_mission_detail(filename):
         },
     })
 
+# ── Autonomous Exploration Agent ──────────────────────────────────────────────
+
+_BATTERY_SAFETY_THRESHOLD = 20   # minimum charge before exploration is halted
+_MAX_CANDIDATES_TO_TRY    = 3    # how many top candidates to evaluate before giving up
+
+
+@app.route("/api/auto_explore/step", methods=["POST"])
+def auto_explore_step():
+    """
+    Single-step Autonomous Exploration Agent.
+
+    Workflow (one step):
+      1. Safety check — abort if battery is critically low
+      2. Scan — score every unvisited, reachable, non-obstacle cell
+      3. Rank — sort by efficiency (science_value / travel_cost)
+      4. Evaluate — lightweight feasibility check for top candidates
+      5. Execute — navigate to the first approved target
+      6. Report — return reasoning log + state + continuation signal
+
+    Stop conditions:
+      - Battery below safety threshold (< 20 units)
+      - No reachable unvisited candidates found
+      - All shortlisted candidates classified NOT_RECOMMENDED
+    """
+    reasoning: list[str] = []
+
+    # ── 1. Battery safety gate ───────────────────────────────────────────────
+    charge = rover.battery.charge
+    if charge < _BATTERY_SAFETY_THRESHOLD:
+        return jsonify({
+            "should_continue": False,
+            "stop_reason":     f"Battery critical ({charge}u). Solar charge recommended before resuming.",
+            "reasoning": [
+                f"⚠ Battery at {charge}u — below safety threshold ({_BATTERY_SAFETY_THRESHOLD}u).",
+                "Autonomous exploration halted. Use Solar Charge (S) to recharge.",
+            ],
+            "state":          build_state_json(),
+            "target":         None,
+            "mission_score":  0,
+        })
+
+    reasoning.append(f"🔋 Battery: {charge}u — sufficient for exploration.")
+
+    # ── 2. Scan: score all unvisited cells ───────────────────────────────────
+    visited   = set(map(tuple, rover.path_history))
+    rover_pos = (rover.x, rover.y)
+
+    candidates = []
+    for x in range(rover.grid.width):
+        for y in range(rover.grid.height):
+            if rover.grid.has_obstacle(x, y):
+                continue
+            if (x, y) == rover_pos:
+                continue
+            if (x, y) in visited:
+                continue
+            sv, reasons = _score_cell(x, y)
+            if sv > 0:
+                candidates.append({
+                    "position":      [x, y],
+                    "science_value": sv,
+                    "reasons":       reasons,
+                })
+
+    if not candidates:
+        return jsonify({
+            "should_continue": False,
+            "stop_reason":     "No unvisited science targets remain. Exploration complete.",
+            "reasoning": reasoning + [
+                "✓ Scan complete — all high-value cells have been explored.",
+                "Autonomous mission finished.",
+            ],
+            "state":         build_state_json(),
+            "target":        None,
+            "mission_score": _compute_mission_score(visited),
+        })
+
+    reasoning.append(f"🔍 Scanned {len(candidates)} unvisited candidate cells.")
+
+    # ── 3. Rank by science value; compute A* cost for top pool ───────────────
+    candidates.sort(key=lambda c: c["science_value"], reverse=True)
+    top_pool = candidates[: _MAX_CANDIDATES_TO_TRY * 4]
+
+    reachable = []
+    for c in top_pool:
+        x, y = c["position"]
+        path  = Pathfinder.find_path(rover.grid, rover_pos, (x, y))
+        if path is None:
+            continue
+        travel_cost = max(1, sum(
+            rover.terrain.get_battery_cost(px, py) for px, py in path[1:]
+        ))
+        efficiency  = round(c["science_value"] / travel_cost, 3)
+        final_score = round(c["science_value"] * 0.6 + efficiency * 10 * 0.4, 1)
+        reachable.append({**c, "travel_cost": travel_cost,
+                          "efficiency": efficiency, "score": final_score, "path": path})
+
+    if not reachable:
+        return jsonify({
+            "should_continue": False,
+            "stop_reason":     "No reachable science targets — rover may be surrounded by obstacles.",
+            "reasoning": reasoning + [
+                "⚠ A* found no routes to any candidate cell.",
+                "Autonomous exploration halted.",
+            ],
+            "state":         build_state_json(),
+            "target":        None,
+            "mission_score": _compute_mission_score(visited),
+        })
+
+    reachable.sort(key=lambda c: c["score"], reverse=True)
+
+    # ── 4. Evaluate: lightweight feasibility check ───────────────────────────
+    selected = None
+    for candidate in reachable[: _MAX_CANDIDATES_TO_TRY]:
+        x, y        = candidate["position"]
+        travel_cost = candidate["travel_cost"]
+        projected   = charge - travel_cost
+        proj_pct    = round((projected / rover.battery.max_charge) * 100, 1)
+
+        # Dust exposure along path
+        dust_vals = [
+            SensorSimulator.dust_opacity(px, py, rover.grid.width, rover.grid.height)
+            for px, py in candidate["path"][1:]
+        ]
+        avg_dust = round(sum(dust_vals) / len(dust_vals), 2) if dust_vals else 0.0
+
+        # Risk classification
+        if projected < _BATTERY_SAFETY_THRESHOLD:
+            risk = "NOT_RECOMMENDED"
+        elif proj_pct < 20 and avg_dust > 1.5:
+            risk = "NOT_RECOMMENDED"
+        elif proj_pct < 25 or avg_dust > 1.5:
+            risk = "MEDIUM"
+        else:
+            risk = "LOW"
+
+        if risk == "NOT_RECOMMENDED":
+            reasoning.append(
+                f"✗ Target ({x},{y}) skipped — projected battery {projected}u ({proj_pct}%) too low."
+            )
+            continue
+
+        selected = {**candidate, "risk": risk, "projected": projected,
+                    "proj_pct": proj_pct, "avg_dust": avg_dust}
+        break
+
+    if selected is None:
+        return jsonify({
+            "should_continue": False,
+            "stop_reason":     "All candidate routes are NOT_RECOMMENDED — insufficient battery for safe travel.",
+            "reasoning": reasoning + [
+                "⛔ No approvable routes found.",
+                "Recommend solar charging (S) before resuming auto-exploration.",
+            ],
+            "state":         build_state_json(),
+            "target":        None,
+            "mission_score": _compute_mission_score(visited),
+        })
+
+    # ── 5. Execute navigation ────────────────────────────────────────────────
+    x, y          = selected["position"]
+    top_reason    = selected["reasons"][0] if selected["reasons"] else "High science value"
+    risk_icon     = "✓" if selected["risk"] == "LOW" else "⚠"
+
+    reasoning.append(
+        f"🎯 Target ({x},{y}) selected — {top_reason} "
+        f"(science: {selected['science_value']}, efficiency: {selected['efficiency']})."
+    )
+    reasoning.append(
+        f"{risk_icon} Route: {len(selected['path'])-1} steps, cost {selected['travel_cost']}u, "
+        f"projected battery {selected['proj_pct']}% — risk {selected['risk']}."
+    )
+
+    cmds = Pathfinder.path_to_commands(selected["path"], str(rover.direction))
+    for step in cmds:
+        if rover.battery.is_dead:
+            break
+        if step == "M":
+            success = rover.move_forward()
+            if success:
+                reached = mission.check_position(rover.x, rover.y)
+                terrain_here = rover.terrain.get_terrain(rover.x, rover.y).value
+                cost = rover.terrain.get_battery_cost(rover.x, rover.y)
+                _log(f"AUTO [{rover.x},{rover.y}] [{terrain_here}, -{cost}]")
+                if reached:
+                    _log(f"Waypoint reached: {reached.name}!")
+        elif step == "L":
+            rover.turn_left()
+        elif step == "R":
+            rover.turn_right()
+        _record_event("command", {
+            "command":        step,
+            "rover_status":   rover.get_status(),
+            "mission_status": mission.get_status(),
+        })
+
+    _update_sensors()
+    _save_telemetry()
+    reasoning.append(f"✓ Navigation complete — rover now at ({rover.x},{rover.y}), battery {rover.battery.charge}u.")
+
+    # ── 6. Continuation check ────────────────────────────────────────────────
+    new_visited     = set(map(tuple, rover.path_history))
+    mission_score   = _compute_mission_score(new_visited)
+    low_battery     = rover.battery.charge < _BATTERY_SAFETY_THRESHOLD
+    has_more        = any(
+        not rover.grid.has_obstacle(cx, cy)
+        and (cx, cy) != (rover.x, rover.y)
+        and (cx, cy) not in new_visited
+        for cx in range(rover.grid.width)
+        for cy in range(rover.grid.height)
+    )
+    should_continue = has_more and not low_battery
+
+    stop_reason = None
+    if low_battery:
+        stop_reason = f"Battery at {rover.battery.charge}u — below safety threshold."
+    elif not has_more:
+        stop_reason = "All accessible science targets explored. Mission survey complete."
+
+    return jsonify({
+        "should_continue": should_continue,
+        "stop_reason":     stop_reason,
+        "reasoning":       reasoning,
+        "state":           build_state_json(),
+        "target":          {"position": [x, y], "science_value": selected["science_value"],
+                            "risk": selected["risk"]},
+        "mission_score":   mission_score,
+    })
+
+
+def _compute_mission_score(visited: set) -> int:
+    """Sum science values for all visited cells."""
+    return sum(
+        _score_cell(vx, vy)[0]
+        for vx, vy in visited
+        if rover.grid.is_valid_position(vx, vy) and not rover.grid.has_obstacle(vx, vy)
+    )
+
+
 # ── Science Prioritization Engine ────────────────────────────────────────────
 
 def _score_cell(x: int, y: int) -> tuple[int, list[str]]:

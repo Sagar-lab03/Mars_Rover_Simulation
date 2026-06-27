@@ -324,6 +324,34 @@
         </div>
       </div>
 
+      <!-- ── Autonomous Exploration Panel ────────────────────────────────── -->
+      <div class="panel panel-auto-explore">
+        <div class="panel-header auto-explore-header" onclick="toggleAutoExplorePanel()">
+          <span class="panel-title">&#9670; AUTO EXPLORE</span>
+          <div class="ae-header-right">
+            <span class="ae-score-badge" id="ae-score-badge">0 pts</span>
+            <span class="ae-toggle-icon" id="ae-panel-toggle">&#9660;</span>
+          </div>
+        </div>
+        <div class="ae-body" id="ae-body">
+          <div class="ae-controls">
+            <button class="btn btn-ae-start" id="btn-ae-start" onclick="toggleAutoExplore()">
+              &#9670; AUTO EXPLORE
+            </button>
+            <select class="ae-speed-select" id="ae-speed" title="Step interval">
+              <option value="800">Fast</option>
+              <option value="1600" selected>Normal</option>
+              <option value="2800">Slow</option>
+            </select>
+          </div>
+          <div class="ae-status-row">
+            <span class="ae-status-label" id="ae-status">Idle</span>
+            <span class="ae-step-count" id="ae-step-count">0 steps</span>
+          </div>
+          <div class="ae-log-container" id="ae-log"></div>
+        </div>
+      </div>
+
     </aside>
   </main>
 
