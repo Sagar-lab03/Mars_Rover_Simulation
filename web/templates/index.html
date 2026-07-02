@@ -314,6 +314,13 @@
           </div>
         </div>
         <div class="survey-body" id="survey-body">
+          <!-- Mission Profile selector -->
+          <div class="profile-selector-row">
+            <span class="profile-row-label">&#9670; MISSION PROFILE</span>
+            <select class="profile-select" id="mission-profile" onchange="onProfileChange()">
+              <option value="balanced">Balanced Exploration</option>
+            </select>
+          </div>
           <div class="survey-controls">
             <button class="btn btn-survey" id="btn-survey" onclick="runSurvey()">
               &#9670; SCAN TARGETS
@@ -329,6 +336,7 @@
         <div class="panel-header auto-explore-header" onclick="toggleAutoExplorePanel()">
           <span class="panel-title">&#9670; AUTO EXPLORE</span>
           <div class="ae-header-right">
+            <span class="ae-profile-label" id="ae-profile-label">Balanced</span>
             <span class="ae-score-badge" id="ae-score-badge">0 pts</span>
             <span class="ae-toggle-icon" id="ae-panel-toggle">&#9660;</span>
           </div>

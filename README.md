@@ -99,6 +99,34 @@ This project was built in three deliberate phases, each adding a meaningful laye
   - **Mission Science Score** accumulates in the panel header as the rover visits high-value cells
   - Rankings auto-refresh after each mission execution
 
+### Phase 4 — Autonomous Agent & Mission Profiles
+- **Autonomous Exploration Loop** — `⬡ AUTO EXPLORE` panel drives the rover without human input:
+  - Each step: scan all unvisited cells → rank by efficiency → feasibility-check top candidates → execute best approved route → repeat
+  - **Speed control** — Fast (800 ms) / Normal (1600 ms) / Slow (2800 ms) inter-step delay
+  - Live **decision log** — colour-coded reasoning lines (✓ green · ⚠ amber · ✗ red · 🎯🔍🔋 cyan) scroll in real time
+  - **Mission Science Score** accumulates in the panel header across all visited cells
+  - Stops automatically when battery < 20u, no reachable candidates remain, or all routes are NOT_RECOMMENDED
+  - Operator can stop at any time; score and grid state are preserved
+- **Architecture refactor — `web/planners/` package** — planning logic extracted from `app.py` into independently testable modules:
+  - `sensor_simulator.py` — REMS sensor simulation (extracted from `app.py` to eliminate circular imports)
+  - `planners/science_engine.py` — `score_cell()`, `get_recommendations()`, `compute_mission_score()`
+  - `planners/auto_explorer.py` — single-step autonomous exploration agent (`run_step()`)
+  - `planners/mission_profiles.py` — profile registry and weight tables
+  - Flask routes in `app.py` now only parse requests and call these modules
+- **Mission Profiles** — five autonomous operating modes selectable from a `◆ MISSION PROFILE` dropdown in the Science Survey panel:
+
+  | Profile | Bias | Accent colour |
+  |---|---|---|
+  | Balanced Exploration | All scoring factors equal | Cyan |
+  | Geological Survey | Rock ×1.6, boundary zones ×1.5 | Orange |
+  | Ice Detection | Ice ×1.8, extreme cold ×1.8 | Sky blue |
+  | Energy Conservation | Travel-cost weight ×0.7 (favours nearby cells) | Green |
+  | Hazard Mapping | Dust zones become targets (penalty removed) | Red |
+
+  - Changing profile instantly re-runs an open scan with the new weights
+  - The **Auto Explore** header badge shows the active profile name
+  - All five profiles pass through the same `score_cell()` function — only the multiplier table differs, making future ML integration a drop-in replacement of one function
+
 ---
 
 ## 📁 Project Structure
@@ -117,14 +145,19 @@ Mars_Rover_Exercise/
 │   ├── terrain.py            # Terrain types and cost map
 │   └── mission.py            # Mission objectives and waypoints
 │
-├── web/                      # Phase 3 — Web visualization
-│   ├── app.py                # Flask server + REST API + telemetry persistence
+├── web/                      # Phase 3/4 — Web visualization & planning engine
+│   ├── app.py                # Flask server + REST API routes (thin wrappers only)
+│   ├── sensor_simulator.py   # REMS-style environmental sensor simulation
+│   ├── planners/             # Planning logic package
+│   │   ├── science_engine.py # Cell scoring, recommendations, mission score
+│   │   ├── auto_explorer.py  # Autonomous exploration step agent
+│   │   └── mission_profiles.py # Profile definitions and scoring weight tables
 │   ├── templates/
 │   │   ├── index.html        # Mission Control single-page app
 │   │   └── analytics.html    # Analytics dashboard page
 │   └── static/
-│       ├── style.css         # Dark space theme + batch panel styles
-│       ├── app.js            # Grid renderer + API client + batch logic
+│       ├── style.css         # Dark space theme + all panel styles
+│       ├── app.js            # Grid renderer + API client + survey/explore logic
 │       ├── analytics.css     # Analytics dashboard styles
 │       └── analytics.js      # Chart.js charts + heatmap renderer
 │
@@ -341,7 +374,9 @@ Phase 1 Core  (rover.py)
 | Endpoint | Method | Purpose |
 |---|---|---|
 | `/api/plan` | POST | Mission Feasibility Analysis — dry-run route assessment (never mutates state) |
-| `/api/recommend` | GET | Science Prioritization Engine — ranked list of top unvisited science targets |
+| `/api/recommend` | GET | Science Prioritization Engine — ranked list of top unvisited science targets. Query: `n`, `profile` |
+| `/api/auto_explore/step` | POST | Autonomous Exploration Agent — execute one step. Query: `profile` |
+| `/api/profiles` | GET | List all available mission profiles for the UI dropdown |
 
 ### Telemetry Persistence
 
