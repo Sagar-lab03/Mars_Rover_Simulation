@@ -2191,4 +2191,69 @@ body {
   margin-top: 3px;
   padding-top: 3px;
 }
-
+
+/* ══ MISSION PROFILES ════════════════════════════════════════════════════════ */
+
+/* Profile selector row inside Science Survey panel */
+.profile-selector-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 12px 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.profile-row-label {
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.profile-select {
+  flex: 1;
+  padding: 5px 8px;
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  cursor: pointer;
+  transition: border-color var(--transition);
+  max-width: 160px;
+}
+.profile-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Active profile label in Auto Explore header */
+.ae-profile-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+/* Per-profile card accent colours — applied via JS class on .survey-card */
+.profile-accent-balanced   { border-left-color: #38bdf8; }
+.profile-accent-geological { border-left-color: #fb923c; background: rgba(251,146,60,0.04); }
+.profile-accent-ice_detection { border-left-color: #67e8f9; background: rgba(103,232,249,0.04); }
+.profile-accent-energy_saving { border-left-color: #4ade80; background: rgba(74,222,128,0.04); }
+.profile-accent-hazard_mapping { border-left-color: #f87171; background: rgba(248,113,113,0.04); }
+
+/* Profile active state updates on the selector row */
+.profile-selector-row.profile-active-geological  .profile-row-label { color: #fb923c; }
+.profile-selector-row.profile-active-ice_detection .profile-row-label { color: #67e8f9; }
+.profile-selector-row.profile-active-energy_saving .profile-row-label { color: #4ade80; }
+.profile-selector-row.profile-active-hazard_mapping .profile-row-label { color: #f87171; }
+.profile-selector-row.profile-active-balanced    .profile-row-label { color: #38bdf8; }

@@ -919,6 +919,52 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closePlanMod
 
 const RANK_SYMBOLS = ["①", "②", "③", "④", "⑤"];
 
+// ── Mission Profile helpers ────────────────────────────────────────────────
+
+/** Fetch available profiles from /api/profiles and populate the dropdown. */
+async function initProfiles() {
+  const select = document.getElementById("mission-profile");
+  if (!select) return;
+  const data = await apiFetch("/api/profiles");
+  if (!data || !data.profiles) return;
+  select.innerHTML = data.profiles
+    .map(p => `<option value="${p.id}">${p.label}</option>`)
+    .join("");
+  _applyProfileStyles(select.value);
+}
+
+/** Return the currently selected profile id. */
+function getActiveProfile() {
+  return document.getElementById("mission-profile")?.value || "balanced";
+}
+
+/** Called when the profile dropdown changes. */
+function onProfileChange() {
+  const profile = getActiveProfile();
+  _applyProfileStyles(profile);
+  // Auto-refresh an already-open scan with the new profile
+  const resultsEl = document.getElementById("survey-results");
+  if (resultsEl && !resultsEl.classList.contains("hidden")) {
+    clearSurveyOverlay();
+    runSurvey();
+  }
+}
+
+/** Apply colour accents and update the Auto Explore profile label. */
+function _applyProfileStyles(profileId) {
+  const row = document.querySelector(".profile-selector-row");
+  if (row) row.className = `profile-selector-row profile-active-${profileId}`;
+  const label = document.getElementById("ae-profile-label");
+  const select = document.getElementById("mission-profile");
+  if (label && select) {
+    const opt = select.querySelector(`option[value="${profileId}"]`);
+    label.textContent = opt ? opt.textContent.split(" ")[0] : profileId;
+  }
+}
+
+// Initialise profile dropdown on page load
+initProfiles();
+
 /** Toggle the Science Survey panel open/closed. */
 function toggleSurvey() {
   const body = document.getElementById("survey-body");
@@ -962,7 +1008,7 @@ async function runSurvey() {
   resultsEl.classList.add("hidden");
   resultsEl.innerHTML = "";
 
-  const data = await apiFetch("/api/recommend?n=3");
+  const data = await apiFetch(`/api/recommend?n=3&profile=${getActiveProfile()}`);
 
   btn.classList.remove("loading");
   btn.disabled = false;
@@ -994,6 +1040,7 @@ async function runSurvey() {
   recs.forEach((rec, i) => {
     const [x, y] = rec.position;
     const rank = RANK_SYMBOLS[i] || `#${i + 1}`;
+    const profileAccentCls = `profile-accent-${getActiveProfile()}`;
 
     // ── Grid overlay badge ──
     const cell = document.getElementById(`cell-${x}-${y}`);
@@ -1008,7 +1055,7 @@ async function runSurvey() {
     ).join("");
 
     const card = document.createElement("div");
-    card.className = "survey-card";
+    card.className = `survey-card ${profileAccentCls}`;
     card.title = `Click to plan route to (${x}, ${y})`;
     card.innerHTML = `
       <div class="survey-card-header">
@@ -1096,7 +1143,7 @@ function _stopAutoExplore(reason) {
 async function _aeLoop() {
   if (!_aeActive) return;
 
-  const result = await apiFetch("/api/auto_explore/step", { method: "POST" });
+  const result = await apiFetch(`/api/auto_explore/step?profile=${getActiveProfile()}`, { method: "POST" });
 
   if (!result) {
     _stopAutoExplore("Connection error — exploration halted.");

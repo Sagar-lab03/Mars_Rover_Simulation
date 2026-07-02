@@ -54,70 +54,8 @@ config: dict               = {}
 _session: dict = {}   # mirrors the terminal telemetry JSON format exactly
 
 
-# ── Environmental Sensor Simulator ─────────────────────────────────────────
-
-class SensorSimulator:
-    """
-    Simulates environmental sensor readings for the rover's current position.
-    Mirrors real Curiosity / Perseverance sensor systems (REMS).
-    """
-
-    # Surface temperature base values by terrain (°C)
-    _TEMP_BASE = {"plain": -20, "sand": 15, "rock": -5, "ice": -80}
-
-    # Slope base values by terrain (degrees)
-    _SLOPE_BASE = {"plain": 2.0, "sand": 5.0, "rock": 18.0, "ice": 8.0}
-
-    @classmethod
-    def surface_temp(cls, terrain: str) -> float:
-        """Terrain-dependent surface temperature with ±3 °C noise."""
-        base = cls._TEMP_BASE.get(terrain, -20)
-        return round(base + random.uniform(-3, 3), 1)
-
-    @classmethod
-    def dust_opacity(cls, x: int, y: int, grid_w: int, grid_h: int) -> float:
-        """
-        Atmospheric dust opacity (τ).  Higher toward grid edges
-        — simulates dust storm zones away from the landing site.
-        τ range: 0.1 (crystal clear) → 3.0 (full dust storm).
-        """
-        cx, cy   = grid_w / 2.0, grid_h / 2.0
-        dx       = abs(x - cx) / max(cx, 1)
-        dy       = abs(y - cy) / max(cy, 1)
-        edge     = max(dx, dy)          # 0 at centre, 1 at corner
-        tau      = 0.3 + edge * 1.8 + random.uniform(-0.1, 0.1)
-        return round(max(0.1, min(tau, 3.0)), 2)
-
-    @classmethod
-    def uv_index(cls, y: int, grid_h: int) -> float:
-        """
-        UV radiation index.  Higher ground (larger Y) = thinner
-        atmosphere = stronger UV.  Range: 0.5 – 5.0 UVI.
-        """
-        uv = 1.0 + (y / max(grid_h - 1, 1)) * 3.5 + random.uniform(-0.2, 0.2)
-        return round(max(0.5, min(uv, 5.0)), 1)
-
-    @classmethod
-    def slope_deg(cls, terrain: str) -> float:
-        """Estimated surface slope in degrees, ±1.5° noise."""
-        base = cls._SLOPE_BASE.get(terrain, 2.0)
-        return round(max(0.0, base + random.uniform(-1.5, 1.5)), 1)
-
-    @classmethod
-    def get_all(cls, x: int, y: int, terrain: str,
-                grid_w: int, grid_h: int) -> dict:
-        """Return a complete sensor snapshot for the current rover position."""
-        tau = cls.dust_opacity(x, y, grid_w, grid_h)
-        # Solar reduction: 0 % at τ ≤ 0.5, linear up to 50 % at τ = 2.5
-        solar_reduction_pct = round(max(0.0, min(50.0, (tau - 0.5) * 25.0)), 1)
-        return {
-            "surface_temp":        cls.surface_temp(terrain),
-            "dust_opacity":        tau,
-            "uv_index":            cls.uv_index(y, grid_h),
-            "slope_deg":           cls.slope_deg(terrain),
-            "solar_reduction_pct": solar_reduction_pct,
-            "terrain":             terrain,
-        }
+# ── Environmental Sensor Simulator ──────────────────────────────────────────
+from sensor_simulator import SensorSimulator  # noqa: E402
 
 
 _current_sensors: dict = {}   # latest reading — updated after every action
@@ -634,321 +572,36 @@ def get_mission_detail(filename):
 
 # ── Autonomous Exploration Agent ──────────────────────────────────────────────
 
-_BATTERY_SAFETY_THRESHOLD = 20   # minimum charge before exploration is halted
-_MAX_CANDIDATES_TO_TRY    = 3    # how many top candidates to evaluate before giving up
+from planners.auto_explorer import run_step as _ae_run_step
 
 
 @app.route("/api/auto_explore/step", methods=["POST"])
 def auto_explore_step():
     """
     Single-step Autonomous Exploration Agent.
-
-    Workflow (one step):
-      1. Safety check — abort if battery is critically low
-      2. Scan — score every unvisited, reachable, non-obstacle cell
-      3. Rank — sort by efficiency (science_value / travel_cost)
-      4. Evaluate — lightweight feasibility check for top candidates
-      5. Execute — navigate to the first approved target
-      6. Report — return reasoning log + state + continuation signal
-
-    Stop conditions:
-      - Battery below safety threshold (< 20 units)
-      - No reachable unvisited candidates found
-      - All shortlisted candidates classified NOT_RECOMMENDED
+    Full decision logic lives in web/planners/auto_explorer.py.
     """
-    reasoning: list[str] = []
-
-    # ── 1. Battery safety gate ───────────────────────────────────────────────
-    charge = rover.battery.charge
-    if charge < _BATTERY_SAFETY_THRESHOLD:
-        return jsonify({
-            "should_continue": False,
-            "stop_reason":     f"Battery critical ({charge}u). Solar charge recommended before resuming.",
-            "reasoning": [
-                f"⚠ Battery at {charge}u — below safety threshold ({_BATTERY_SAFETY_THRESHOLD}u).",
-                "Autonomous exploration halted. Use Solar Charge (S) to recharge.",
-            ],
-            "state":          build_state_json(),
-            "target":         None,
-            "mission_score":  0,
-        })
-
-    reasoning.append(f"🔋 Battery: {charge}u — sufficient for exploration.")
-
-    # ── 2. Scan: score all unvisited cells ───────────────────────────────────
-    visited   = set(map(tuple, rover.path_history))
-    rover_pos = (rover.x, rover.y)
-
-    candidates = []
-    for x in range(rover.grid.width):
-        for y in range(rover.grid.height):
-            if rover.grid.has_obstacle(x, y):
-                continue
-            if (x, y) == rover_pos:
-                continue
-            if (x, y) in visited:
-                continue
-            sv, reasons = _score_cell(x, y)
-            if sv > 0:
-                candidates.append({
-                    "position":      [x, y],
-                    "science_value": sv,
-                    "reasons":       reasons,
-                })
-
-    if not candidates:
-        return jsonify({
-            "should_continue": False,
-            "stop_reason":     "No unvisited science targets remain. Exploration complete.",
-            "reasoning": reasoning + [
-                "✓ Scan complete — all high-value cells have been explored.",
-                "Autonomous mission finished.",
-            ],
-            "state":         build_state_json(),
-            "target":        None,
-            "mission_score": _compute_mission_score(visited),
-        })
-
-    reasoning.append(f"🔍 Scanned {len(candidates)} unvisited candidate cells.")
-
-    # ── 3. Rank by science value; compute A* cost for top pool ───────────────
-    candidates.sort(key=lambda c: c["science_value"], reverse=True)
-    top_pool = candidates[: _MAX_CANDIDATES_TO_TRY * 4]
-
-    reachable = []
-    for c in top_pool:
-        x, y = c["position"]
-        path  = Pathfinder.find_path(rover.grid, rover_pos, (x, y))
-        if path is None:
-            continue
-        travel_cost = max(1, sum(
-            rover.terrain.get_battery_cost(px, py) for px, py in path[1:]
-        ))
-        efficiency  = round(c["science_value"] / travel_cost, 3)
-        final_score = round(c["science_value"] * 0.6 + efficiency * 10 * 0.4, 1)
-        reachable.append({**c, "travel_cost": travel_cost,
-                          "efficiency": efficiency, "score": final_score, "path": path})
-
-    if not reachable:
-        return jsonify({
-            "should_continue": False,
-            "stop_reason":     "No reachable science targets — rover may be surrounded by obstacles.",
-            "reasoning": reasoning + [
-                "⚠ A* found no routes to any candidate cell.",
-                "Autonomous exploration halted.",
-            ],
-            "state":         build_state_json(),
-            "target":        None,
-            "mission_score": _compute_mission_score(visited),
-        })
-
-    reachable.sort(key=lambda c: c["score"], reverse=True)
-
-    # ── 4. Evaluate: lightweight feasibility check ───────────────────────────
-    selected = None
-    for candidate in reachable[: _MAX_CANDIDATES_TO_TRY]:
-        x, y        = candidate["position"]
-        travel_cost = candidate["travel_cost"]
-        projected   = charge - travel_cost
-        proj_pct    = round((projected / rover.battery.max_charge) * 100, 1)
-
-        # Dust exposure along path
-        dust_vals = [
-            SensorSimulator.dust_opacity(px, py, rover.grid.width, rover.grid.height)
-            for px, py in candidate["path"][1:]
-        ]
-        avg_dust = round(sum(dust_vals) / len(dust_vals), 2) if dust_vals else 0.0
-
-        # Risk classification
-        if projected < _BATTERY_SAFETY_THRESHOLD:
-            risk = "NOT_RECOMMENDED"
-        elif proj_pct < 20 and avg_dust > 1.5:
-            risk = "NOT_RECOMMENDED"
-        elif proj_pct < 25 or avg_dust > 1.5:
-            risk = "MEDIUM"
-        else:
-            risk = "LOW"
-
-        if risk == "NOT_RECOMMENDED":
-            reasoning.append(
-                f"✗ Target ({x},{y}) skipped — projected battery {projected}u ({proj_pct}%) too low."
-            )
-            continue
-
-        selected = {**candidate, "risk": risk, "projected": projected,
-                    "proj_pct": proj_pct, "avg_dust": avg_dust}
-        break
-
-    if selected is None:
-        return jsonify({
-            "should_continue": False,
-            "stop_reason":     "All candidate routes are NOT_RECOMMENDED — insufficient battery for safe travel.",
-            "reasoning": reasoning + [
-                "⛔ No approvable routes found.",
-                "Recommend solar charging (S) before resuming auto-exploration.",
-            ],
-            "state":         build_state_json(),
-            "target":        None,
-            "mission_score": _compute_mission_score(visited),
-        })
-
-    # ── 5. Execute navigation ────────────────────────────────────────────────
-    x, y          = selected["position"]
-    top_reason    = selected["reasons"][0] if selected["reasons"] else "High science value"
-    risk_icon     = "✓" if selected["risk"] == "LOW" else "⚠"
-
-    reasoning.append(
-        f"🎯 Target ({x},{y}) selected — {top_reason} "
-        f"(science: {selected['science_value']}, efficiency: {selected['efficiency']})."
+    result = _ae_run_step(
+        rover      = rover,
+        mission    = mission,
+        log_fn     = _log,
+        record_fn  = _record_event,
+        profile_name = request.args.get("profile", "balanced"),
     )
-    reasoning.append(
-        f"{risk_icon} Route: {len(selected['path'])-1} steps, cost {selected['travel_cost']}u, "
-        f"projected battery {selected['proj_pct']}% — risk {selected['risk']}."
-    )
-
-    cmds = Pathfinder.path_to_commands(selected["path"], str(rover.direction))
-    for step in cmds:
-        if rover.battery.is_dead:
-            break
-        if step == "M":
-            success = rover.move_forward()
-            if success:
-                reached = mission.check_position(rover.x, rover.y)
-                terrain_here = rover.terrain.get_terrain(rover.x, rover.y).value
-                cost = rover.terrain.get_battery_cost(rover.x, rover.y)
-                _log(f"AUTO [{rover.x},{rover.y}] [{terrain_here}, -{cost}]")
-                if reached:
-                    _log(f"Waypoint reached: {reached.name}!")
-        elif step == "L":
-            rover.turn_left()
-        elif step == "R":
-            rover.turn_right()
-        _record_event("command", {
-            "command":        step,
-            "rover_status":   rover.get_status(),
-            "mission_status": mission.get_status(),
-        })
-
     _update_sensors()
     _save_telemetry()
-    reasoning.append(f"✓ Navigation complete — rover now at ({rover.x},{rover.y}), battery {rover.battery.charge}u.")
-
-    # ── 6. Continuation check ────────────────────────────────────────────────
-    new_visited     = set(map(tuple, rover.path_history))
-    mission_score   = _compute_mission_score(new_visited)
-    low_battery     = rover.battery.charge < _BATTERY_SAFETY_THRESHOLD
-    has_more        = any(
-        not rover.grid.has_obstacle(cx, cy)
-        and (cx, cy) != (rover.x, rover.y)
-        and (cx, cy) not in new_visited
-        for cx in range(rover.grid.width)
-        for cy in range(rover.grid.height)
-    )
-    should_continue = has_more and not low_battery
-
-    stop_reason = None
-    if low_battery:
-        stop_reason = f"Battery at {rover.battery.charge}u — below safety threshold."
-    elif not has_more:
-        stop_reason = "All accessible science targets explored. Mission survey complete."
-
-    return jsonify({
-        "should_continue": should_continue,
-        "stop_reason":     stop_reason,
-        "reasoning":       reasoning,
-        "state":           build_state_json(),
-        "target":          {"position": [x, y], "science_value": selected["science_value"],
-                            "risk": selected["risk"]},
-        "mission_score":   mission_score,
-    })
-
-
-def _compute_mission_score(visited: set) -> int:
-    """Sum science values for all visited cells."""
-    return sum(
-        _score_cell(vx, vy)[0]
-        for vx, vy in visited
-        if rover.grid.is_valid_position(vx, vy) and not rover.grid.has_obstacle(vx, vy)
-    )
+    result["state"] = build_state_json()
+    return jsonify(result)
 
 
 # ── Science Prioritization Engine ────────────────────────────────────────────
 
-def _score_cell(x: int, y: int) -> tuple[int, list[str]]:
-    """
-    Compute the science yield score (0-100) for a candidate cell.
-    Returns (science_value, reasons[]).
-
-    Scoring factors (deterministic, rule-based):
-      1. Terrain base value       — geological interest of the terrain type
-      2. Terrain boundary bonus   — adjacency to multiple biome types (contact zones)
-      3. UV anomaly bonus         — high UV at northern latitudes = thinner atmosphere
-      4. Extreme temperature      — ice-field cold signatures indicate subsurface interest
-      5. Mission waypoint bonus   — designated science targets score higher
-      6. Dust storm penalty       — heavy dust degrades instrument performance
-    """
-    reasons: list[str] = []
-    score = 0
-
-    ttype = rover.terrain.get_terrain(x, y).value
-
-    # 1. Terrain base
-    terrain_base = {"rock": 40, "ice": 35, "sand": 20, "plain": 10}
-    base = terrain_base.get(ttype, 10)
-    score += base
-    if ttype == "rock":
-        reasons.append("Rock terrain — high geological interest")
-    elif ttype == "ice":
-        reasons.append("Ice terrain — potential subsurface water")
-    elif ttype == "sand":
-        reasons.append("Sand terrain — aeolian deposit analysis")
-
-    # 2. Terrain boundary bonus — count distinct terrain types in 8 neighbours
-    neighbour_types: set[str] = set()
-    for dx in [-1, 0, 1]:
-        for dy in [-1, 0, 1]:
-            if dx == 0 and dy == 0:
-                continue
-            nx, ny = x + dx, y + dy
-            if rover.grid.is_valid_position(nx, ny) and not rover.grid.has_obstacle(nx, ny):
-                neighbour_types.add(rover.terrain.get_terrain(nx, ny).value)
-
-    # Subtract own type to count *different* biomes nearby
-    foreign = neighbour_types - {ttype}
-    if len(foreign) >= 2:
-        score += 30
-        reasons.append("Multi-terrain boundary zone — 3+ biomes converge")
-    elif len(foreign) == 1:
-        score += 20
-        reasons.append("Terrain boundary zone — biome transition region")
-
-    # 3. UV anomaly — high elevation (large y) = higher UV
-    uv = SensorSimulator.uv_index(y, rover.grid.height)
-    if uv >= 3.5:
-        score += 15
-        reasons.append(f"High UV anomaly (UVI {uv:.1f}) — atmospheric thinning")
-    elif uv >= 2.5:
-        score += 8
-        reasons.append(f"Elevated UV index (UVI {uv:.1f})")
-
-    # 4. Extreme temperature signature
-    temp = SensorSimulator.surface_temp(ttype)
-    if temp < -65:
-        score += 10
-        reasons.append(f"Extreme cold signature ({temp}°C) — cryogenic interest")
-
-    # 5. Mission waypoint bonus
-    wp_positions = {tuple(wp["position"]) for wp in mission.get_status().get("waypoints", [])}
-    if (x, y) in wp_positions:
-        score += 20
-        reasons.append("Designated mission science target")
-
-    # 6. Dust storm penalty
-    dust = SensorSimulator.dust_opacity(x, y, rover.grid.width, rover.grid.height)
-    if dust > 1.5:
-        score -= 5   # instrument degradation in heavy dust
-
-    return max(0, min(100, score)), reasons
+from planners.science_engine import (
+    score_cell       as _score_cell_fn,
+    get_recommendations,
+    compute_mission_score as _compute_mission_score_fn,
+)
+from planners.mission_profiles import list_profiles
 
 
 @app.route("/api/recommend", methods=["GET"])
@@ -956,75 +609,22 @@ def recommend_science():
     """
     Science Prioritization Engine — rank unvisited cells by scientific value
     relative to travel cost.
+    Full ranking logic lives in web/planners/science_engine.py.
 
     Query params:
-      n  (int, default 3) — number of top recommendations to return.
-
-    Returns for each target:
-      position, terrain, science_value, travel_cost, efficiency, score, reasons[].
-    Also returns mission_score (cumulative science value of all visited cells).
+      n        (int, default 3)   — number of top recommendations.
+      profile  (str, default 'balanced') — mission profile id.
     """
-    n = min(int(request.args.get("n", 3)), 10)
+    n            = min(int(request.args.get("n", 3)), 10)
+    profile_name = request.args.get("profile", "balanced")
+    result       = get_recommendations(rover, mission, n=n, profile_name=profile_name)
+    return jsonify(result)
 
-    visited = set(map(tuple, rover.path_history))
-    rover_pos = (rover.x, rover.y)
 
-    # ── Score all candidate cells ──
-    candidates = []
-    for x in range(rover.grid.width):
-        for y in range(rover.grid.height):
-            if rover.grid.has_obstacle(x, y):
-                continue
-            if (x, y) == rover_pos:
-                continue
-            if (x, y) in visited:
-                continue
-            science_value, reasons = _score_cell(x, y)
-            candidates.append({
-                "position":      [x, y],
-                "terrain":       rover.terrain.get_terrain(x, y).value,
-                "science_value": science_value,
-                "reasons":       reasons,
-            })
-
-    # ── Pre-filter: top candidates by science_value before running A* ──
-    candidates.sort(key=lambda c: c["science_value"], reverse=True)
-    top_pool = candidates[:min(len(candidates), n * 6)]
-
-    # ── Compute A* travel cost for shortlisted candidates ──
-    reachable = []
-    for c in top_pool:
-        x, y = c["position"]
-        path = Pathfinder.find_path(rover.grid, rover_pos, (x, y))
-        if path is None:
-            continue
-        travel_cost = max(1, sum(
-            rover.terrain.get_battery_cost(px, py) for px, py in path[1:]
-        ))
-        efficiency = round(c["science_value"] / travel_cost, 3)
-        # Final score: 60% science value + 40% efficiency (normalised ×10)
-        final_score = round(c["science_value"] * 0.6 + efficiency * 10 * 0.4, 1)
-        reachable.append({
-            **c,
-            "travel_cost": travel_cost,
-            "efficiency":  efficiency,
-            "score":       final_score,
-        })
-
-    reachable.sort(key=lambda c: c["score"], reverse=True)
-
-    # ── Mission science score: sum of science values for visited cells ──
-    mission_score = sum(
-        _score_cell(vx, vy)[0]
-        for vx, vy in visited
-        if rover.grid.is_valid_position(vx, vy) and not rover.grid.has_obstacle(vx, vy)
-    )
-
-    return jsonify({
-        "recommendations":   reachable[:n],
-        "total_candidates":  len(candidates),
-        "mission_score":     mission_score,
-    })
+@app.route("/api/profiles", methods=["GET"])
+def get_profiles():
+    """Return the list of available mission profiles for the UI dropdown."""
+    return jsonify({"profiles": list_profiles()})
 
 
 # ── Mission Planner ───────────────────────────────────────────────────────────
